@@ -1,0 +1,26 @@
+{
+  "name": "autoformulario",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuanHernandezMartinTesicnor/AutoFormulario.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JuanHernandezMartinTesicnor/AutoFormulario/issues"
+  },
+  "homepage": "https://github.com/JuanHernandezMartinTesicnor/AutoFormulario#readme",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "nodemailer": "^8.0.7",
+    "puppeteer": "^24.42.0"
+  }
+}
