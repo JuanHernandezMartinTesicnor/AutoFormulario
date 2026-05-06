@@ -1,6 +1,123 @@
-<input id="fecha" type="date">
-<input id="observador" placeholder="Nombre">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario Seguridad</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 
-<button onclick="enviar()">Generar PDF</button>
+<body>
+
+<div class="container">
+
+  <h2>Control de Actuación</h2>
+
+  <!-- Datos básicos -->
+  <div class="section">
+    <label>Fecha</label>
+    <input id="fecha" type="date">
+
+    <label>Tipo de trabajo</label>
+    <select id="tipoTrabajo">
+        <option value="INGENIERIA">Ingeniería</option>
+        <option value="MANTENIMIENTO">Mantenimiento</option>
+    </select>
+
+    <label>Incidencias</label>
+    <select id="incidencias">
+        <option value="CON INCIDENCIAS">Con incidencias</option>
+        <option value="SIN INCIDENCIAS">Sin incidencias</option>
+    </select>
+
+    <label>Observador</label>
+    <input id="observador" type="text">
+
+    <label>Contrata</label>
+    <input id="contrata" type="text">
+
+    <label>Descripción</label>
+    <textarea id="descripcion"></textarea>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section">
+    <h3>Checklist</h3>
+
+    <div class="check-item">
+      <span>Identificación</span>
+      <select id="identificacion">
+        <option>SI</option>
+        <option>NO</option>
+        <option>NA</option>
+      </select>
+    </div>
+
+    <div class="check-item">
+      <span>Orden y limpieza</span>
+      <select id="orden">
+        <option>SI</option>
+        <option>NO</option>
+        <option>NA</option>
+      </select>
+    </div>
+
+    <div class="check-item">
+      <span>Equipos</span>
+      <select id="equipos">
+        <option>SI</option>
+        <option>NO</option>
+        <option>NA</option>
+      </select>
+    </div>
+
+    <div class="check-item">
+      <span>EPIs</span>
+      <select id="epis">
+        <option>SI</option>
+        <option>NO</option>
+        <option>NA</option>
+      </select>
+    </div>
+
+    <div class="check-item">
+      <span>Procedimientos</span>
+      <select id="procedimientos">
+        <option>SI</option>
+        <option>NO</option>
+        <option>NA</option>
+      </select>
+    </div>
+
+    <div class="check-item">
+      <span>Coordinación</span>
+      <select id="coordinacion">
+        <option>SI</option>
+        <option>NO</option>
+        <option>NA</option>
+      </select>
+    </div>
+
+    <div class="check-item">
+      <span>Ambientales</span>
+      <select id="ambientales">
+        <option>SI</option>
+        <option>NO</option>
+        <option>NA</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Observaciones -->
+  <div class="section">
+    <label>Observaciones</label>
+    <textarea id="observaciones"></textarea>
+  </div>
+
+  <button onclick="enviar()">Generar PDF</button>
+
+</div>
 
 <script src="app.js"></script>
+</body>
+</html>

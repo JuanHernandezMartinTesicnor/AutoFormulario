@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <style>
     @page {
@@ -38,11 +39,14 @@
       margin-top: 10px;
     }
 
-    table, td, th {
+    table,
+    td,
+    th {
       border: 1px solid black;
     }
 
-    th, td {
+    th,
+    td {
       padding: 5px;
       text-align: left;
     }
@@ -72,10 +76,8 @@
 
     <div class="field">
       Tipo:
-      Ingeniería {{ingenieria}}
-      Mantenimiento {{mantenimiento}}
-      Con incidencias {{incidencias}}
-      Sin incidencias {{sinIncidencias}}
+      {{tipoTrabajo}} -
+      {{incidencias}}
     </div>
 
     <div class="field">
@@ -94,65 +96,49 @@
   <table>
     <tr>
       <th>Concepto</th>
-      <th class="center">SI</th>
-      <th class="center">NO</th>
-      <th class="center">N/A</th>
+      <th class="center">Resultado</th>
     </tr>
 
     <tr>
       <td>1) IDENTIFICACIÓN</td>
-      <td class="checkbox">{{identificacion_si}}</td>
-      <td class="checkbox">{{identificacion_no}}</td>
-      <td class="checkbox">{{identificacion_na}}</td>
+      <td class="center">{{identificacion}}</td>
     </tr>
 
     <tr>
       <td>2) ORDEN Y LIMPIEZA</td>
-      <td class="checkbox">{{orden_si}}</td>
-      <td class="checkbox">{{orden_no}}</td>
-      <td class="checkbox">{{orden_na}}</td>
+      <td class="center">{{orden}}</td>
     </tr>
 
     <tr>
       <td>3) EQUIPOS Y HERRAMIENTAS</td>
-      <td class="checkbox">{{equipos_si}}</td>
-      <td class="checkbox">{{equipos_no}}</td>
-      <td class="checkbox">{{equipos_na}}</td>
+      <td class="center">{{equipos}}</td>
     </tr>
 
     <tr>
       <td>4) EPIs</td>
-      <td class="checkbox">{{epis_si}}</td>
-      <td class="checkbox">{{epis_no}}</td>
-      <td class="checkbox">{{epis_na}}</td>
+      <td class="center">{{epis}}</td>
     </tr>
 
     <tr>
       <td>5) PROCEDIMIENTOS</td>
-      <td class="checkbox">{{procedimientos_si}}</td>
-      <td class="checkbox">{{procedimientos_no}}</td>
-      <td class="checkbox">{{procedimientos_na}}</td>
+      <td class="center">{{procedimientos}}</td>
     </tr>
 
     <tr>
       <td>6) COORDINACIÓN</td>
-      <td class="checkbox">{{coordinacion_si}}</td>
-      <td class="checkbox">{{coordinacion_no}}</td>
-      <td class="checkbox">{{coordinacion_na}}</td>
+      <td class="center">{{coordinacion}}</td>
     </tr>
 
     <tr>
       <td>7) ASPECTOS AMBIENTALES</td>
-      <td class="checkbox">{{ambientales_si}}</td>
-      <td class="checkbox">{{ambientales_no}}</td>
-      <td class="checkbox">{{ambientales_na}}</td>
+      <td class="center">{{ambientales}}</td>
     </tr>
-  </table>
 
-  <div class="section">
-    <strong>Observaciones:</strong>
-    <div>{{observaciones}}</div>
-  </div>
+    <div class="section">
+      <strong>Observaciones:</strong>
+      <div>{{observaciones}}</div>
+    </div>
 
 </body>
+
 </html>

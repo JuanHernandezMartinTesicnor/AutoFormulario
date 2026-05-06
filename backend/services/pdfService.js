@@ -15,17 +15,25 @@ async function generatePDF(data) {
 
   const page = await browser.newPage();
 
-  // Cargar plantilla HTML
+  // 1. Cargar plantilla HTML
   let html = fs.readFileSync(
     path.join(__dirname, "../templates/pdfTemplate.html"),
     "utf8"
   );
 
-  // Reemplazos básicos
+  // 2. Reemplazos básicos
   html = html.replace(/{{fecha}}/g, data.fecha || "");
   html = html.replace(/{{observador}}/g, data.observador || "");
+  html = html.replace(/{{tipoTrabajo}}/g, data.tipoTrabajo || "");
+  html = html.replace(/{{incidencias}}/g, data.incidencias || "");
+  html = html.replace(/{{contrata}}/g, data.contrata || "");
+  html = html.replace(/{{descripcion}}/g, data.descripcion || "");
+  html = html.replace(/{{observaciones}}/g, data.observaciones || "");
 
-  // Configuración de render
+  // 3. Rellenar checklist (AQUÍ es donde se usa la función)
+  html = fillSimpleChecklist(html, data.checklist || {});
+
+  // 4. Configuración de render
   await page.setViewport({
     width: 1200,
     height: 1600,
@@ -34,10 +42,10 @@ async function generatePDF(data) {
 
   await page.setContent(html, { waitUntil: "networkidle0" });
 
-  // Forzar modo pantalla (evita estilos raros de impresión)
+  // 5. Forzar modo pantalla
   await page.emulateMediaType("screen");
 
-  // Forzar fondo blanco SIEMPRE
+  // 6. Forzar fondo blanco SIEMPRE
   await page.addStyleTag({
     content: `
       html, body {
@@ -47,19 +55,28 @@ async function generatePDF(data) {
     `
   });
 
-  // Generar PDF
+  // 7. Generar PDF
   const pdf = await page.pdf({
     format: "A4",
     printBackground: true,
     omitBackground: false
   });
 
-  // DEBUG: Guardar imgen de PDF en disco para inspección
-  //await page.screenshot({ path: "debug.png", fullPage: true });
-
   await browser.close();
 
   return pdf;
+}
+
+
+
+function fillSimpleChecklist(html, checklist) {
+  Object.keys(checklist).forEach((key) => {
+    const value = checklist[key] || "";
+
+    html = html.replace(new RegExp(`{{${key}}}`, "g"), value);
+  });
+
+  return html;
 }
 
 module.exports = { generatePDF };
