@@ -21,7 +21,7 @@ async function enviar() {
     }
   };
 
-  const res = await fetch("http://localhost:3000/api/generate-pdf", {
+  const res = await fetch("/api/generate-pdf", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
