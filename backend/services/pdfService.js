@@ -4,6 +4,14 @@ const path = require("path");
 
 const isLinux = process.platform === "linux";
 
+function getSignatureBase64(filename) {
+  const filePath = path.join(__dirname, "../../frontend/signatures", filename);
+
+  const image = fs.readFileSync(filePath);
+
+  return `data:image/png;base64,${image.toString("base64")}`;
+}
+
 async function generatePDF(data) {
   const browser = await puppeteer.launch({
     headless: true,
@@ -36,6 +44,18 @@ async function generatePDF(data) {
   html = html.replace(/{{contrata}}/g, data.contrata || "");
   html = html.replace(/{{descripcion}}/g, data.descripcion || "");
   html = html.replace(/{{observaciones}}/g, data.observaciones || "");
+
+  let firmaObservador = "";
+
+  if (data.observador === "maria") {
+    firmaObservador = getSignatureBase64("maria.png");
+  }
+
+  if (data.observador === "antonio") {
+    firmaObservador = getSignatureBase64("antonio.png");
+  }
+
+  html = html.replace(/{{firmaObservador}}/g, firmaObservador);
 
   // 3. Rellenar checklist (AQUÍ es donde se usa la función)
   html = fillSimpleChecklist(html, data.checklist || {});

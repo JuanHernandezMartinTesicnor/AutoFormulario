@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,114 +10,118 @@
 
 <body>
 
-<div class="container">
-  <h2><br>Control de Actuación</h2>
+  <div class="container">
+    <h2><br>Control de Actuación</h2>
 
-  <!-- Datos básicos -->
-  <div class="section">
-    <label>Fecha</label>
-    <input id="fecha" type="date">
+    <!-- Datos básicos -->
+    <div class="section">
+      <label>Fecha</label>
+      <input id="fecha" type="date">
 
-    <label>Tipo de trabajo</label>
-    <select id="tipoTrabajo">
+      <label>Tipo de trabajo</label>
+      <select id="tipoTrabajo">
         <option value="INGENIERIA">Ingeniería</option>
         <option value="MANTENIMIENTO">Mantenimiento</option>
-    </select>
+      </select>
 
-    <label>Incidencias</label>
-    <select id="incidencias">
+      <label>Incidencias</label>
+      <select id="incidencias">
         <option value="CON INCIDENCIAS">Con incidencias</option>
         <option value="SIN INCIDENCIAS">Sin incidencias</option>
-    </select>
+      </select>
 
-    <label>Observador</label>
-    <input id="observador" type="text">
+      <label>Observador</label>
+      <select id="observador">
+        <option value="maria">Maria</option>
+        <option value="antonio">Antonio</option>
+      </select>
 
-    <label>Contrata</label>
-    <input id="contrata" type="text">
+      <label>Contrata</label>
+      <input id="contrata" type="text">
 
-    <label>Descripción</label>
-    <textarea id="descripcion"></textarea>
+      <label>Descripción</label>
+      <textarea id="descripcion"></textarea>
+    </div>
+
+    <!-- Checklist -->
+    <div class="section">
+      <h3>Checklist</h3>
+
+      <div class="check-item">
+        <span>Identificación</span>
+        <select id="identificacion">
+          <option>SI</option>
+          <option>NO</option>
+          <option>NA</option>
+        </select>
+      </div>
+
+      <div class="check-item">
+        <span>Orden y limpieza</span>
+        <select id="orden">
+          <option>SI</option>
+          <option>NO</option>
+          <option>NA</option>
+        </select>
+      </div>
+
+      <div class="check-item">
+        <span>Equipos</span>
+        <select id="equipos">
+          <option>SI</option>
+          <option>NO</option>
+          <option>NA</option>
+        </select>
+      </div>
+
+      <div class="check-item">
+        <span>EPIs</span>
+        <select id="epis">
+          <option>SI</option>
+          <option>NO</option>
+          <option>NA</option>
+        </select>
+      </div>
+
+      <div class="check-item">
+        <span>Procedimientos</span>
+        <select id="procedimientos">
+          <option>SI</option>
+          <option>NO</option>
+          <option>NA</option>
+        </select>
+      </div>
+
+      <div class="check-item">
+        <span>Coordinación</span>
+        <select id="coordinacion">
+          <option>SI</option>
+          <option>NO</option>
+          <option>NA</option>
+        </select>
+      </div>
+
+      <div class="check-item">
+        <span>Ambientales</span>
+        <select id="ambientales">
+          <option>SI</option>
+          <option>NO</option>
+          <option>NA</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Observaciones -->
+    <div class="section">
+      <label>Observaciones</label>
+      <textarea id="observaciones"></textarea>
+    </div>
+
+    <button onclick="enviar()">Generar PDF</button>
+
   </div>
 
-  <!-- Checklist -->
-  <div class="section">
-    <h3>Checklist</h3>
-
-    <div class="check-item">
-      <span>Identificación</span>
-      <select id="identificacion">
-        <option>SI</option>
-        <option>NO</option>
-        <option>NA</option>
-      </select>
-    </div>
-
-    <div class="check-item">
-      <span>Orden y limpieza</span>
-      <select id="orden">
-        <option>SI</option>
-        <option>NO</option>
-        <option>NA</option>
-      </select>
-    </div>
-
-    <div class="check-item">
-      <span>Equipos</span>
-      <select id="equipos">
-        <option>SI</option>
-        <option>NO</option>
-        <option>NA</option>
-      </select>
-    </div>
-
-    <div class="check-item">
-      <span>EPIs</span>
-      <select id="epis">
-        <option>SI</option>
-        <option>NO</option>
-        <option>NA</option>
-      </select>
-    </div>
-
-    <div class="check-item">
-      <span>Procedimientos</span>
-      <select id="procedimientos">
-        <option>SI</option>
-        <option>NO</option>
-        <option>NA</option>
-      </select>
-    </div>
-
-    <div class="check-item">
-      <span>Coordinación</span>
-      <select id="coordinacion">
-        <option>SI</option>
-        <option>NO</option>
-        <option>NA</option>
-      </select>
-    </div>
-
-    <div class="check-item">
-      <span>Ambientales</span>
-      <select id="ambientales">
-        <option>SI</option>
-        <option>NO</option>
-        <option>NA</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Observaciones -->
-  <div class="section">
-    <label>Observaciones</label>
-    <textarea id="observaciones"></textarea>
-  </div>
-
-  <button onclick="enviar()">Generar PDF</button>
-
-</div>
-
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
+
 </html>
