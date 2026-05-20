@@ -12,6 +12,23 @@
       font-family: Arial, sans-serif;
       font-size: 12px;
       color: black;
+
+      margin-top: 35px;
+      margin-left: 35px;
+      margin-right: 35px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      height: 60px;
+      object-fit: contain;
     }
 
     .title {
@@ -92,11 +109,13 @@
     .firma-img {
       position: absolute;
 
-      left: 0;
-      bottom: 5px;
+      left: 50%;
+      bottom: 8px;
 
-      width: 120px !important;
-      height: 40px !important;
+      transform: translateX(-50%);
+
+      width: 200px !important;
+      height: 60px !important;
 
       object-fit: contain;
 
@@ -106,6 +125,11 @@
 </head>
 
 <body>
+
+  <div class="header">
+    <img src="{{tesicnorLogo}}" class="logo">
+    <img src="{{graftechLogo}}" class="logo">
+  </div>
 
   <div class="title">
     CONTROL DE LA ACTUACIÓN DEL CONTRATISTA
@@ -206,7 +230,7 @@
     <div class="firma-box">
 
       <div class="firma-label">
-        Nombre del observador (y firma):
+        Firma del observador:
       </div>
 
       <div class="firma-linea-container">
@@ -224,7 +248,7 @@
     <div class="firma-box">
 
       <div class="firma-label">
-        Firma receptor:
+        Firma del receptor:
       </div>
 
       <div class="firma-linea-container">
