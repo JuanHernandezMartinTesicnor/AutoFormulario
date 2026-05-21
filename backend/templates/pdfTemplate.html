@@ -31,11 +31,49 @@
       object-fit: contain;
     }
 
-    .title {
-      text-align: center;
-      font-weight: bold;
+    .tipo-table {
+      width: 100%;
+      border-collapse: collapse;
       margin-bottom: 20px;
+    }
+
+    .tipo-table td {
+      border: 1px solid black;
+      padding: 4px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .tipo-option {
+      width: 18%;
+    }
+
+    .tipo-marcar {
+      width: 4%;
+    }
+
+    .title-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .title-table td {
+      border: 2px solid black;
+    }
+
+    .title-cell {
+      font-weight: bold;
       font-size: 18px;
+      text-align: center;
+      padding: 15px;
+    }
+
+    .page-cell {
+      width: 120px;
+      font-size: 14px;
+      padding: 10px;
+      text-align: center;
     }
 
     .section {
@@ -131,23 +169,64 @@
     <img src="{{graftechLogo}}" class="logo">
   </div>
 
-  <div class="title">
-    CONTROL DE LA ACTUACIÓN DEL CONTRATISTA
-  </div>
+  <table class="title-table">
+
+    <tr>
+      <td class="title-cell">
+        CONTROL DE LA ACTUACIÓN DEL CONTRATISTA
+      </td>
+      <td class="page-cell">
+        <div>
+          Fecha: {{fecha}}
+        </div>
+      </td>
+    </tr>
+
+  </table>
 
   <!-- DATOS GENERALES -->
 
   <div class="section">
 
-    <div class="field">
-      Fecha: {{fecha}}
-    </div>
+    <table class="tipo-table">
 
-    <div class="field">
-      Tipo:
-      {{tipoTrabajo}} -
-      {{incidencias}}
-    </div>
+      <tr>
+
+        <td class="tipo-option">
+          INGENIERÍA
+        </td>
+
+        <td class="tipo-marcar">
+          {{ingenieria}}
+        </td>
+
+        <td class="tipo-option">
+          MANTO.
+        </td>
+
+        <td class="tipo-marcar">
+          {{mantenimiento}}
+        </td>
+
+        <td class="tipo-option">
+          CON INCIDENCIA/S
+        </td>
+
+        <td class="tipo-marcar">
+          {{conIncidencias}}
+        </td>
+
+        <td class="tipo-option">
+          SIN INCIDENCIAS
+        </td>
+
+        <td class="tipo-marcar">
+          {{sinIncidencias}}
+        </td>
+
+      </tr>
+
+    </table>
 
     <div class="field">
       Observador: {{observador}}

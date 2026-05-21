@@ -53,6 +53,18 @@ async function generatePDF(data) {
   html = html.replace(/{{descripcion}}/g, data.descripcion || "");
   html = html.replace(/{{observaciones}}/g, data.observaciones || "");
 
+  html = html.replace(/{{ingenieria}}/g,
+    data.tipoTrabajo === "INGENIERIA" ? "X" : "");
+
+  html = html.replace(/{{mantenimiento}}/g,
+    data.tipoTrabajo === "MANTENIMIENTO" ? "X" : "");
+
+  html = html.replace(/{{conIncidencias}}/g,
+    data.incidencias === "CON INCIDENCIAS" ? "X" : "");
+
+  html = html.replace(/{{sinIncidencias}}/g,
+    data.incidencias === "SIN INCIDENCIAS" ? "X" : "");
+
   let firmaObservador = "";
 
   if (data.observador === "Maria Rodríguez") {
