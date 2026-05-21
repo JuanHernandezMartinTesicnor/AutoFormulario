@@ -84,100 +84,103 @@
   <div class="descripcionTabla">
     <strong><u>Indicar en el casillero correspondiente : SI, NO o N/A según proceda</u></strong>
 
-  <!-- TABLA -->
+    <!-- TABLA -->
 
-  <table>
-    <tr>
-      <td><b>1) IDENTIFICACIÓN: </b>El trabajador está correctamente identificado.<br></td>
-      <td class="center">{{identificacion}}</td>
-    </tr>
+    <table>
+      <tr>
+        <td><b>1) IDENTIFICACIÓN: </b>El trabajador está correctamente identificado.<br></td>
+        <td class="center" style="padding: 13px;">{{identificacion}}</td>
+      </tr>
 
-    <tr>
-      <td><b>2) ORDEN Y LIMPIEZA: </b>La limpieza del área de trabajo es adecuada (no hay 
-      derrames, material combustible acumulado, objetos en el suelo con riesgo de tropiezo, ...)</td>
-      <td class="center">{{orden}}</td>
-    </tr>
+      <tr>
+        <td><b>2) ORDEN Y LIMPIEZA: </b>La limpieza del área de trabajo es adecuada (no hay
+          derrames, material combustible acumulado, objetos en el suelo con riesgo de tropiezo, ...)</td>
+        <td class="center" style="padding: 13px;">{{orden}}</td>
+      </tr>
 
-    <tr>
-      <td><b>3) EQUIPOS Y HERRAMIENTAS: </b>Se utilizan los equipos de trabajo y las herramientas
-        correctamente, estan en buen estado y son adecuados para el trabajo que se realiza.
-      </td>
-      <td class="center">{{equipos}}</td>
-    </tr>
+      <tr>
+        <td><b>3) EQUIPOS Y HERRAMIENTAS: </b>Se utilizan los equipos de trabajo y las herramientas
+          correctamente, estan en buen estado y son adecuados para el trabajo que se realiza.
+        </td>
+        <td class="center" style="padding: 13px;">{{equipos}}</td>
+      </tr>
 
-    <tr>
-      <td><b>4) EPIs: </b></td>
-      <td class="center">{{epis}}</td>
-    </tr>
+      <tr>
+        <td><b>4) EPIs: </b>Se utilizan los EPI,s correctamente, están en buen estado y son los adecuados.</td>
+        <td class="center" style="padding: 13px;">{{epis}}</td>
+      </tr>
 
-    <tr>
-      <td><b>5) PROCEDIMIENTOS: </b></td>
-      <td class="center">{{procedimientos}}</td>
-    </tr>
+      <tr>
+        <td><b>5) PROCEDIMIENTOS DE TRABAJO: </b>Los procedimientos de trabajo seguidos están de acuerdo a
+          las normas (bloqueo, corte y soldadura, trabajo en alturas, apilamiento, ...).</td>
+        <td class="center" style="padding: 13px;">{{procedimientos}}</td>
+      </tr>
 
-    <tr>
-      <td><b>6) COORDINACIÓN: </b></td>
-      <td class="center">{{coordinacion}}</td>
-    </tr>
+      <tr>
+        <td><b>6) COORDINACIÓN DE TRABAJOS: </b>El trabajo es seguro para los trabajadores de Graftech
+          y de otras contratas, están establecidos medios adecuados de coordinación.</td>
+        <td class="center" style="padding: 13px;">{{coordinacion}}</td>
+      </tr>
 
-    <tr>
-      <td><b>7) ASPECTOS AMBIENTALES: </b></td>
-      <td class="center">{{ambientales}}</td>
-    </tr>
+      <tr>
+        <td><b>7) ASPECTOS AMBIENTALES: </b>Los residuos están separados y en su lugar, no hay derrames, 
+          no se generan ruidos que afecten al exterior de la planta, …</td>
+        <td class="center" style="padding: 13px;">{{ambientales}}</td>
+      </tr>
 
-  </table>
+    </table>
 
-  <!-- OBSERVACIONES -->
+    <!-- OBSERVACIONES -->
 
-  <div class="section" style="margin-top: 20px;">
+    <div class="section" style="margin-top: 20px;">
 
-    <strong>Observaciones:</strong>
+      <strong>Observaciones:</strong>
 
-    <div style="margin-top: 5px;">
-      {{observaciones}}
-    </div>
-
-  </div>
-
-  <!-- FIRMAS -->
-
-  <div class="firmas">
-
-    <!-- OBSERVADOR -->
-
-    <div class="firma-box">
-
-      <div class="firma-label">
-        Firma del observador:
-      </div>
-
-      <div class="firma-linea-container">
-
-        <img src="{{firmaObservador}}" class="firma-img">
-
-        <div class="linea-firma"></div>
-
+      <div style="margin-top: 5px;">
+        {{observaciones}}
       </div>
 
     </div>
 
-    <!-- RECEPTOR -->
+    <!-- FIRMAS -->
 
-    <div class="firma-box">
+    <div class="firmas">
 
-      <div class="firma-label">
-        Firma del receptor:
+      <!-- OBSERVADOR -->
+
+      <div class="firma-box">
+
+        <div class="firma-label">
+          Firma del observador:
+        </div>
+
+        <div class="firma-linea-container">
+
+          <img src="{{firmaObservador}}" class="firma-img">
+
+          <div class="linea-firma"></div>
+
+        </div>
+
       </div>
 
-      <div class="firma-linea-container">
+      <!-- RECEPTOR -->
 
-        <div class="linea-firma"></div>
+      <div class="firma-box">
+
+        <div class="firma-label">
+          Firma del receptor:
+        </div>
+
+        <div class="firma-linea-container">
+
+          <div class="linea-firma"></div>
+
+        </div>
 
       </div>
 
     </div>
-
-  </div>
 
 </body>
 
