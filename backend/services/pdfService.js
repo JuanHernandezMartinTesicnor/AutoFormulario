@@ -21,6 +21,7 @@ function getSignatureBase64(filename) {
 }
 
 async function generatePDF(data) {
+
   const browser = await puppeteer.launch({
     headless: true,
 
@@ -38,13 +39,24 @@ async function generatePDF(data) {
 
   const page = await browser.newPage();
 
-  // 1. Cargar plantilla HTML
+  /* =========================
+     CARGAR HTML + CSS
+  ========================= */
+
   let html = fs.readFileSync(
     path.join(__dirname, "../templates/pdfTemplate.html"),
     "utf8"
   );
 
-  // 2. Reemplazos básicos
+  const css = fs.readFileSync(
+    path.join(__dirname, "../templates/pdfStyles.css"),
+    "utf8"
+  );
+
+  /* =========================
+     REEMPLAZOS BÁSICOS
+  ========================= */
+
   html = html.replace(/{{fecha}}/g, data.fecha || "");
   html = html.replace(/{{observador}}/g, data.observador || "");
   html = html.replace(/{{tipoTrabajo}}/g, data.tipoTrabajo || "");
@@ -53,17 +65,33 @@ async function generatePDF(data) {
   html = html.replace(/{{descripcion}}/g, data.descripcion || "");
   html = html.replace(/{{observaciones}}/g, data.observaciones || "");
 
-  html = html.replace(/{{ingenieria}}/g,
-    data.tipoTrabajo === "INGENIERIA" ? "X" : "");
+  /* =========================
+     CASILLAS TIPO TRABAJO
+  ========================= */
 
-  html = html.replace(/{{mantenimiento}}/g,
-    data.tipoTrabajo === "MANTENIMIENTO" ? "X" : "");
+  html = html.replace(
+    /{{ingenieria}}/g,
+    data.tipoTrabajo === "INGENIERIA" ? "X" : ""
+  );
 
-  html = html.replace(/{{conIncidencias}}/g,
-    data.incidencias === "CON INCIDENCIAS" ? "X" : "");
+  html = html.replace(
+    /{{mantenimiento}}/g,
+    data.tipoTrabajo === "MANTENIMIENTO" ? "X" : ""
+  );
 
-  html = html.replace(/{{sinIncidencias}}/g,
-    data.incidencias === "SIN INCIDENCIAS" ? "X" : "");
+  html = html.replace(
+    /{{conIncidencias}}/g,
+    data.incidencias === "CON INCIDENCIAS" ? "X" : ""
+  );
+
+  html = html.replace(
+    /{{sinIncidencias}}/g,
+    data.incidencias === "SIN INCIDENCIAS" ? "X" : ""
+  );
+
+  /* =========================
+     FIRMA OBSERVADOR
+  ========================= */
 
   let firmaObservador = "";
 
@@ -75,30 +103,79 @@ async function generatePDF(data) {
     firmaObservador = getSignatureBase64("antonio.png");
   }
 
-  html = html.replace(/{{firmaObservador}}/g, firmaObservador);
+  html = html.replace(
+    /{{firmaObservador}}/g,
+    firmaObservador
+  );
 
-  const tesicnorLogo = getImageBase64("frontend/logos/tesicnor.png");
-  const graftechLogo = getImageBase64("frontend/logos/grafTech.png");
+  /* =========================
+     LOGOS
+  ========================= */
 
-  html = html.replace(/{{tesicnorLogo}}/g, tesicnorLogo);
-  html = html.replace(/{{graftechLogo}}/g, graftechLogo);
+  const tesicnorLogo = getImageBase64(
+    "frontend/logos/tesicnor.png"
+  );
 
-  // 3. Rellenar checklist (AQUÍ es donde se usa la función)
-  html = fillSimpleChecklist(html, data.checklist || {});
+  const graftechLogo = getImageBase64(
+    "frontend/logos/grafTech.png"
+  );
 
-  // 4. Configuración de render
+  html = html.replace(
+    /{{tesicnorLogo}}/g,
+    tesicnorLogo
+  );
+
+  html = html.replace(
+    /{{graftechLogo}}/g,
+    graftechLogo
+  );
+
+  /* =========================
+     CHECKLIST
+  ========================= */
+
+  html = fillSimpleChecklist(
+    html,
+    data.checklist || {}
+  );
+
+  /* =========================
+     VIEWPORT
+  ========================= */
+
   await page.setViewport({
     width: 1200,
     height: 1600,
     deviceScaleFactor: 1
   });
 
-  await page.setContent(html, { waitUntil: "networkidle0" });
+  /* =========================
+     CARGAR HTML
+  ========================= */
 
-  // 5. Forzar modo pantalla
+  await page.setContent(
+    html,
+    { waitUntil: "networkidle0" }
+  );
+
+  /* =========================
+     CARGAR CSS EXTERNO
+  ========================= */
+
+  await page.addStyleTag({
+    content: css
+  });
+
+  /* =========================
+     MODO SCREEN
+  ========================= */
+
   await page.emulateMediaType("screen");
 
-  // 6. Forzar fondo blanco SIEMPRE
+  /* =========================
+     FORZAR FONDO BLANCO
+  ========================= */
+
   await page.addStyleTag({
     content: `
       html, body {
@@ -108,7 +185,10 @@ async function generatePDF(data) {
     `
   });
 
-  // 7. Generar PDF
+  /* =========================
+     GENERAR PDF
+  ========================= */
+
   const pdf = await page.pdf({
     format: "A4",
     printBackground: true,

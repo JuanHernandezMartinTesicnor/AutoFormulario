@@ -1,167 +1,6 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <style>
-    @page {
-      size: A4;
-      margin: 20px;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      font-size: 12px;
-      color: black;
-
-      margin-top: 35px;
-      margin-left: 35px;
-      margin-right: 35px;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      margin-bottom: 20px;
-    }
-
-    .logo {
-      height: 60px;
-      object-fit: contain;
-    }
-
-    .tipo-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-
-    .tipo-table td {
-      border: 1px solid black;
-      padding: 4px;
-      font-weight: bold;
-      text-align: center;
-    }
-
-    .tipo-option {
-      width: 18%;
-    }
-
-    .tipo-marcar {
-      width: 4%;
-    }
-
-    .title-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-
-    .title-table td {
-      border: 2px solid black;
-    }
-
-    .title-cell {
-      font-weight: bold;
-      font-size: 18px;
-      text-align: center;
-      padding: 15px;
-    }
-
-    .page-cell {
-      width: 120px;
-      font-size: 14px;
-      padding: 10px;
-      text-align: center;
-    }
-
-    .section {
-      margin-bottom: 15px;
-    }
-
-    .row {
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .field {
-      margin-bottom: 8px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-
-    table,
-    td,
-    th {
-      border: 1px solid black;
-    }
-
-    th,
-    td {
-      padding: 6px;
-      text-align: left;
-    }
-
-    .center {
-      text-align: center;
-    }
-
-    /* =========================
-       FIRMAS
-    ========================= */
-
-    .firmas {
-      display: flex;
-      justify-content: space-between;
-      gap: 60px;
-      margin-top: 40px;
-    }
-
-    .firma-box {
-      width: 45%;
-    }
-
-    .firma-label {
-      font-size: 12px;
-      margin-bottom: 12px;
-    }
-
-    .firma-linea-container {
-      position: relative;
-      width: 100%;
-      height: 80px;
-    }
-
-    .linea-firma {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      border-bottom: 1px solid black;
-    }
-
-    .firma-img {
-      position: absolute;
-
-      left: 50%;
-      bottom: 8px;
-
-      transform: translateX(-50%);
-
-      width: 200px !important;
-      height: 60px !important;
-
-      object-fit: contain;
-
-      z-index: 10;
-    }
-  </style>
-</head>
-
 <body>
 
   <div class="header">
@@ -242,47 +81,47 @@
 
   </div>
 
+  <div class="descripcionTabla">
+    <strong><u>Indicar en el casillero correspondiente : SI, NO o N/A según proceda</u></strong>
+
   <!-- TABLA -->
 
   <table>
-
     <tr>
-      <th>Concepto</th>
-      <th class="center">Resultado</th>
-    </tr>
-
-    <tr>
-      <td>1) IDENTIFICACIÓN</td>
+      <td><b>1) IDENTIFICACIÓN: </b>El trabajador está correctamente identificado.<br></td>
       <td class="center">{{identificacion}}</td>
     </tr>
 
     <tr>
-      <td>2) ORDEN Y LIMPIEZA</td>
+      <td><b>2) ORDEN Y LIMPIEZA: </b>La limpieza del área de trabajo es adecuada (no hay 
+      derrames, material combustible acumulado, objetos en el suelo con riesgo de tropiezo, ...)</td>
       <td class="center">{{orden}}</td>
     </tr>
 
     <tr>
-      <td>3) EQUIPOS Y HERRAMIENTAS</td>
+      <td><b>3) EQUIPOS Y HERRAMIENTAS: </b>Se utilizan los equipos de trabajo y las herramientas
+        correctamente, estan en buen estado y son adecuados para el trabajo que se realiza.
+      </td>
       <td class="center">{{equipos}}</td>
     </tr>
 
     <tr>
-      <td>4) EPIs</td>
+      <td><b>4) EPIs: </b></td>
       <td class="center">{{epis}}</td>
     </tr>
 
     <tr>
-      <td>5) PROCEDIMIENTOS</td>
+      <td><b>5) PROCEDIMIENTOS: </b></td>
       <td class="center">{{procedimientos}}</td>
     </tr>
 
     <tr>
-      <td>6) COORDINACIÓN</td>
+      <td><b>6) COORDINACIÓN: </b></td>
       <td class="center">{{coordinacion}}</td>
     </tr>
 
     <tr>
-      <td>7) ASPECTOS AMBIENTALES</td>
+      <td><b>7) ASPECTOS AMBIENTALES: </b></td>
       <td class="center">{{ambientales}}</td>
     </tr>
 
