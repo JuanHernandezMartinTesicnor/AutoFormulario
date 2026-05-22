@@ -67,17 +67,57 @@
 
     </table>
 
-    <div class="field">
-      Observador: {{observador}}
-    </div>
+    <table class="info-table">
 
-    <div class="field">
-      Contrata: {{contrata}}
-    </div>
+      <!-- OBSERVADOR -->
 
-    <div class="field">
-      Descripción: {{descripcion}}
-    </div>
+      <tr>
+
+        <td class="label-cell">
+          Nombre del observador (y firma):
+        </td>
+
+        <td class="value-cell">
+          &nbsp;&nbsp;{{observador}}
+        </td>
+
+        <td class="signature-cell">
+          <img src="{{firmaObservador}}" class="firma-img-tabla">
+        </td>
+
+      </tr>
+
+      <!-- CONTRATA -->
+
+      <tr>
+
+        <td class="label-cell">
+          Nombre de la contrata observada:
+        </td>
+
+        <td class="value-cell">
+          &nbsp;&nbsp;{{contrata}}
+        </td>
+
+        <td class="signature-cell"></td>
+
+      </tr>
+
+      <!-- DESCRIPCION -->
+
+      <tr>
+
+        <td class="label-cell">
+          Descripción del trabajo observado:
+        </td>
+
+        <td colspan="2" class="descripcion-cell">
+          &nbsp;&nbsp;{{descripcion}}
+        </td>
+
+      </tr>
+
+    </table>
 
   </div>
 
@@ -123,7 +163,7 @@
       </tr>
 
       <tr>
-        <td><b>7) ASPECTOS AMBIENTALES: </b>Los residuos están separados y en su lugar, no hay derrames, 
+        <td><b>7) ASPECTOS AMBIENTALES: </b>Los residuos están separados y en su lugar, no hay derrames,
           no se generan ruidos que afecten al exterior de la planta, …</td>
         <td class="center" style="padding: 13px;">{{ambientales}}</td>
       </tr>
@@ -142,44 +182,11 @@
 
     </div>
 
-    <!-- FIRMAS -->
-
-    <div class="firmas">
-
-      <!-- OBSERVADOR -->
-
-      <div class="firma-box">
-
-        <div class="firma-label">
-          Firma del observador:
-        </div>
-
-        <div class="firma-linea-container">
-
-          <img src="{{firmaObservador}}" class="firma-img">
-
-          <div class="linea-firma"></div>
-
-        </div>
-
-      </div>
-
-      <!-- RECEPTOR -->
-
-      <div class="firma-box">
-
-        <div class="firma-label">
-          Firma del receptor:
-        </div>
-
-        <div class="firma-linea-container">
-
-          <div class="linea-firma"></div>
-
-        </div>
-
-      </div>
-
+    <div>
+      <br><br>NOTA: ∙ Este registro debidamente cumplimentado se archivará en el dpto. emisor. <br>
+      ∙ Si se detectase una situación clasificada con REQUERIMIENTO: se cumplimentará un registro de
+      “acción correctora del contratista ante requerimiento”, se anexará a este registro y se enviarán copias
+      a Tesicnor.
     </div>
 
 </body>

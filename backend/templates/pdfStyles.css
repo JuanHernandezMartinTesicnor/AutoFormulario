@@ -94,9 +94,9 @@ table {
     margin-top: 15px;
 }
 
-table,
-td,
-th {
+table:not(.info-table),
+table:not(.info-table) td,
+table:not(.info-table) th {
     border: 1px solid black;
 }
 
@@ -157,4 +157,107 @@ td {
     object-fit: contain;
 
     z-index: 10;
+}
+
+/* =========================
+   TABLA INFORMACION
+========================= */
+
+.info-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin-top: 4px;
+    margin-bottom: 8px;
+}
+
+.info-table td {
+    padding: 1px 4px;
+
+    vertical-align: middle;
+
+    line-height: 1.1;
+}
+
+/* ETIQUETAS */
+.label-cell {
+    width: 28%;
+
+    font-weight: bold;
+
+    font-size: 11px;
+
+    white-space: nowrap;
+
+    padding-right: 2px;
+}
+
+/* VALORES */
+.value-cell {
+    width: 37%;
+
+    height: 24px;
+
+    font-size: 11px;
+
+    border-bottom: 1px solid black;
+
+    vertical-align: bottom;
+
+    padding-left: 1px;
+    padding-right: 2px;
+    padding-bottom: 0px;
+}
+
+/* FIRMAS */
+.signature-cell {
+    width: 30%;
+
+    height: 24px;
+
+    position: relative;
+
+    border-bottom: 1px solid black;
+
+    vertical-align: bottom;
+
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+/* IMAGEN FIRMA */
+.firma-img-tabla {
+    position: absolute;
+
+    right: 10px;
+    bottom: 2px;
+
+    max-width: 140px;
+    max-height: 33px;
+
+    object-fit: contain;
+}
+
+/* LINEA FIRMA VACIA */
+.firma-vacia {
+    width: 110px;
+
+    margin: auto;
+
+    border-bottom: 1px solid black;
+}
+
+/* DESCRIPCION */
+.descripcion-cell {
+    height: 24px;
+
+    font-size: 11px;
+
+    border-bottom: 1px solid black;
+
+    vertical-align: bottom;
+
+    padding-left: 2px;
+    padding-bottom: 0px;
 }
