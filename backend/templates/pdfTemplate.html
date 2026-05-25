@@ -172,15 +172,69 @@
 
     <!-- OBSERVACIONES -->
 
-    <div class="section" style="margin-top: 20px;">
 
-      <strong>Observaciones:</strong>
+    <div class="obs-title">
+      8) OBSERVACIONES:
+    </div>
 
-      <div style="margin-top: 5px;">
-        {{observaciones}}
+    <div class="obs-description">
+      DESCRIPCIÓN (todo NO indicado en un casillero irá acompañado de una descripción)
+    </div>
+
+    <div class="obs-warning-row">
+
+      <div class="obs-warning-text">
+        A rellenar solamente en caso de alguna anomalía.
+      </div>
+
+      <div class="obs-checks">
+
+        <div class="obs-check-item">
+          AVISO
+          <span class="check-box">{{aviso}}</span>
+        </div>
+
+        <div class="obs-check-item">
+          REQUERIMIENTO*
+          <span class="check-box">{{requerimiento}}</span>
+        </div>
+
       </div>
 
     </div>
+
+    <div class="acciones-intro">
+      En el caso de indicar alguna anomalía, se tomarán acciones correctoras,
+      indicándose a continuación:
+    </div>
+
+    <!-- ACCIONES CORRECTORAS -->
+
+    <div class="acciones-title">
+      ACCIONES CORRECTORAS
+    </div>
+
+    <table class="acciones-table">
+
+      <tr>
+
+        <th class="accion-col">
+          ACCION
+        </th>
+
+        <th class="responsable-col">
+          RESPONSABLE
+        </th>
+
+        <th class="control-col">
+          CONTROL DE REALIZACION
+        </th>
+
+      </tr>
+
+      {{accionesRows}}
+
+    </table>
 
     <div>
       <br><br>NOTA: ∙ Este registro debidamente cumplimentado se archivará en el dpto. emisor. <br>

@@ -89,6 +89,12 @@ async function generatePDF(data) {
     data.incidencias === "SIN INCIDENCIAS" ? "X" : ""
   );
 
+  html = html.replace(/{{aviso}}/g,
+    data.tipoAnomalia === "AVISO" ? "X" : "");
+
+  html = html.replace(/{{requerimiento}}/g,
+    data.tipoAnomalia === "REQUERIMIENTO" ? "X" : "");
+
   /* =========================
      FIRMA OBSERVADOR
   ========================= */
@@ -138,6 +144,45 @@ async function generatePDF(data) {
     html,
     data.checklist || {}
   );
+
+  html = html.replace(
+    /{{accionesRows}}/g,
+    generateAccionesRows(data.accionesCorrectoras)
+  );
+
+  function generateAccionesRows(acciones) {
+
+    if (!acciones || acciones.length === 0) {
+
+      return `
+      <tr>
+        <td class="acciones-content"></td>
+        <td></td>
+        <td></td>
+      </tr>
+    `;
+    }
+
+    return acciones.map(a => `
+  
+    <tr>
+
+      <td class="acciones-content">
+        ${a.accion || ""}
+      </td>
+
+      <td>
+        ${a.responsable || ""}
+      </td>
+
+      <td>
+        ${a.control || ""}
+      </td>
+
+    </tr>
+
+  `).join("");
+  }
 
   /* =========================
      VIEWPORT
