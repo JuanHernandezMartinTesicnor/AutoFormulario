@@ -126,46 +126,109 @@
 
     <!-- TABLA -->
 
-    <table>
-      <tr>
-        <td><b>1) IDENTIFICACIÓN: </b>El trabajador está correctamente identificado.<br></td>
-        <td class="center" style="padding: 13px;">{{identificacion}}</td>
-      </tr>
+    <table class="checklist-table">
 
       <tr>
-        <td><b>2) ORDEN Y LIMPIEZA: </b>La limpieza del área de trabajo es adecuada (no hay
-          derrames, material combustible acumulado, objetos en el suelo con riesgo de tropiezo, ...)</td>
-        <td class="center" style="padding: 13px;">{{orden}}</td>
-      </tr>
 
-      <tr>
-        <td><b>3) EQUIPOS Y HERRAMIENTAS: </b>Se utilizan los equipos de trabajo y las herramientas
-          correctamente, estan en buen estado y son adecuados para el trabajo que se realiza.
+        <td class="checklist-text">
+          <b>1) IDENTIFICACIÓN:</b>
+          El trabajador está correctamente identificado.
         </td>
-        <td class="center" style="padding: 13px;">{{equipos}}</td>
+
+        <td class="checklist-result">
+          <span class="check-box">{{identificacion}}</span>
+        </td>
+
       </tr>
 
       <tr>
-        <td><b>4) EPIs: </b>Se utilizan los EPI,s correctamente, están en buen estado y son los adecuados.</td>
-        <td class="center" style="padding: 13px;">{{epis}}</td>
+
+        <td class="checklist-text">
+          <b>2) ORDEN Y LIMPIEZA:</b>
+          La limpieza del área de trabajo es adecuada
+          (no hay derrames, material combustible acumulado,
+          objetos en el suelo con riesgo de tropiezo, ...)
+        </td>
+
+        <td class="checklist-result">
+          <span class="check-box">{{orden}}</span>
+        </td>
+
       </tr>
 
       <tr>
-        <td><b>5) PROCEDIMIENTOS DE TRABAJO: </b>Los procedimientos de trabajo seguidos están de acuerdo a
-          las normas (bloqueo, corte y soldadura, trabajo en alturas, apilamiento, ...).</td>
-        <td class="center" style="padding: 13px;">{{procedimientos}}</td>
+
+        <td class="checklist-text">
+          <b>3) EQUIPOS Y HERRAMIENTAS:</b>
+          Se utilizan los equipos de trabajo y las herramientas
+          correctamente, están en buen estado y son adecuados
+          para el trabajo que se realiza.
+        </td>
+
+        <td class="checklist-result">
+          <span class="check-box">{{equipos}}</span>
+        </td>
+
       </tr>
 
       <tr>
-        <td><b>6) COORDINACIÓN DE TRABAJOS: </b>El trabajo es seguro para los trabajadores de Graftech
-          y de otras contratas, están establecidos medios adecuados de coordinación.</td>
-        <td class="center" style="padding: 13px;">{{coordinacion}}</td>
+
+        <td class="checklist-text">
+          <b>4) EPIs:</b>
+          Se utilizan los EPI,s correctamente,
+          están en buen estado y son los adecuados.
+        </td>
+
+        <td class="checklist-result">
+          <span class="check-box">{{epis}}</span>
+        </td>
+
       </tr>
 
       <tr>
-        <td><b>7) ASPECTOS AMBIENTALES: </b>Los residuos están separados y en su lugar, no hay derrames,
-          no se generan ruidos que afecten al exterior de la planta, …</td>
-        <td class="center" style="padding: 13px;">{{ambientales}}</td>
+
+        <td class="checklist-text">
+          <b>5) PROCEDIMIENTOS DE TRABAJO:</b>
+          Los procedimientos de trabajo seguidos están
+          de acuerdo a las normas
+          (bloqueo, corte y soldadura, trabajo en alturas,
+          apilamiento, ...).
+        </td>
+
+        <td class="checklist-result">
+          <span class="check-box">{{procedimientos}}</span>
+        </td>
+
+      </tr>
+
+      <tr>
+
+        <td class="checklist-text">
+          <b>6) COORDINACIÓN DE TRABAJOS:</b>
+          El trabajo es seguro para los trabajadores de Graftech
+          y de otras contratas, están establecidos medios
+          adecuados de coordinación.
+        </td>
+
+        <td class="checklist-result">
+          <span class="check-box">{{coordinacion}}</span>
+        </td>
+
+      </tr>
+
+      <tr>
+
+        <td class="checklist-text">
+          <b>7) ASPECTOS AMBIENTALES:</b>
+          Los residuos están separados y en su lugar,
+          no hay derrames, no se generan ruidos
+          que afecten al exterior de la planta, …
+        </td>
+
+        <td class="checklist-result">
+          <span class="check-box">{{ambientales}}</span>
+        </td>
+
       </tr>
 
     </table>

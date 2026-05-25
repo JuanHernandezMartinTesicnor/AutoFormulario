@@ -7,7 +7,6 @@ body {
     font-family: Arial, sans-serif;
     font-size: 12px;
     color: black;
-
     margin-top: 35px;
     margin-left: 35px;
     margin-right: 35px;
@@ -17,7 +16,6 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     margin-bottom: 20px;
 }
 
@@ -145,17 +143,12 @@ td {
 
 .firma-img {
     position: absolute;
-
     left: 50%;
     bottom: 8px;
-
     transform: translateX(-50%);
-
     width: 200px !important;
     height: 60px !important;
-
     object-fit: contain;
-
     z-index: 10;
 }
 
@@ -165,46 +158,33 @@ td {
 
 .info-table {
     width: 100%;
-
     border-collapse: collapse;
-
     margin-top: 4px;
     margin-bottom: 8px;
 }
 
 .info-table td {
     padding: 1px 4px;
-
     vertical-align: middle;
-
     line-height: 1.1;
 }
 
 /* ETIQUETAS */
 .label-cell {
     width: 28%;
-
     font-weight: bold;
-
     font-size: 11px;
-
     white-space: nowrap;
-
     padding-right: 2px;
 }
 
 /* VALORES */
 .value-cell {
     width: 37%;
-
     height: 24px;
-
     font-size: 11px;
-
     border-bottom: 1px solid black;
-
     vertical-align: bottom;
-
     padding-left: 1px;
     padding-right: 2px;
     padding-bottom: 0px;
@@ -213,15 +193,10 @@ td {
 /* FIRMAS */
 .signature-cell {
     width: 30%;
-
     height: 24px;
-
     position: relative;
-
     border-bottom: 1px solid black;
-
     vertical-align: bottom;
-
     padding-left: 0px;
     padding-right: 0px;
 }
@@ -229,35 +204,26 @@ td {
 /* IMAGEN FIRMA */
 .firma-img-tabla {
     position: absolute;
-
     right: 10px;
     bottom: 2px;
-
     max-width: 140px;
     max-height: 33px;
-
     object-fit: contain;
 }
 
 /* LINEA FIRMA VACIA */
 .firma-vacia {
     width: 110px;
-
     margin: auto;
-
     border-bottom: 1px solid black;
 }
 
 /* DESCRIPCION */
 .descripcion-cell {
     height: 24px;
-
     font-size: 11px;
-
     border-bottom: 1px solid black;
-
     vertical-align: bottom;
-
     padding-left: 2px;
     padding-bottom: 0px;
 }
@@ -269,151 +235,192 @@ td {
 
 .obs-title {
     margin-top: 20px;
-
     font-weight: bold;
-
     font-size: 14px;
 }
 
 .obs-description {
     margin-top: 6px;
-
     font-weight: bold;
-
     text-decoration: underline;
-
     font-size: 12px;
 }
 
 .obs-warning-row {
     margin-top: 12px;
-
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
 }
 
 .obs-warning-text {
     font-weight: bold;
-
     font-size: 12px;
 }
 
 .obs-checks {
     display: flex;
-
     gap: 40px;
-
     align-items: center;
 }
 
 .obs-check-item {
     font-weight: bold;
-
     font-size: 18px;
-
     display: flex;
-
     align-items: center;
-
     gap: 10px;
 }
 
 .check-box {
     width: 18px;
     height: 18px;
-
     border: 2px solid black;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+}
 
+/* =========================
+   CHECKLIST PRINCIPAL
+========================= */
+
+.checklist-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin-top: 10px;
+}
+
+/* ELIMINAR TODOS LOS BORDES */
+
+.checklist-table,
+.checklist-table tr,
+.checklist-table td {
+    border: none !important;
+}
+
+/* TEXTO IZQUIERDA */
+
+.checklist-text {
+    font-size: 11px;
+
+    line-height: 1.25;
+
+    padding-right: 10px;
+
+    padding-top: 3px;
+    padding-bottom: 3px;
+
+    vertical-align: top;
+}
+
+/* CELDA DERECHA */
+
+.checklist-result {
+    width: 26px;
+
+    text-align: center;
+
+    vertical-align: top;
+
+    padding-top: 3px;
+}
+
+/* CASILLA */
+
+.check-box {
     display: inline-flex;
 
     align-items: center;
     justify-content: center;
 
-    font-size: 14px;
+    width: 18px;
+    height: 18px;
+
+    border: 1px solid black;
+
+    font-size: 10px;
 
     font-weight: bold;
 
     line-height: 1;
 }
 
-.acciones-intro {
-    margin-top: 18px;
-
-    margin-bottom: 14px;
-
-    font-size: 12px;
-}
-
 /* =========================
    ACCIONES CORRECTORAS
 ========================= */
-
 .acciones-title {
     font-weight: bold;
-
     text-decoration: underline;
-
     font-size: 14px;
-
     margin-bottom: 8px;
 }
 
 .acciones-table {
     width: 100%;
-
     border-collapse: collapse;
-
     table-layout: fixed;
 }
 
 .acciones-table th,
 .acciones-table td {
     border: 1px solid black;
-
     padding: 6px;
-
     vertical-align: top;
 }
 
 .accion-col {
     width: 62%;
-
     text-align: center;
 }
 
 .responsable-col {
     width: 18%;
-
     text-align: center;
 }
 
 .control-col {
     width: 20%;
-
     text-align: center;
 }
 
 .accion-item {
   border: 1px solid #ccc;
-
   padding: 15px;
-
   margin-top: 15px;
-
   border-radius: 8px;
-
   background: #fafafa;
 }
 
 .delete-btn {
   background: #c0392b;
-
   margin-top: 10px;
 }
 
 .acciones-table td {
     height: auto;
+}
+
+/* =========================
+   CHECKLIST
+========================= */
+
+/* Quitar bordes de la columna izquierda */
+
+.checklist-text {
+    border: none !important;
+    padding-right: 10px;
+}
+
+/* Mantener casilla derecha */
+
+.checklist-result {
+    width: 45px;
+    text-align: center;
+    font-weight: bold;
 }
