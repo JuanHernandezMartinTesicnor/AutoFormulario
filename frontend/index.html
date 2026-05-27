@@ -2,146 +2,59 @@
 <html lang="es">
 
 <head>
+
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulario Seguridad</title>
+
+  <title>Formularios</title>
+
   <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
   <div class="container">
-    <h2><br>Control de Actuación</h2>
 
-    <!-- Datos básicos -->
-    <div class="section">
-      <label>Fecha</label>
-      <input id="fecha" type="date">
+    <h1 class="main-title">
+      Formularios disponibles
+    </h1>
 
-      <label>Tipo de trabajo</label>
-      <select id="tipoTrabajo">
-        <option value="INGENIERIA">Ingeniería</option>
-        <option value="MANTENIMIENTO">Mantenimiento</option>
-      </select>
+    <div class="forms-grid">
 
-      <label>Incidencias</label>
-      <select id="incidencias">
-        <option value="CON INCIDENCIAS">Con incidencias</option>
-        <option value="SIN INCIDENCIAS">Sin incidencias</option>
-      </select>
+      <!-- FORMULARIO ACTUAL -->
 
-      <label>Observador</label>
-      <select id="observador">
-        <option value="Maria Rodríguez">Maria Rodríguez</option>
-        <option value="antonio">Antonio</option>
-      </select>
+      <a class="form-card" href="formularios/contratistas.html">
 
-      <label>Contrata</label>
-      <input id="contrata" type="text">
+        <h2>
+          Control actuación contratistas
+        </h2>
 
-      <label>Descripción</label>
-      <textarea id="descripcion"></textarea>
+        <p>
+          Formulario de control de actuación del contratista.
+        </p>
+
+      </a>
+
+      <!-- FUTURO FORMULARIO -->
+
+      <a class="form-card" href="#">
+
+        <h2>
+          Otro formulario
+        </h2>
+
+        <p>
+          Próximamente...
+        </p>
+
+      </a>
+
     </div>
-
-    <!-- Checklist -->
-    <div class="section">
-      <h3>Checklist</h3>
-
-      <div class="check-item">
-        <span>Identificación</span>
-        <select id="identificacion">
-          <option>SI</option>
-          <option>NO</option>
-          <option>NA</option>
-        </select>
-      </div>
-
-      <div class="check-item">
-        <span>Orden y limpieza</span>
-        <select id="orden">
-          <option>SI</option>
-          <option>NO</option>
-          <option>NA</option>
-        </select>
-      </div>
-
-      <div class="check-item">
-        <span>Equipos</span>
-        <select id="equipos">
-          <option>SI</option>
-          <option>NO</option>
-          <option>NA</option>
-        </select>
-      </div>
-
-      <div class="check-item">
-        <span>EPIs</span>
-        <select id="epis">
-          <option>SI</option>
-          <option>NO</option>
-          <option>NA</option>
-        </select>
-      </div>
-
-      <div class="check-item">
-        <span>Procedimientos</span>
-        <select id="procedimientos">
-          <option>SI</option>
-          <option>NO</option>
-          <option>NA</option>
-        </select>
-      </div>
-
-      <div class="check-item">
-        <span>Coordinación</span>
-        <select id="coordinacion">
-          <option>SI</option>
-          <option>NO</option>
-          <option>NA</option>
-        </select>
-      </div>
-
-      <div class="check-item">
-        <span>Ambientales</span>
-        <select id="ambientales">
-          <option>SI</option>
-          <option>NO</option>
-          <option>NA</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Observaciones -->
-    <div class="section">
-      <h3>Acciones correctoras</h3>
-
-      <div id="accionesContainer"></div>
-
-      <button type="button" onclick="agregarAccion()">
-        Añadir observación
-      </button>
-      <label>Tipo de anomalía</label>
-
-      <select id="tipoAnomalia">
-
-        <option value="">Ninguna</option>
-
-        <option value="AVISO">
-          AVISO
-        </option>
-
-        <option value="REQUERIMIENTO">
-          REQUERIMIENTO
-        </option>
-
-      </select>
-    </div>
-
-    <button onclick="enviar()">Generar PDF</button>
 
   </div>
 
-  <script src="app.js"></script>
 </body>
 
 </html>
