@@ -13,7 +13,7 @@ function getImageBase64(relativePath) {
 const isLinux = process.platform === "linux";
 
 function getSignatureBase64(filename) {
-  const filePath = path.join(__dirname, "../../frontend/signatures", filename);
+  const filePath = path.join(__dirname, "../../../assets/firmas", filename);
 
   const image = fs.readFileSync(filePath);
 
@@ -44,12 +44,12 @@ async function generatePDF(data) {
   ========================= */
 
   let html = fs.readFileSync(
-    path.join(__dirname, "../templates/pdfTemplate.html"),
+    path.join(__dirname, "pdfTemplate.html"),
     "utf8"
   );
 
   const css = fs.readFileSync(
-    path.join(__dirname, "../templates/pdfStyles.css"),
+    path.join(__dirname, "pdfStyles.css"),
     "utf8"
   );
 
@@ -119,11 +119,11 @@ async function generatePDF(data) {
   ========================= */
 
   const tesicnorLogo = getImageBase64(
-    "frontend/logos/tesicnor.png"
+    "../assets/logos/tesicnor.png"
   );
 
   const graftechLogo = getImageBase64(
-    "frontend/logos/grafTech.png"
+    "../assets/logos/graftech.png"
   );
 
   html = html.replace(

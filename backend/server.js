@@ -2,7 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 
-const formRoutes = require("./routes/formRoutes");
+const contratistaRoutes = require("./routes/contratistaRoutes");
+const coordinadorRoutes = require("./routes/coordinadorRoutes");
 
 const app = express();
 
@@ -13,16 +14,18 @@ app.use(express.json());
    API
 ========================= */
 
-app.use("/api", formRoutes);
+app.use("/api/contratista", contratistaRoutes);
+
+app.use("/api/coordinador", coordinadorRoutes);
 
 /* =========================
    FRONTEND
 ========================= */
 
-// Servir archivos frontend
+// Archivos estáticos
 app.use(express.static(path.join(__dirname, "../frontend")));
 
-// Ruta principal
+// Página principal
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });

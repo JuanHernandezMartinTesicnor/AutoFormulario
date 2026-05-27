@@ -1,76 +1,89 @@
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f2f2f2;
+
+    margin: 0;
+
+    font-family: Arial, sans-serif;
+
+    background: #f4f6f8;
+
+    color: #222;
 }
 
-.container {
-  max-width: 600px;
-  margin: auto;
-  padding: 20px;
-  background: white;
-  min-height: 100vh;
+.home-container {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 40px;
 }
 
-h2 {
-  text-align: center;
+.main-title {
+
+    font-size: 42px;
+
+    margin-bottom: 50px;
+
+    text-align: center;
 }
 
-.section {
-  margin-bottom: 20px;
+.cards-container {
+
+    display: flex;
+
+    gap: 30px;
+
+    flex-wrap: wrap;
+
+    justify-content: center;
 }
 
-label {
-  display: block;
-  margin-top: 10px;
-  font-weight: bold;
+.form-card {
+
+    width: 320px;
+
+    background: white;
+
+    border-radius: 14px;
+
+    padding: 30px;
+
+    text-decoration: none;
+
+    color: inherit;
+
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+
+    transition: 0.2s;
 }
 
-input, textarea, select {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  box-sizing: border-box;
-  font-size: 16px;
+.form-card:hover {
+
+    transform: translateY(-5px);
+
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
 }
 
-textarea {
-  resize: vertical;
-  min-height: 80px;
+.card-title {
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+    margin-bottom: 15px;
 }
 
-.check-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-}
+.card-description {
 
-.check-item span {
-  flex: 1;
-}
+    font-size: 15px;
 
-.check-item select {
-  width: 100px;
-}
+    line-height: 1.5;
 
-button {
-  width: 100%;
-  padding: 15px;
-  font-size: 18px;
-  background: #007bff;
-  color: white;
-  border: none;
-  margin-top: 20px;
-}
-
-button:active {
-  background: #0056b3;
-}
-
-.linea {
-  border-bottom: 1px solid black;
-  width: 400px;
-  margin-left: 200px;
-  margin-top: -10px;
+    color: #555;
 }
