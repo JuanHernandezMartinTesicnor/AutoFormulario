@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe de Coordinación</title>
+    <link rel="stylesheet" href="/formularios/coordinador/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Informe de Coordinación</h2>
+
+        <div class="section">
+            <label>Fecha</label>
+            <input type="date" id="fecha">
+
+            <label>Obra</label>
+            <input type="text" id="obra">
+
+            <label>Cliente</label>
+            <input type="text" id="cliente">
+
+            <label>Alcance</label>
+            <textarea id="alcance"></textarea>
+        </div>
+
+        <h3>Personal presente</h3>
+        <div id="personalContainer"></div>
+
+        <button type="button" onclick="addPersonal()">
+            Añadir trabajador
+        </button>
+
+        <h3>Maquinaria</h3>
+        <div id="maquinariaContainer"></div>
+
+        <button type="button" onclick="addMaquinaria()">
+            Añadir maquinaria
+        </button>
+
+        <h3>Empresas / Subcontratas</h3>
+        <div id="empresaContainer"></div>
+
+        <button type="button" onclick="addEmpresa()">
+            Añadir empresa
+        </button>
+
+        <h3>Inspecciones</h3>
+        <div id="inspeccionesContainer"></div>
+
+        <button type="button" onclick="addInspeccion()">
+            Añadir inspección
+        </button>
+
+        <h3>Firmas</h3>
+
+        <label>Realizado por</label>
+        <select id="realizadoPor">
+            <option>Ana Isabel Pérez Martínez</option>
+            <option>Juan Hernández</option>
+        </select>
+
+        <label>Revisado por</label>
+        <select id="revisadoPor">
+            <option>Jesús Domínguez Segura</option>
+        </select>
+
+        <button class="generate-btn" onclick="enviar()">
+            Generar PDF
+        </button>
+
+    </div>
+
+    <script src="/formularios/coordinador/app.js"></script>
+
+</body>

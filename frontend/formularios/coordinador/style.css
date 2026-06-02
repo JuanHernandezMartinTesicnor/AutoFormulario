@@ -1,0 +1,139 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    min-height: 100vh;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h3 {
+    margin-top: 35px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.section {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* =========================
+   BLOQUES DINÁMICOS
+========================= */
+
+.dynamic-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fafafa;
+}
+
+.dynamic-item input,
+.dynamic-item textarea {
+    margin-bottom: 10px;
+}
+
+/* =========================
+   INSPECCIONES
+========================= */
+
+.inspeccion-item {
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #fcfcfc;
+}
+
+.inspeccion-item textarea {
+    min-height: 150px;
+}
+
+.inspeccion-item input[type="file"] {
+    margin-top: 10px;
+}
+
+/* =========================
+   BOTONES
+========================= */
+
+button {
+    padding: 12px 20px;
+    border: none;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+.delete-btn {
+    background: #c0392b;
+}
+
+.delete-btn:hover {
+    background: #962d22;
+}
+
+/* =========================
+   GENERAR PDF
+========================= */
+
+.generate-btn {
+    width: 100%;
+    margin-top: 40px;
+    font-size: 18px;
+    padding: 18px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+}
