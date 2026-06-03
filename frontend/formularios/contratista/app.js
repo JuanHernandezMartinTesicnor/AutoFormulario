@@ -1,6 +1,3 @@
-
-let accionesCorrectoras = [];
-
 function agregarAccion(data = {}) {
 
   const container = document.getElementById("accionesContainer");
@@ -40,6 +37,24 @@ function agregarAccion(data = {}) {
 
 async function enviar() {
 
+  const accionesCorrectoras = [];
+
+  document.querySelectorAll(".accion-item").forEach(item => {
+
+    accionesCorrectoras.push({
+
+      accion:
+        item.querySelector(".accion").value,
+
+      responsable:
+        item.querySelector(".responsable").value,
+
+      control:
+        item.querySelector(".control").value
+    });
+
+  });
+
   const data = {
 
     fecha: document.getElementById("fecha").value,
@@ -48,20 +63,28 @@ async function enviar() {
     incidencias: document.getElementById("incidencias").value,
     contrata: document.getElementById("contrata").value,
     descripcion: document.getElementById("descripcion").value,
+    tipoAnomalia: document.getElementById("tipoAnomalia").value,
+
     checklist: {
 
       identificacion:
         document.getElementById("identificacion").value,
+
       orden:
         document.getElementById("orden").value,
+
       equipos:
         document.getElementById("equipos").value,
+
       epis:
         document.getElementById("epis").value,
+
       procedimientos:
         document.getElementById("procedimientos").value,
+
       coordinacion:
         document.getElementById("coordinacion").value,
+
       ambientales:
         document.getElementById("ambientales").value
     },
@@ -89,13 +112,17 @@ async function enviar() {
     const blob = await res.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
+
     a.href = url;
     a.download = "formulario.pdf";
     a.click();
+
     window.URL.revokeObjectURL(url);
 
   } catch (error) {
+
     console.error(error);
+
     alert("Error generando PDF");
   }
 }
