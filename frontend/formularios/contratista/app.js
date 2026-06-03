@@ -63,6 +63,7 @@ async function enviar() {
     incidencias: document.getElementById("incidencias").value,
     contrata: document.getElementById("contrata").value,
     descripcion: document.getElementById("descripcion").value,
+    observaciones: document.getElementById("observaciones").value,
     tipoAnomalia: document.getElementById("tipoAnomalia").value,
 
     checklist: {

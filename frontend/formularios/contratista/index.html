@@ -109,7 +109,33 @@
           <option>NA</option>
         </select>
       </div>
+
+      <div class="section">
+
+        <h3>8) Observaciones</h3>
+        <textarea id="observaciones" rows="4" placeholder="Introducir observaciones..."></textarea>
+
+        <label>Tipo de anomalía</label>
+
+        <select id="tipoAnomalia">
+
+          <option value="">Ninguna</option>
+
+          <option value="AVISO">
+            AVISO
+          </option>
+
+          <option value="REQUERIMIENTO">
+            REQUERIMIENTO
+          </option>
+
+        </select>
+
+      </div>
+
     </div>
+
+
 
     <!-- Observaciones -->
     <div class="section">
@@ -118,23 +144,9 @@
       <div id="accionesContainer"></div>
 
       <button type="button" onclick="agregarAccion()">
-        Añadir observación
+        Añadir acción correctora
       </button>
-      <label>Tipo de anomalía</label>
 
-      <select id="tipoAnomalia">
-
-        <option value="">Ninguna</option>
-
-        <option value="AVISO">
-          AVISO
-        </option>
-
-        <option value="REQUERIMIENTO">
-          REQUERIMIENTO
-        </option>
-
-      </select>
     </div>
 
     <button onclick="enviar()">Generar PDF</button>
