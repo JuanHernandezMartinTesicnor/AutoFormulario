@@ -1,4 +1,6 @@
 const puppeteer = require("puppeteer");
+const fs = require("fs");
+const path = require("path");
 
 const isLinux = process.platform === "linux";
 
@@ -22,77 +24,17 @@ async function generatePDF(data) {
 
     const page = await browser.newPage();
 
-    const html = `
-    <!DOCTYPE html>
-    <html>
+    let html = fs.readFileSync(
+        path.join(__dirname, "pdfTemplate.html"),
+        "utf8"
+    );
 
-    <head>
-
-        <style>
-
-            body {
-                font-family: Arial, sans-serif;
-                margin: 40px;
-                font-size: 12px;
-            }
-
-            h1 {
-                text-align: center;
-                margin-bottom: 30px;
-            }
-
-            .field {
-                margin-bottom: 10px;
-            }
-
-            .label {
-                font-weight: bold;
-            }
-
-        </style>
-
-    </head>
-
-    <body>
-
-        <h1>INFORME DE COORDINACIÓN</h1>
-
-        <div class="field">
-            <span class="label">Fecha:</span>
-            ${data.fecha || ""}
-        </div>
-
-        <div class="field">
-            <span class="label">Obra:</span>
-            ${data.obra || ""}
-        </div>
-
-        <div class="field">
-            <span class="label">Cliente:</span>
-            ${data.cliente || ""}
-        </div>
-
-        <div class="field">
-            <span class="label">Alcance:</span>
-            ${data.alcance || ""}
-        </div>
-
-        <hr>
-
-        <div class="field">
-            <span class="label">Realizado por:</span>
-            ${data.realizadoPor || ""}
-        </div>
-
-        <div class="field">
-            <span class="label">Revisado por:</span>
-            ${data.revisadoPor || ""}
-        </div>
-
-    </body>
-
-    </html>
-    `;
+    html = html.replace(/{{fecha}}/g, data.fecha || "");
+    html = html.replace(/{{obra}}/g, data.obra || "");
+    html = html.replace(/{{cliente}}/g, data.cliente || "");
+    html = html.replace(/{{alcance}}/g, data.alcance || "");
+    html = html.replace(/{{realizadoPor}}/g, data.realizadoPor || "");
+    html = html.replace(/{{revisadoPor}}/g, data.revisadoPor || "");
 
     await page.setContent(
         html,

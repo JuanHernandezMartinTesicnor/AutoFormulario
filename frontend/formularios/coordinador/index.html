@@ -73,13 +73,16 @@
             <option>Jesús Domínguez Segura</option>
         </select>
 
-        <h3>Firma responsable de obra</h3>
+        <h3>Firma del responsable de obra</h3>
 
-        <canvas id="firmaCanvas" width="500" height="180"></canvas>
+        <canvas id="firmaCanvas" width="700" height="220">
+        </canvas>
 
-        <button type="button" onclick="limpiarFirma()">
-            Limpiar firma
-        </button>
+        <div class="firma-buttons">
+            <button type="button" onclick="limpiarFirma()">
+                Limpiar firma
+            </button>
+        </div>
 
         <button class="generate-btn" onclick="enviar()">
             Generar PDF
