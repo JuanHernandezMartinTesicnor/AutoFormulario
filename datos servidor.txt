@@ -2,3 +2,9 @@ Nombre: vps-4ba6a91e.vps.ovh.net (BIM2XRServer.tesicnor.com)
 Usuario: root
 Contraseña: deR6m6b4PM6Uu
 IP: 37.59.113.226
+
+
+lanzar desde repo
+    pm2 start backend/server.js --name autoformulario
+ver estado
+    pm2 list

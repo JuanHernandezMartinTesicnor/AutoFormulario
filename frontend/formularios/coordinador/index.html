@@ -56,6 +56,10 @@
             Añadir inspección
         </button>
 
+        <h3>Checklist de inspección</h3>
+
+        <div id="checklistContainer"></div>
+
         <h3>Firmas</h3>
 
         <label>Realizado por</label>
@@ -68,6 +72,14 @@
         <select id="revisadoPor">
             <option>Jesús Domínguez Segura</option>
         </select>
+
+        <h3>Firma responsable de obra</h3>
+
+        <canvas id="firmaCanvas" width="500" height="180"></canvas>
+
+        <button type="button" onclick="limpiarFirma()">
+            Limpiar firma
+        </button>
 
         <button class="generate-btn" onclick="enviar()">
             Generar PDF

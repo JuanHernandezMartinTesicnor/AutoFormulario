@@ -287,3 +287,136 @@ async function enviar() {
 
     a.click();
 }
+
+
+const checklist = {
+  controlBasico: [
+    "Presencia del Recurso Preventivo",
+    "Listado de trabajadores en las instalaciones",
+    "Existencia de Plan de Seguridad y Salud",
+    "Botiquín de primeros auxilios",
+    "Medios de lucha contra incendios",
+    "Personal formado para manejo de equipos",
+    "Cobertura de telefonía móvil",
+    "Orden y limpieza de la zona",
+    "Señalización y delimitación de trabajos",
+    "Uso correcto de EPIs"
+  ],
+
+  herramientas: [
+    "Herramientas manuales en buen estado",
+    "Máquinas y herramientas en buen estado"
+  ],
+
+  escaleras: [
+    "Escaleras de madera no pintadas",
+    "Peldaños en buen estado",
+    "Zapatas antideslizantes",
+    "Escalera fijada correctamente",
+    "Uso correcto de la escalera"
+  ],
+
+  electrico: [
+    "Marcado CE",
+    "Manual de uso",
+    "Declaración de conformidad",
+    "Certificado instalación BT"
+  ],
+
+  sistemaElectrico: [
+    "Distancias de seguridad",
+    "Cinco reglas de oro",
+    "Protección de zanjas y canaletas"
+  ],
+
+  izado: [
+    "Plan de izado",
+    "Certificados de equipos",
+    "Anemómetro operativo",
+    "Certificación de útiles",
+    "Reunión previa",
+    "Coordinación CAE",
+    "Zona de exclusión señalizada"
+  ],
+
+  logistica: [
+    "Elementos de izado certificados",
+    "Cadenas en buen estado",
+    "Puntos de amarre correctos",
+    "Comunicación entre operarios",
+    "Zona de carga señalizada",
+    "Inspecciones registradas",
+    "Carga correctamente distribuida",
+    "Uso de EPIs"
+  ]
+};
+
+
+
+function renderChecklist() {
+
+    const container =
+        document.getElementById("checklistContainer");
+
+    container.innerHTML = "";
+
+    Object.entries(checklist).forEach(([grupo, items]) => {
+
+        const section =
+            document.createElement("div");
+
+        section.className = "check-section";
+
+        section.innerHTML =
+            `<h4>${grupo}</h4>`;
+
+        items.forEach((texto, index) => {
+
+            section.innerHTML += `
+
+            <div class="check-row">
+
+                <span>${texto}</span>
+
+                <select
+                    id="${grupo}_${index}"
+                >
+                    <option value="SI">SI</option>
+                    <option value="NO">NO</option>
+                    <option value="NA">NA</option>
+                </select>
+
+            </div>
+            `;
+        });
+
+        container.appendChild(section);
+    });
+}
+
+
+function obtenerChecklist() {
+
+    const resultado = {};
+
+    Object.entries(checklist).forEach(([grupo, items]) => {
+
+        resultado[grupo] = [];
+
+        items.forEach((texto, index) => {
+
+            resultado[grupo].push({
+                texto,
+                valor: document.getElementById(
+                    `${grupo}_${index}`
+                ).value
+            });
+
+        });
+    });
+
+    return resultado;
+}
+
+
+renderChecklist();
