@@ -29,17 +29,18 @@ import {
    ESTADO
 ========================= */
 
-let personal = [];
-let maquinaria = [];
-let empresas = [];
-let inspecciones = [];
+import {
+    personal,
+    maquinaria,
+    empresas,
+    inspecciones
+} from "./state.js";
 
 /* =========================
    INICIALIZACIÓN
 ========================= */
 
 renderChecklist();
-
 initFirma();
 
 /* =========================
@@ -50,7 +51,6 @@ window.addPersonal = addPersonal;
 window.addMaquinaria = addMaquinaria;
 window.addEmpresa = addEmpresa;
 window.addInspeccion = addInspeccion;
-
 window.limpiarFirma = limpiarFirma;
 
 /* =========================

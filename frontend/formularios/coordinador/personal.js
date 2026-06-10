@@ -41,7 +41,8 @@ export function renderPersonal() {
                 value="${item.cargo}"
                 onchange="personal[${index}].cargo=this.value">
 
-            <button type="button"
+            <button
+                type="button"
                 onclick="removePersonal(${index})">
                 Eliminar
             </button>
@@ -58,3 +59,5 @@ export function removePersonal(index) {
     renderPersonal();
 }
 
+window.personal = personal;
+window.removePersonal = removePersonal;

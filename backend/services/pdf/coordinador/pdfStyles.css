@@ -1,0 +1,66 @@
+body {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: #000;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+h2 {
+    margin-top: 20px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 3px;
+}
+
+.datos-generales {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.datos-generales td {
+    border: 1px solid #000;
+    padding: 6px;
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+.tabla th,
+.tabla td {
+    border: 1px solid #000;
+    padding: 6px;
+    vertical-align: top;
+}
+
+.tabla th {
+    background: #efefef;
+}
+
+.firmas-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.firmas-table td {
+    border: 1px solid #000;
+    padding: 10px;
+}
+
+.firma-cell {
+    text-align: center;
+    height: 120px;
+}
+
+.firma {
+    max-height: 100px;
+    max-width: 300px;
+}

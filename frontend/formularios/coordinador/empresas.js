@@ -34,7 +34,8 @@ export function renderEmpresas() {
                 placeholder="Observaciones"
                 onchange="empresas[${index}].observaciones=this.value">${item.observaciones}</textarea>
 
-            <button type="button"
+            <button
+                type="button"
                 onclick="removeEmpresa(${index})">
                 Eliminar
             </button>
@@ -50,3 +51,6 @@ export function removeEmpresa(index) {
 
     renderEmpresas();
 }
+
+window.empresas = empresas;
+window.removeEmpresa = removeEmpresa;

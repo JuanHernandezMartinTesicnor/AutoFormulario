@@ -1,7 +1,7 @@
-export let personal = [];
+export const personal = [];
 
-export let maquinaria = [];
+export const maquinaria = [];
 
-export let empresas = [];
+export const empresas = [];
 
-export let inspecciones = [];
+export const inspecciones = [];

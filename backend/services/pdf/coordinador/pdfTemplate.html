@@ -1,68 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 
 <head>
-
-    <style>
-
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            font-size: 12px;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .field {
-            margin-bottom: 10px;
-        }
-
-        .label {
-            font-weight: bold;
-        }
-
-    </style>
-
+    <meta charset="UTF-8">
 </head>
 
 <body>
 
     <h1>INFORME DE COORDINACIÓN</h1>
 
-    <div class="field">
-        <span class="label">Fecha:</span>
-        {{fecha}}
-    </div>
+    <table class="datos-generales">
+        <tr>
+            <td><b>Fecha</b></td>
+            <td>{{fecha}}</td>
+        </tr>
 
-    <div class="field">
-        <span class="label">Obra:</span>
-        {{obra}}
-    </div>
+        <tr>
+            <td><b>Obra</b></td>
+            <td>{{obra}}</td>
+        </tr>
 
-    <div class="field">
-        <span class="label">Cliente:</span>
-        {{cliente}}
-    </div>
+        <tr>
+            <td><b>Cliente</b></td>
+            <td>{{cliente}}</td>
+        </tr>
 
-    <div class="field">
-        <span class="label">Alcance:</span>
-        {{alcance}}
-    </div>
+        <tr>
+            <td><b>Alcance</b></td>
+            <td>{{alcance}}</td>
+        </tr>
+    </table>
 
-    <hr>
+    <h2>Personal presente</h2>
 
-    <div class="field">
-        <span class="label">Realizado por:</span>
-        {{realizadoPor}}
-    </div>
+    <table class="tabla">
+        <tr>
+            <th>Empresa</th>
+            <th>Trabajador</th>
+            <th>Cargo</th>
+        </tr>
 
-    <div class="field">
-        <span class="label">Revisado por:</span>
-        {{revisadoPor}}
-    </div>
+        {{personalRows}}
+    </table>
+
+    <h2>Maquinaria y equipos</h2>
+
+    <table class="tabla">
+        <tr>
+            <th>Equipo</th>
+            <th>Matrícula</th>
+        </tr>
+
+        {{maquinariaRows}}
+    </table>
+
+    <h2>Empresas / Subcontratas</h2>
+
+    <table class="tabla">
+        <tr>
+            <th>Empresa</th>
+            <th>Observaciones</th>
+        </tr>
+
+        {{empresaRows}}
+    </table>
+
+    <h2>Inspecciones realizadas</h2>
+
+    <table class="tabla">
+        <tr>
+            <th>Fase</th>
+            <th>Observaciones</th>
+        </tr>
+
+        {{inspeccionRows}}
+    </table>
+
+    <h2>Checklist de verificación</h2>
+
+    {{checklist}}
+
+    <h2>Firmas</h2>
+
+    <table class="firmas-table">
+        <tr>
+            <td>
+                <b>Realizado por</b><br>
+                {{realizadoPor}}
+            </td>
+
+            <td>
+                <b>Revisado por</b><br>
+                {{revisadoPor}}
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2" class="firma-cell">
+
+                <img
+                    src="{{firma}}"
+                    class="firma">
+
+            </td>
+        </tr>
+    </table>
 
 </body>
 

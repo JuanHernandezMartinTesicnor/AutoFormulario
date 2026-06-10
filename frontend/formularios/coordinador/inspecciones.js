@@ -40,7 +40,8 @@ export function renderInspecciones() {
                 multiple
                 onchange="guardarFotos(event, ${index})">
 
-            <button type="button"
+            <button
+                type="button"
                 onclick="removeInspeccion(${index})">
                 Eliminar
             </button>
@@ -62,3 +63,7 @@ export function removeInspeccion(index) {
 
     renderInspecciones();
 }
+
+window.inspecciones = inspecciones;
+window.guardarFotos = guardarFotos;
+window.removeInspeccion = removeInspeccion;

@@ -10,7 +10,6 @@ export function addMaquinaria() {
     renderMaquinaria();
 }
 
-
 export function renderMaquinaria() {
 
     const container =
@@ -36,7 +35,8 @@ export function renderMaquinaria() {
                 value="${item.matricula}"
                 onchange="maquinaria[${index}].matricula=this.value">
 
-            <button type="button"
+            <button
+                type="button"
                 onclick="removeMaquinaria(${index})">
                 Eliminar
             </button>
@@ -46,10 +46,12 @@ export function renderMaquinaria() {
     });
 }
 
-
 export function removeMaquinaria(index) {
 
     maquinaria.splice(index, 1);
 
     renderMaquinaria();
 }
+
+window.maquinaria = maquinaria;
+window.removeMaquinaria = removeMaquinaria;
