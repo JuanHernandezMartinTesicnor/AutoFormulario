@@ -1,63 +1,186 @@
 export const checklist = {
 
-    controlBasico: [
-        "Presencia del Recurso Preventivo",
-        "Listado de trabajadores en las instalaciones",
-        "Existencia de Plan de Seguridad y Salud",
-        "Botiquín de primeros auxilios",
-        "Medios de lucha contra incendios",
-        "Personal formado para manejo de equipos",
-        "Cobertura de telefonía móvil",
-        "Orden y limpieza de la zona",
-        "Señalización y delimitación de trabajos",
-        "Uso correcto de EPIs"
+    documentacion: [
+
+        {
+            id: "planSeguridad",
+            titulo: "Plan de Seguridad y Salud aprobado",
+            gravedad: "MODERADA"
+        },
+
+        {
+            id: "libroIncidencias",
+            titulo: "Libro de Incidencias",
+            gravedad: "MODERADA"
+        },
+
+        {
+            id: "aperturaCentro",
+            titulo: "Comunicación Apertura Centro Trabajo",
+            gravedad: "MODERADA"
+        }
     ],
 
-    herramientas: [
-        "Herramientas manuales en buen estado",
-        "Máquinas y herramientas en buen estado"
+    recursosPreventivos: [
+
+        {
+            id: "recursoPreventivo",
+            titulo: "Presencia de Recurso Preventivo",
+            gravedad: "GRAVE"
+        },
+
+        {
+            id: "formacionPreventiva",
+            titulo: "Formación Preventiva",
+            gravedad: "MODERADA"
+        }
     ],
 
-    escaleras: [
-        "Escaleras de madera no pintadas",
-        "Peldaños en buen estado",
-        "Zapatas antideslizantes",
-        "Escalera fijada correctamente",
-        "Uso correcto de la escalera"
+    ordenLimpieza: [
+
+        {
+            id: "estadoGeneral",
+            titulo: "Estado General",
+            gravedad: "MODERADA"
+        },
+
+        {
+            id: "gestionResiduos",
+            titulo: "Gestión de Residuos",
+            gravedad: "MODERADA"
+        }
     ],
 
-    electrico: [
-        "Marcado CE",
-        "Manual de uso",
-        "Declaración de conformidad",
-        "Certificado instalación BT"
+    delimitacionSenalizacion: [
+
+        {
+            id: "vallado",
+            titulo: "Vallado",
+            gravedad: "MODERADA"
+        },
+
+        {
+            id: "senalizacion",
+            titulo: "Señalización",
+            gravedad: "MODERADA"
+        }
     ],
 
-    sistemaElectrico: [
-        "Distancias de seguridad",
-        "Cinco reglas de oro",
-        "Protección de zanjas y canaletas"
+    epis: [
+
+        {
+            id: "casco",
+            titulo: "Casco",
+            gravedad: "GRAVE"
+        },
+
+        {
+            id: "calzado",
+            titulo: "Calzado de Seguridad",
+            gravedad: "MODERADA"
+        },
+
+        {
+            id: "arnes",
+            titulo: "Arnés Anticaídas",
+            gravedad: "GRAVE"
+        }
     ],
 
-    izado: [
-        "Plan de izado",
-        "Certificados de equipos",
-        "Anemómetro operativo",
-        "Certificación de útiles",
-        "Reunión previa",
-        "Coordinación CAE",
-        "Zona de exclusión señalizada"
+    trabajosAltura: [
+
+        {
+            id: "proteccionesColectivas",
+            titulo: "Protecciones Colectivas",
+            gravedad: "GRAVE"
+        },
+
+        {
+            id: "escaleras",
+            titulo: "Escaleras",
+            gravedad: "MODERADA"
+        }
     ],
 
-    logistica: [
-        "Elementos de izado certificados",
-        "Cadenas en buen estado",
-        "Puntos de amarre correctos",
-        "Comunicación entre operarios",
-        "Zona de carga señalizada",
-        "Inspecciones registradas",
-        "Carga correctamente distribuida",
-        "Uso de EPIs"
+    maquinaria: [
+
+        {
+            id: "marcadoCE",
+            titulo: "Marcado CE",
+            gravedad: "MODERADA"
+        },
+
+        {
+            id: "estadoMaquinaria",
+            titulo: "Estado General",
+            gravedad: "MODERADA"
+        }
+    ],
+
+    electricidad: [
+
+        {
+            id: "cuadrosElectricos",
+            titulo: "Cuadros Eléctricos",
+            gravedad: "GRAVE"
+        },
+
+        {
+            id: "cableado",
+            titulo: "Cableado",
+            gravedad: "GRAVE"
+        }
+    ],
+
+    excavaciones: [
+
+        {
+            id: "estabilidad",
+            titulo: "Estabilidad",
+            gravedad: "GRAVE"
+        },
+
+        {
+            id: "accesos",
+            titulo: "Accesos",
+            gravedad: "GRAVE"
+        }
+    ],
+
+    izados: [
+
+        {
+            id: "planIzado",
+            titulo: "Plan de Izado",
+            gravedad: "GRAVE"
+        },
+
+        {
+            id: "eslingas",
+            titulo: "Eslingas y Accesorios",
+            gravedad: "GRAVE"
+        },
+
+        {
+            id: "zonaExclusion",
+            titulo: "Zona de Exclusión",
+            gravedad: "GRAVE"
+        }
+    ],
+
+    emergencias: [
+
+        {
+            id: "botiquin",
+            titulo: "Botiquín",
+            gravedad: "MODERADA"
+        },
+
+        {
+            id: "extintores",
+            titulo: "Extintores",
+            gravedad: "MODERADA"
+        }
     ]
 };
 
@@ -105,22 +228,86 @@ export function renderChecklist() {
             content.classList.add("collapsed");
         }
 
-        items.forEach((texto, index) => {
+        items.forEach(item => {
 
             content.innerHTML += `
+
                 <div class="check-row">
 
-                    <span>${texto}</span>
+                    <div class="check-info">
 
-                    <select id="${grupo}_${index}">
-                        <option value="SI">SI</option>
-                        <option value="NO">NO</option>
-                        <option value="NA">NA</option>
+                        <strong>${item.titulo}</strong>
+
+                        <small>
+                            Gravedad: ${item.gravedad}
+                        </small>
+
+                    </div>
+
+                    <select
+                        id="${item.id}"
+                        onchange="toggleDetalle('${item.id}')">
+
+                        <option value="NA" selected>
+                            NA
+                        </option>
+
+                        <option value="SI">
+                            SI
+                        </option>
+
+                        <option value="NO">
+                            NO
+                        </option>
+
+                        <option value="OBS">
+                            OBS
+                        </option>
+
                     </select>
 
                 </div>
+
+                <div
+                    id="${item.id}_detalle"
+                    class="detalle-check oculto">
+
+                    <textarea
+                        id="${item.id}_comentario"
+                        placeholder="Observaciones">
+                    </textarea>
+
+                    <input
+                        type="text"
+                        id="${item.id}_responsable"
+                        placeholder="Responsable">
+
+                    <input
+                        type="date"
+                        id="${item.id}_fechaLimite">
+
+                </div>
+
             `;
         });
+
+        content.innerHTML += `
+
+            <div class="categoria-fotos">
+
+                <label>
+                    Fotografías de ${formatTitulo(grupo)}
+                </label>
+
+                <input
+                    type="file"
+                    id="${grupo}_fotos"
+                    multiple
+                    accept="image/*">
+
+            </div>
+
+        `;
 
         const header =
             section.querySelector(".check-header");
@@ -129,10 +316,7 @@ export function renderChecklist() {
 
             content.classList.toggle("collapsed");
 
-            const arrow =
-                header.querySelector(".toggle");
-
-            arrow.textContent =
+            header.querySelector(".toggle").textContent =
                 content.classList.contains("collapsed")
                     ? "►"
                     : "▼";
@@ -146,26 +330,73 @@ export function renderChecklist() {
 
 export function obtenerChecklist() {
 
-    const resultado = {};
+    const resultado = [];
 
     Object.entries(checklist).forEach(([grupo, items]) => {
 
-        resultado[grupo] = [];
+        const fotosInput =
+            document.getElementById(
+                `${grupo}_fotos`
+            );
 
-        items.forEach((texto, index) => {
+        const fotos =
+            fotosInput
+                ? [...fotosInput.files]
+                : [];
 
-            const select =
-                document.getElementById(
-                    `${grupo}_${index}`
-                );
+        resultado.push({
 
-            resultado[grupo].push({
-                texto,
-                valor: select ? select.value : "NA"
-            });
+            categoria: grupo,
 
+            fotos,
+
+            items: items.map(item => ({
+
+                id: item.id,
+
+                titulo: item.titulo,
+
+                gravedad: item.gravedad,
+
+                valor:
+                    document.getElementById(
+                        item.id
+                    )?.value || "NA",
+
+                comentario:
+                    document.getElementById(
+                        `${item.id}_comentario`
+                    )?.value || "",
+
+                responsable:
+                    document.getElementById(
+                        `${item.id}_responsable`
+                    )?.value || "",
+
+                fechaLimite:
+                    document.getElementById(
+                        `${item.id}_fechaLimite`
+                    )?.value || ""
+
+            }))
         });
     });
 
     return resultado;
 }
+
+window.toggleDetalle = function (id) {
+
+    const valor =
+        document.getElementById(id).value;
+
+    const detalle =
+        document.getElementById(
+            `${id}_detalle`
+        );
+
+    detalle.style.display =
+        (valor === "NO" || valor === "OBS")
+            ? "flex"
+            : "none";
+};

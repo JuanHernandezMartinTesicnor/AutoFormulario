@@ -190,3 +190,14 @@ button:hover {
 .firma-buttons {
     margin-top: 10px;
 }
+
+.detalle-check {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.oculto {
+    display: none;
+}

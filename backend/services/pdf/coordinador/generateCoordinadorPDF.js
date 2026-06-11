@@ -24,10 +24,6 @@ async function generatePDF(data) {
 
     const page = await browser.newPage();
 
-    /* =========================
-       HTML + CSS
-    ========================= */
-
     let html = fs.readFileSync(
         path.join(__dirname, "pdfTemplate.html"),
         "utf8"
@@ -53,7 +49,8 @@ async function generatePDF(data) {
        PERSONAL
     ========================= */
 
-    const personalRows =
+    html = html.replace(
+        /{{personalRows}}/g,
         (data.personal || [])
             .map(p => `
                 <tr>
@@ -62,18 +59,15 @@ async function generatePDF(data) {
                     <td>${p.cargo || ""}</td>
                 </tr>
             `)
-            .join("");
-
-    html = html.replace(
-        /{{personalRows}}/g,
-        personalRows
+            .join("")
     );
 
     /* =========================
        MAQUINARIA
     ========================= */
 
-    const maquinariaRows =
+    html = html.replace(
+        /{{maquinariaRows}}/g,
         (data.maquinaria || [])
             .map(m => `
                 <tr>
@@ -81,18 +75,15 @@ async function generatePDF(data) {
                     <td>${m.matricula || ""}</td>
                 </tr>
             `)
-            .join("");
-
-    html = html.replace(
-        /{{maquinariaRows}}/g,
-        maquinariaRows
+            .join("")
     );
 
     /* =========================
        EMPRESAS
     ========================= */
 
-    const empresaRows =
+    html = html.replace(
+        /{{empresaRows}}/g,
         (data.empresas || [])
             .map(e => `
                 <tr>
@@ -100,18 +91,15 @@ async function generatePDF(data) {
                     <td>${e.observaciones || ""}</td>
                 </tr>
             `)
-            .join("");
-
-    html = html.replace(
-        /{{empresaRows}}/g,
-        empresaRows
+            .join("")
     );
 
     /* =========================
        INSPECCIONES
     ========================= */
 
-    const inspeccionRows =
+    html = html.replace(
+        /{{inspeccionRows}}/g,
         (data.inspecciones || [])
             .map(i => `
                 <tr>
@@ -119,11 +107,7 @@ async function generatePDF(data) {
                     <td>${i.observaciones || ""}</td>
                 </tr>
             `)
-            .join("");
-
-    html = html.replace(
-        /{{inspeccionRows}}/g,
-        inspeccionRows
+            .join("")
     );
 
     /* =========================
@@ -141,33 +125,103 @@ async function generatePDF(data) {
 
     let checklistHtml = "";
 
-    if (data.checklist) {
+    let total = 0;
+    let incumplimientos = 0;
+    let incumplimientosGraves = 0;
 
-        Object.entries(data.checklist).forEach(([grupo, items]) => {
+    if (Array.isArray(data.checklist)) {
+
+        data.checklist.forEach(grupo => {
+
+            const itemsValidos =
+                grupo.items.filter(
+                    item => item.valor !== "NA"
+                );
+
+            if (itemsValidos.length === 0) {
+                return;
+            }
 
             checklistHtml += `
-                <h3>${formatearTitulo(grupo)}</h3>
-
-                <table class="tabla">
-                    <tr>
-                        <th>Elemento</th>
-                        <th>Resultado</th>
-                    </tr>
+                <h3>
+                    ${formatearTitulo(grupo.categoria)}
+                </h3>
             `;
 
-            items.forEach(item => {
+            itemsValidos.forEach(item => {
+
+                total++;
+
+                if (item.valor === "NO") {
+
+                    incumplimientos++;
+
+                    if (
+                        item.gravedad === "GRAVE"
+                    ) {
+                        incumplimientosGraves++;
+                    }
+                }
 
                 checklistHtml += `
-                    <tr>
-                        <td>${item.texto}</td>
-                        <td>${item.valor}</td>
-                    </tr>
+                    <div class="check-item">
+
+                        <strong>
+                            ${item.titulo}
+                        </strong>
+
+                        <br>
+
+                        Resultado:
+                        ${item.valor}
+
+                        <br>
+
+                        Gravedad:
+                        ${item.gravedad}
+                `;
+
+                if (
+                    item.comentario &&
+                    item.comentario.trim()
+                ) {
+
+                    checklistHtml += `
+                        <br>
+                        Observaciones:
+                        ${item.comentario}
+                    `;
+                }
+
+                if (
+                    item.responsable &&
+                    item.responsable.trim()
+                ) {
+
+                    checklistHtml += `
+                        <br>
+                        Responsable:
+                        ${item.responsable}
+                    `;
+                }
+
+                if (
+                    item.fechaLimite &&
+                    item.fechaLimite.trim()
+                ) {
+
+                    checklistHtml += `
+                        <br>
+                        Fecha límite:
+                        ${item.fechaLimite}
+                    `;
+                }
+
+                checklistHtml += `
+                    </div>
+                    <hr>
                 `;
             });
-
-            checklistHtml += `
-                </table>
-            `;
         });
     }
 
@@ -177,7 +231,96 @@ async function generatePDF(data) {
     );
 
     /* =========================
-       CARGAR HTML
+       RESUMEN
+    ========================= */
+
+    const cumplimiento =
+        total > 0
+            ? Math.round(
+                ((total - incumplimientos) / total) * 100
+            )
+            : 100;
+
+    const resumenHtml = `
+
+        <div class="resumen">
+
+            <h2>Resumen Ejecutivo</h2>
+
+            <p>
+                Aspectos evaluados:
+                ${total}
+            </p>
+
+            <p>
+                Incumplimientos detectados:
+                ${incumplimientos}
+            </p>
+
+            <p>
+                Incumplimientos graves:
+                ${incumplimientosGraves}
+            </p>
+
+            <p>
+                Índice de cumplimiento:
+                ${cumplimiento}%
+            </p>
+
+        </div>
+
+    `;
+
+    html = html.replace(
+        /{{resumen}}/g,
+        resumenHtml
+    );
+
+    /* =========================
+       FOTOS CHECKLIST
+    ========================= */
+
+    let fotosHtml = "";
+
+    if (data.fotosChecklist) {
+
+        Object.entries(
+            data.fotosChecklist
+        ).forEach(([grupo, fotos]) => {
+
+            if (!fotos || !fotos.length) {
+                return;
+            }
+
+            fotosHtml += `
+                <h3>
+                    ${formatearTitulo(grupo)}
+                </h3>
+            `;
+
+            fotos.forEach(foto => {
+
+                fotosHtml += `
+                    <img
+                        src="${foto.imagen}"
+                        style="
+                            max-width:300px;
+                            margin:10px;
+                            border:1px solid #ccc;
+                        "
+                    >
+                `;
+            });
+        });
+    }
+
+    html = html.replace(
+        /{{fotosChecklist}}/g,
+        fotosHtml
+    );
+
+    /* =========================
+       GENERAR PDF
     ========================= */
 
     await page.setContent(
@@ -187,17 +330,9 @@ async function generatePDF(data) {
         }
     );
 
-    /* =========================
-       CSS
-    ========================= */
-
     await page.addStyleTag({
         content: css
     });
-
-    /* =========================
-       PDF
-    ========================= */
 
     const pdf = await page.pdf({
 

@@ -25,10 +25,6 @@ import {
     getFirmaBase64
 } from "./firma.js";
 
-/* =========================
-   ESTADO
-========================= */
-
 import {
     personal,
     maquinaria,
@@ -54,46 +50,115 @@ window.addInspeccion = addInspeccion;
 window.limpiarFirma = limpiarFirma;
 
 /* =========================
+   FOTOS CHECKLIST
+========================= */
+
+async function fileToBase64(file) {
+
+    return new Promise((resolve, reject) => {
+
+        const reader = new FileReader();
+
+        reader.onload = () => resolve(reader.result);
+
+        reader.onerror = reject;
+
+        reader.readAsDataURL(file);
+    });
+}
+
+async function obtenerFotosChecklist() {
+
+    const resultado = {};
+
+    document
+        .querySelectorAll(".check-foto")
+        .forEach(async input => { });
+
+    const fotosInputs =
+        document.querySelectorAll(".check-foto");
+
+    for (const input of fotosInputs) {
+
+        const grupo =
+            input.dataset.grupo;
+
+        resultado[grupo] = [];
+
+        if (!input.files.length) {
+            continue;
+        }
+
+        for (const file of input.files) {
+
+            const base64 =
+                await fileToBase64(file);
+
+            resultado[grupo].push({
+                nombre: file.name,
+                imagen: base64
+            });
+        }
+    }
+
+    return resultado;
+}
+
+/* =========================
    ENVÍO PDF
 ========================= */
 
 async function enviar() {
 
-    const data = {
-
-        fecha:
-            document.getElementById("fecha")?.value || "",
-
-        obra:
-            document.getElementById("obra")?.value || "",
-
-        cliente:
-            document.getElementById("cliente")?.value || "",
-
-        alcance:
-            document.getElementById("alcance")?.value || "",
-
-        realizadoPor:
-            document.getElementById("realizadoPor")?.value || "",
-
-        revisadoPor:
-            document.getElementById("revisadoPor")?.value || "",
-
-        firma:
-            getFirmaBase64(),
-
-        personal,
-        maquinaria,
-        empresas,
-        inspecciones,
-
-        checklist:
-            obtenerChecklist()
-    };
-
-    console.log(data);
-
     try {
+
+        const fotosChecklist =
+            await obtenerFotosChecklist();
+
+        const data = {
+
+            fecha:
+                document.getElementById("fecha")?.value || "",
+
+            obra:
+                document.getElementById("obra")?.value || "",
+
+            cliente:
+                document.getElementById("cliente")?.value || "",
+
+            alcance:
+                document.getElementById("alcance")?.value || "",
+
+            realizadoPor:
+                document.getElementById("realizadoPor")?.value || "",
+
+            revisadoPor:
+                document.getElementById("revisadoPor")?.value || "",
+
+            firma:
+                getFirmaBase64(),
+
+            personal,
+
+            maquinaria,
+
+            empresas,
+
+            inspecciones,
+
+            checklist:
+                obtenerChecklist(),
+
+            fotosChecklist
+        };
+
+        console.log(
+            JSON.stringify(
+                data.checklist,
+                null,
+                2
+            )
+        );
 
         const res = await fetch(
             "/api/coordinador/generate-pdf",
@@ -146,7 +211,7 @@ async function enviar() {
 }
 
 /* =========================
-   EXPORTAR A HTML
+   EXPORTAR
 ========================= */
 
 window.enviar = enviar;
