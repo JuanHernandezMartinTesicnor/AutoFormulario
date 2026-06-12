@@ -115,6 +115,11 @@ async function enviar() {
         const fotosChecklist =
             await obtenerFotosChecklist();
 
+        console.log(
+            "FOTOS CHECKLIST:",
+            fotosChecklist
+        );
+
         const data = {
 
             fecha:
@@ -151,14 +156,6 @@ async function enviar() {
 
             fotosChecklist
         };
-
-        console.log(
-            JSON.stringify(
-                data.checklist,
-                null,
-                2
-            )
-        );
 
         const res = await fetch(
             "/api/coordinador/generate-pdf",

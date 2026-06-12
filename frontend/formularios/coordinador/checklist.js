@@ -293,19 +293,21 @@ export function renderChecklist() {
 
         content.innerHTML += `
 
-            <div class="categoria-fotos">
+        <div class="categoria-fotos">
 
-                <label>
-                    Fotografías de ${formatTitulo(grupo)}
-                </label>
+            <label>
+                Fotografías de ${formatTitulo(grupo)}
+            </label>
 
-                <input
-                    type="file"
-                    id="${grupo}_fotos"
-                    multiple
-                    accept="image/*">
+            <input
+                type="file"
+                class="check-foto"
+                data-grupo="${grupo}"
+                id="${grupo}_fotos"
+                multiple
+                accept="image/*">
 
-            </div>
+        </div>
 
         `;
 
