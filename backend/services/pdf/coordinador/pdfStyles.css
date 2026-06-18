@@ -1,4 +1,6 @@
 body {
+    margin: 0;
+    padding: 0;
     font-family: Arial, sans-serif;
     font-size: 11px;
     color: #000;
@@ -16,51 +18,228 @@ h2 {
     padding-bottom: 3px;
 }
 
-.datos-generales {
+h3 {
+    margin-top: 18px;
+    margin-bottom: 10px;
+    color: #1f6ea5;
+}
+
+h4 {
+    margin-top: 12px;
+    margin-bottom: 8px;
+}
+
+/* =========================
+   PORTADA
+========================= */
+
+.cover {
+
     width: 100%;
+
+    height: 270mm;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    text-align: center;
+
+    page-break-after: always;
+
+    page-break-before: auto;
+
+    break-after: page;
+}
+
+.cover-logo {
+
+    width: 250px;
+
+    align-self: flex-end;
+
+    margin-top: 15mm;
+
+    margin-right: 10mm;
+}
+
+.cover-center {
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.cover-title {
+
+    font-size: 30px;
+
+    line-height: 1.2;
+
+    color: #1f6ea5;
+
+    margin-bottom: 50px;
+}
+
+.cover-date {
+
+    font-size: 24px;
+
+    color: #1f6ea5;
+
+    margin-bottom: 20px;
+}
+
+.cover-work {
+
+    width: 80%;
+
+    font-size: 26px;
+
+    font-weight: bold;
+
+    color: #1f6ea5;
+
+    line-height: 1.2;
+}
+
+.cover-image {
+
+    width: 85%;
+
+    margin-bottom: 15mm;
+}
+
+/* =========================
+   TABLAS
+========================= */
+
+.datos-generales {
+
+    width: 100%;
+
     border-collapse: collapse;
+
     margin-bottom: 20px;
 }
 
 .datos-generales td {
+
     border: 1px solid #000;
+
     padding: 6px;
 }
 
 .tabla {
+
     width: 100%;
+
     border-collapse: collapse;
+
     margin-bottom: 15px;
 }
 
 .tabla th,
 .tabla td {
+
     border: 1px solid #000;
+
     padding: 6px;
+
     vertical-align: top;
 }
 
 .tabla th {
+
     background: #efefef;
 }
 
+/* =========================
+   CHECKLIST
+========================= */
+
+.check-item {
+
+    margin-bottom: 12px;
+
+    line-height: 1.5;
+}
+
+.check-photo {
+
+    width: 260px;
+
+    margin: 10px;
+
+    border: 1px solid #999;
+}
+
+/* =========================
+   FIRMAS
+========================= */
+
 .firmas-table {
+
     width: 100%;
+
     border-collapse: collapse;
+
     margin-top: 20px;
 }
 
 .firmas-table td {
+
     border: 1px solid #000;
+
     padding: 10px;
 }
 
 .firma-cell {
+
     text-align: center;
+
     height: 120px;
 }
 
 .firma {
-    max-height: 100px;
+
     max-width: 300px;
+
+    max-height: 100px;
+}
+
+/* =========================
+   RESUMEN
+========================= */
+
+.resumen {
+
+    border: 1px solid #000;
+
+    padding: 12px;
+
+    margin-bottom: 20px;
+
+    background: #f7f7f7;
+}
+
+/* =========================
+   IMPRESIÓN
+========================= */
+
+@page {
+
+    size: A4;
+
+    margin: 15mm 10mm;
 }

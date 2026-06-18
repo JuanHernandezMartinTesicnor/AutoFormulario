@@ -8,7 +8,30 @@
 
 <body>
 
-    <h1>INFORME DE COORDINACIÓN</h1>
+    <div class="cover">
+
+        <img src="data:image/png;base64,{{logoTesicnor}}" class="cover-logo">
+
+        <div class="cover-center">
+
+            <h1 class="cover-title">
+                INFORME DEL COORDINADOR<br>
+                DE SEGURIDAD Y SALUD
+            </h1>
+
+            <div class="cover-date">
+                {{fecha}}
+            </div>
+
+            <div class="cover-work">
+                {{obra}}
+            </div>
+
+        </div>
+
+        <img src="data:image/png;base64,{{coverImage}}" class="cover-image">
+
+    </div>
 
     <table class="datos-generales">
         <tr>
@@ -35,8 +58,6 @@
     {{resumen}}
 
     {{checklist}}
-
-    {{fotosChecklist}}
 
     <h2>Personal presente</h2>
 
@@ -102,9 +123,7 @@
         <tr>
             <td colspan="2" class="firma-cell">
 
-                <img
-                    src="{{firma}}"
-                    class="firma">
+                <img src="{{firma}}" class="firma">
 
             </td>
         </tr>

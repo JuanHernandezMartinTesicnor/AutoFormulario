@@ -24,6 +24,16 @@ async function generatePDF(data) {
 
     const page = await browser.newPage();
 
+    const logoTesicnor = fs.readFileSync(
+        path.join(__dirname, "../../../assets/logos/tesicnor.png"),
+        "base64"
+    );
+
+    const portada = fs.readFileSync(
+        path.join(__dirname, "../../../assets/logos/tesicnorPortada.png"),
+        "base64"
+    );
+
     let html = fs.readFileSync(
         path.join(__dirname, "pdfTemplate.html"),
         "utf8"
@@ -32,6 +42,16 @@ async function generatePDF(data) {
     const css = fs.readFileSync(
         path.join(__dirname, "pdfStyles.css"),
         "utf8"
+    );
+
+    html = html.replace(
+        /{{logoTesicnor}}/g,
+        logoTesicnor
+    );
+
+    html = html.replace(
+        /{{coverImage}}/g,
+        portada
     );
 
     /* =========================
@@ -44,6 +64,8 @@ async function generatePDF(data) {
     html = html.replace(/{{alcance}}/g, data.alcance || "");
     html = html.replace(/{{realizadoPor}}/g, data.realizadoPor || "");
     html = html.replace(/{{revisadoPor}}/g, data.revisadoPor || "");
+    html = html.replace(/{{fecha}}/g, data.fecha || "");
+    html = html.replace(/{{obra}}/g, data.obra || "");
 
     /* =========================
        PERSONAL
@@ -234,6 +256,38 @@ async function generatePDF(data) {
                     <hr>
                 `;
             });
+
+            const fotosGrupo =
+                data.fotosChecklist?.[grupo.categoria] || [];
+
+            if (fotosGrupo.length > 0) {
+
+                checklistHtml += `
+                    <h4>Evidencias fotográficas</h4>
+
+                    <div class="galeria-fotos">
+                `;
+
+                fotosGrupo.forEach(foto => {
+
+                    checklistHtml += `
+                        <img
+                            src="${foto.imagen}"
+                            style="
+                                width:220px;
+                                margin:8px;
+                                border:1px solid #ccc;
+                                border-radius:4px;
+                            "
+                        >
+                    `;
+                });
+
+                checklistHtml += `
+                    </div>
+                    <hr>
+                `;
+            }
         });
     }
 
@@ -286,49 +340,6 @@ async function generatePDF(data) {
     html = html.replace(
         /{{resumen}}/g,
         resumenHtml
-    );
-
-    /* =========================
-       FOTOS CHECKLIST
-    ========================= */
-
-    let fotosHtml = "";
-
-    if (data.fotosChecklist) {
-
-        Object.entries(
-            data.fotosChecklist
-        ).forEach(([grupo, fotos]) => {
-
-            if (!fotos || !fotos.length) {
-                return;
-            }
-
-            fotosHtml += `
-                <h3>
-                    ${formatearTitulo(grupo)}
-                </h3>
-            `;
-
-            fotos.forEach(foto => {
-
-                fotosHtml += `
-                    <img
-                        src="${foto.imagen}"
-                        style="
-                            max-width:300px;
-                            margin:10px;
-                            border:1px solid #ccc;
-                        "
-                    >
-                `;
-            });
-        });
-    }
-
-    html = html.replace(
-        /{{fotosChecklist}}/g,
-        fotosHtml
     );
 
     /* =========================
