@@ -4,7 +4,8 @@ export function addEmpresa() {
 
     empresas.push({
         nombre: "",
-        observaciones: ""
+        observaciones: "",
+        principal: false
     });
 
     renderEmpresas();
@@ -25,6 +26,7 @@ export function renderEmpresas() {
         div.className = "item-card";
 
         div.innerHTML = `
+
             <input
                 placeholder="Empresa"
                 value="${item.nombre}"
@@ -34,15 +36,39 @@ export function renderEmpresas() {
                 placeholder="Observaciones"
                 onchange="empresas[${index}].observaciones=this.value">${item.observaciones}</textarea>
 
+            <label class="empresa-principal">
+
+                <input
+                    type="checkbox"
+                    ${item.principal ? "checked" : ""}
+                    onchange="setEmpresaPrincipal(${index}, this.checked)">
+
+                Contrata principal
+
+            </label>
+
             <button
                 type="button"
                 onclick="removeEmpresa(${index})">
                 Eliminar
             </button>
+
         `;
 
         container.appendChild(div);
     });
+}
+
+export function setEmpresaPrincipal(index, checked) {
+
+    empresas.forEach((empresa, i) => {
+
+        empresa.principal =
+            checked && i === index;
+
+    });
+
+    renderEmpresas();
 }
 
 export function removeEmpresa(index) {
@@ -54,3 +80,4 @@ export function removeEmpresa(index) {
 
 window.empresas = empresas;
 window.removeEmpresa = removeEmpresa;
+window.setEmpresaPrincipal = setEmpresaPrincipal;

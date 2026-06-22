@@ -64,16 +64,13 @@ async function fileToBase64(file) {
         reader.onerror = reject;
 
         reader.readAsDataURL(file);
+
     });
 }
 
 async function obtenerFotosChecklist() {
 
     const resultado = {};
-
-    document
-        .querySelectorAll(".check-foto")
-        .forEach(async input => { });
 
     const fotosInputs =
         document.querySelectorAll(".check-foto");
@@ -95,8 +92,12 @@ async function obtenerFotosChecklist() {
                 await fileToBase64(file);
 
             resultado[grupo].push({
-                nombre: file.name,
-                imagen: base64
+
+                nombre:
+                    file.name,
+
+                imagen:
+                    base64
             });
         }
     }
@@ -134,13 +135,13 @@ async function enviar() {
             alcance:
                 document.getElementById("alcance")?.value || "",
 
-            realizadoPor:
-                document.getElementById("realizadoPor")?.value || "",
+            tecnicoResponsable:
+                document.getElementById("tecnicoResponsable")?.value || "",
 
-            revisadoPor:
-                document.getElementById("revisadoPor")?.value || "",
+            coordinador:
+                document.getElementById("coordinador")?.value || "",
 
-            firma:
+            firmaTecnico:
                 getFirmaBase64(),
 
             personal,
@@ -157,19 +158,26 @@ async function enviar() {
             fotosChecklist
         };
 
-        const res = await fetch(
-            "/api/coordinador/generate-pdf",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
-                body: JSON.stringify(data)
-            }
-        );
+        const body = JSON.stringify(data);
+
+        console.log("Tamaño del JSON:", (body.length / 1024 / 1024).toFixed(2), "MB");
+
+        const res =
+            await fetch(
+                "/api/coordinador/generate-pdf",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+                    body:
+                        JSON.stringify(data)
+                }
+            );
 
         if (!res.ok) {
+
             throw new Error(
                 "Error generando PDF"
             );
@@ -184,7 +192,8 @@ async function enviar() {
         const a =
             document.createElement("a");
 
-        a.href = url;
+        a.href =
+            url;
 
         a.download =
             "informe-coordinacion.pdf";
@@ -197,7 +206,8 @@ async function enviar() {
 
         window.URL.revokeObjectURL(url);
 
-    } catch (error) {
+    }
+    catch (error) {
 
         console.error(error);
 

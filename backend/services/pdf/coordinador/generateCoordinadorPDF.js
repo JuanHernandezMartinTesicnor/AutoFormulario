@@ -34,6 +34,16 @@ async function generatePDF(data) {
         "base64"
     );
 
+    const firmaAna = fs.readFileSync(
+        path.join(__dirname, "../../../assets/firmas/ana.png"),
+        "base64"
+    );
+
+    const firmaJesus = fs.readFileSync(
+        path.join(__dirname, "../../../assets/firmas/jesus.png"),
+        "base64"
+    );
+
     let html = fs.readFileSync(
         path.join(__dirname, "pdfTemplate.html"),
         "utf8"
@@ -54,6 +64,27 @@ async function generatePDF(data) {
         portada
     );
 
+    let firmaCoordinador = "";
+
+    if (
+        data.coordinador &&
+        data.coordinador.includes("Ana")
+    ) {
+
+        firmaCoordinador =
+            "data:image/png;base64," + firmaAna;
+
+    }
+    else if (
+        data.coordinador &&
+        data.coordinador.includes("Jes")
+    ) {
+
+        firmaCoordinador =
+            "data:image/png;base64," + firmaJesus;
+
+    }
+
     /* =========================
        DATOS GENERALES
     ========================= */
@@ -62,10 +93,28 @@ async function generatePDF(data) {
     html = html.replace(/{{obra}}/g, data.obra || "");
     html = html.replace(/{{cliente}}/g, data.cliente || "");
     html = html.replace(/{{alcance}}/g, data.alcance || "");
-    html = html.replace(/{{realizadoPor}}/g, data.realizadoPor || "");
-    html = html.replace(/{{revisadoPor}}/g, data.revisadoPor || "");
     html = html.replace(/{{fecha}}/g, data.fecha || "");
     html = html.replace(/{{obra}}/g, data.obra || "");
+
+    html = html.replace(
+        /{{tecnicoResponsable}}/g,
+        data.tecnicoResponsable || ""
+    );
+
+    html = html.replace(
+        /{{coordinador}}/g,
+        data.coordinador || ""
+    );
+
+    html = html.replace(
+        /{{firmaTecnico}}/g,
+        data.firmaTecnico || ""
+    );
+
+    html = html.replace(
+        /{{firmaCoordinador}}/g,
+        firmaCoordinador
+    );
 
     /* =========================
        PERSONAL
@@ -104,13 +153,33 @@ async function generatePDF(data) {
        EMPRESAS
     ========================= */
 
+    const principal = (data.empresas || []).find(
+        e => e.principal
+    );
+
+    html = html.replace(
+        /{{contrataPrincipal}}/g,
+        principal
+            ? principal.nombre
+            : ""
+    );
+
     html = html.replace(
         /{{empresaRows}}/g,
         (data.empresas || [])
             .map(e => `
                 <tr>
+
                     <td>${e.nombre || ""}</td>
+
                     <td>${e.observaciones || ""}</td>
+
+                    <td>
+
+                        ${e.principal ? "SI" : ""}
+
+                    </td>
+
                 </tr>
             `)
             .join("")
@@ -130,15 +199,6 @@ async function generatePDF(data) {
                 </tr>
             `)
             .join("")
-    );
-
-    /* =========================
-       FIRMA
-    ========================= */
-
-    html = html.replace(
-        /{{firma}}/g,
-        data.firma || ""
     );
 
     /* =========================
@@ -345,6 +405,73 @@ async function generatePDF(data) {
     /* =========================
        GENERAR PDF
     ========================= */
+
+    let contratasHtml = "";
+
+    const contrtaPrincipal =
+        (data.empresas || []).find(
+            e =>
+                e.principal === true ||
+                e.principal === "SI"
+        );
+
+    if (contrtaPrincipal) {
+
+        contratasHtml += `
+        <p>
+            <strong>
+                Contrata principal:
+            </strong>
+            ${contrtaPrincipal.nombre}
+        </p>
+    `;
+    }
+
+    if (data.empresas.length) {
+
+        contratasHtml += `
+
+        <table class="tabla">
+
+            <tr>
+
+                <th>Empresa</th>
+
+                <th>Firma</th>
+
+            </tr>
+
+    `;
+
+        data.empresas.forEach(e => {
+
+            contratasHtml += `
+
+            <tr>
+
+                <td>
+
+                    ${e.nombre}
+
+                </td>
+
+                <td style="height:70px;">
+
+                </td>
+
+            </tr>
+
+        `;
+
+        });
+
+        contratasHtml += "</table>";
+    }
+
+    html = html.replace(
+        /{{firmasContratas}}/g,
+        contratasHtml
+    );
 
     await page.setContent(
         html,

@@ -5,91 +5,131 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Informe de Coordinación</title>
+
     <link rel="stylesheet" href="/formularios/coordinador/style.css">
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <h2>Informe de Coordinación</h2>
+    <h2>Informe de Coordinación</h2>
 
-        <div class="section">
-            <label>Fecha</label>
-            <input type="date" id="fecha">
+    <div class="section">
 
-            <label>Obra</label>
-            <input type="text" id="obra">
+        <label>Fecha</label>
+        <input type="date" id="fecha">
 
-            <label>Cliente</label>
-            <input type="text" id="cliente">
+        <label>Obra</label>
+        <input type="text" id="obra">
 
-            <label>Alcance</label>
-            <textarea id="alcance"></textarea>
-        </div>
+        <label>Cliente</label>
+        <input type="text" id="cliente">
 
-        <h3>Personal presente</h3>
-        <div id="personalContainer"></div>
+        <label>Alcance</label>
+        <textarea id="alcance"></textarea>
 
-        <button type="button" onclick="addPersonal()">
-            Añadir trabajador
-        </button>
+    </div>
 
-        <h3>Maquinaria</h3>
-        <div id="maquinariaContainer"></div>
+    <h3>Personal presente</h3>
 
-        <button type="button" onclick="addMaquinaria()">
-            Añadir maquinaria
-        </button>
+    <div id="personalContainer"></div>
 
-        <h3>Empresas / Subcontratas</h3>
-        <div id="empresaContainer"></div>
+    <button type="button" onclick="addPersonal()">
+        Añadir trabajador
+    </button>
 
-        <button type="button" onclick="addEmpresa()">
-            Añadir empresa
-        </button>
+    <h3>Maquinaria</h3>
 
-        <h3>Inspecciones</h3>
-        <div id="inspeccionesContainer"></div>
+    <div id="maquinariaContainer"></div>
 
-        <button type="button" onclick="addInspeccion()">
-            Añadir inspección
-        </button>
+    <button type="button" onclick="addMaquinaria()">
+        Añadir maquinaria
+    </button>
 
-        <h3>Checklist de inspección</h3>
+    <h3>Empresas / Contratas</h3>
 
-        <div id="checklistContainer"></div>
+    <div id="empresaContainer"></div>
 
-        <h3>Firmas</h3>
+    <button type="button" onclick="addEmpresa()">
+        Añadir empresa
+    </button>
 
-        <label>Realizado por</label>
-        <select id="realizadoPor">
-            <option>Ana Isabel Pérez Martínez</option>
-            <option>Juan Hernández</option>
-        </select>
+    <h3>Inspecciones</h3>
 
-        <label>Revisado por</label>
-        <select id="revisadoPor">
-            <option>Jesús Domínguez Segura</option>
-        </select>
+    <div id="inspeccionesContainer"></div>
 
-        <h3>Firma del responsable de obra</h3>
+    <button type="button" onclick="addInspeccion()">
+        Añadir inspección
+    </button>
 
-        <canvas id="firmaCanvas" width="700" height="220">
-        </canvas>
+    <h3>Checklist de inspección</h3>
 
-        <div class="firma-buttons">
-            <button type="button" onclick="limpiarFirma()">
-                Limpiar firma
-            </button>
-        </div>
+    <div id="checklistContainer"></div>
 
-        <button class="generate-btn" onclick="enviar()">
-            Generar PDF
+    <hr>
+
+    <h3>Técnico responsable de la obra</h3>
+
+    <label>Nombre</label>
+
+    <input
+        type="text"
+        id="tecnicoResponsable"
+        placeholder="Nombre del técnico responsable">
+
+    <label>Firma</label>
+
+    <canvas
+        id="firmaCanvas"
+        width="700"
+        height="220">
+    </canvas>
+
+    <div class="firma-buttons">
+
+        <button
+            type="button"
+            onclick="limpiarFirma()">
+
+            Limpiar firma
+
         </button>
 
     </div>
 
-    <script type="module" src="./app.js"></script>
+    <hr>
+
+    <h3>Coordinador de Seguridad y Salud (TESICNOR)</h3>
+
+    <label>Coordinador</label>
+
+    <select id="coordinador">
+
+        <option value="Ana Isabel Pérez Martínez">
+            Ana Isabel Pérez Martínez
+        </option>
+
+        <option value="Jesús Domínguez Segura">
+            Jesús Domínguez Segura
+        </option>
+
+    </select>
+
+    <br><br>
+
+    <button
+        class="generate-btn"
+        onclick="enviar()">
+
+        Generar PDF
+
+    </button>
+
+</div>
+
+<script type="module" src="./app.js"></script>
 
 </body>
+
+</html>

@@ -33,28 +33,6 @@
 
     </div>
 
-    <table class="datos-generales">
-        <tr>
-            <td><b>Fecha</b></td>
-            <td>{{fecha}}</td>
-        </tr>
-
-        <tr>
-            <td><b>Obra</b></td>
-            <td>{{obra}}</td>
-        </tr>
-
-        <tr>
-            <td><b>Cliente</b></td>
-            <td>{{cliente}}</td>
-        </tr>
-
-        <tr>
-            <td><b>Alcance</b></td>
-            <td>{{alcance}}</td>
-        </tr>
-    </table>
-
     {{resumen}}
 
     {{checklist}}
@@ -88,6 +66,7 @@
         <tr>
             <th>Empresa</th>
             <th>Observaciones</th>
+            <th>Principal</th>
         </tr>
 
         {{empresaRows}}
@@ -109,24 +88,62 @@
     <table class="firmas-table">
 
         <tr>
-            <td>
-                <b>Realizado por</b><br>
-                {{realizadoPor}}
-            </td>
 
-            <td>
-                <b>Revisado por</b><br>
-                {{revisadoPor}}
-            </td>
+            <th>
+                Técnico responsable de la obra
+            </th>
+
+            <th>
+                Coordinador de Seguridad y Salud
+            </th>
+
         </tr>
 
         <tr>
-            <td colspan="2" class="firma-cell">
 
-                <img src="{{firma}}" class="firma">
+            <td class="firma-cell">
+
+                <strong>
+                    {{tecnicoResponsable}}
+                </strong>
+
+                <br><br>
+
+                <img src="{{firmaTecnico}}" class="firma">
 
             </td>
+
+            <td class="firma-cell">
+
+                <strong>
+                    {{coordinador}}
+                </strong>
+
+                <br><br>
+
+                <img src="{{firmaCoordinador}}" class="firma">
+
+            </td>
+
         </tr>
+
+    </table>
+
+    <h3>Empresas asistentes</h3>
+
+    <table class="tabla">
+
+        <tr>
+
+            <th>Empresa</th>
+
+            <th>Observaciones</th>
+
+            <th>Principal</th>
+
+        </tr>
+
+        {{empresaRows}}
 
     </table>
 
