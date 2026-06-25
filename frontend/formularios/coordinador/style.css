@@ -5,11 +5,25 @@ body {
 }
 
 .container {
-    max-width: 600px;
+
+    max-width: 700px;
+
     margin: auto;
+
     padding: 20px;
+
     background: white;
+
     min-height: 100vh;
+
+    box-sizing: border-box;
+}
+
+.container-content {
+
+    max-width: 600px;
+
+    margin: 0 auto;
 }
 
 h2 {
@@ -200,4 +214,127 @@ button:hover {
 
 .oculto {
     display: none;
+}
+
+
+/* =========================
+   EMPRESAS
+========================= */
+
+.empresa-card-content{
+
+    display:flex;
+
+    gap:12px;
+
+    align-items:flex-start;
+}
+
+.empresa-datos{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+}
+
+.empresa-acciones{
+
+    width:100px;
+
+    flex-shrink:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding-top:2px;
+}
+
+.principal-check{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:4px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    text-align:center;
+}
+
+.principal-check input{
+
+    width:18px;
+
+    height:18px;
+}
+
+.item-card{
+
+    margin-bottom:12px;
+
+    padding:14px;
+
+    border:1px solid #d9d9d9;
+
+    border-radius:8px;
+
+    background:#fff;
+}
+
+.item-card:last-child{
+
+    margin-bottom:0;
+}
+
+
+@media (max-width:700px){
+
+    .empresa-card-content{
+
+        flex-direction:column;
+    }
+
+    .empresa-datos{
+
+        width:100%;
+    }
+
+    .empresa-datos input,
+    .empresa-datos textarea{
+
+        width:100%;
+    }
+
+    .empresa-acciones{
+
+        width:100%;
+
+        flex-direction:row;
+
+        justify-content:space-between;
+
+        align-items:center;
+    }
+
+    .principal-check{
+
+        flex-direction:row;
+
+        gap:8px;
+    }
+
 }

@@ -27,33 +27,48 @@ export function renderEmpresas() {
 
         div.innerHTML = `
 
-            <input
-                placeholder="Empresa"
-                value="${item.nombre}"
-                onchange="empresas[${index}].nombre=this.value">
+            <div class="empresa-card-content">
 
-            <textarea
-                placeholder="Observaciones"
-                onchange="empresas[${index}].observaciones=this.value">${item.observaciones}</textarea>
+                <div class="empresa-datos">
 
-            <label class="empresa-principal">
+                    <input
+                        placeholder="Empresa"
+                        value="${item.nombre}"
+                        onchange="empresas[${index}].nombre=this.value">
 
-                <input
-                    type="checkbox"
-                    ${item.principal ? "checked" : ""}
-                    onchange="setEmpresaPrincipal(${index}, this.checked)">
+                    <textarea
+                        rows="3"
+                        placeholder="Observaciones"
+                        onchange="empresas[${index}].observaciones=this.value">${item.observaciones}</textarea>
 
-                Contrata principal
+                </div>
 
-            </label>
+                <div class="empresa-acciones">
 
-            <button
-                type="button"
-                onclick="removeEmpresa(${index})">
-                Eliminar
-            </button>
+                    <label class="principal-check">
 
-        `;
+                        <input
+                            type="checkbox"
+                            ${item.principal ? "checked" : ""}
+                            onchange="setPrincipal(${index}, this.checked)">
+
+                        Principal
+
+                    </label>
+
+                    <button
+                        type="button"
+                        onclick="removeEmpresa(${index})">
+
+                        Eliminar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            `;
 
         container.appendChild(div);
     });
