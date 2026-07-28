@@ -484,6 +484,7 @@ async function generatePDF(data) {
         content: css
     });
 
+    await page.emulateMediaType("screen");
     const pdf = await page.pdf({
 
         format: "A4",
@@ -491,8 +492,8 @@ async function generatePDF(data) {
         printBackground: true,
 
         margin: {
-            top: "15mm",
-            bottom: "15mm",
+            top: "0mm",
+            bottom: "0mm",
             left: "10mm",
             right: "10mm"
         }
