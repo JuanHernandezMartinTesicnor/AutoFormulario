@@ -134,19 +134,53 @@ async function generatePDF(data) {
     );
 
     /* =========================
-       MAQUINARIA
+    MAQUINARIA
     ========================= */
 
-    html = html.replace(
-        /{{maquinariaRows}}/g,
-        (data.maquinaria || [])
-            .map(m => `
+    const maquinariaValida =
+        (data.maquinaria || []).filter(m =>
+            (m.equipo || "").trim() ||
+            (m.matricula || "").trim()
+        );
+
+    let maquinariaHtml = "";
+
+    if (maquinariaValida.length > 0) {
+
+        maquinariaHtml = `
+
+        <h2>Maquinaria y equipos</h2>
+
+        <table class="tabla">
+
+            <tr>
+
+                <th>Equipo</th>
+
+                <th>Matrícula</th>
+
+            </tr>
+
+            ${maquinariaValida.map(m => `
+
                 <tr>
+
                     <td>${m.equipo || ""}</td>
+
                     <td>${m.matricula || ""}</td>
+
                 </tr>
-            `)
-            .join("")
+
+            `).join("")}
+
+        </table>
+
+    `;
+    }
+
+    html = html.replace(
+        "{{maquinariaSection}}",
+        maquinariaHtml
     );
 
     /* =========================
