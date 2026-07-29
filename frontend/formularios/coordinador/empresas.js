@@ -48,9 +48,10 @@ export function renderEmpresas() {
                     <label class="principal-check">
 
                         <input
-                            type="checkbox"
+                            type="radio"
+                            name="contrataPrincipal"
                             ${item.principal ? "checked" : ""}
-                            onchange="setPrincipal(${index}, this.checked)">
+                            onchange="setEmpresaPrincipal(${index})">
 
                         Principal
 
@@ -74,12 +75,11 @@ export function renderEmpresas() {
     });
 }
 
-export function setEmpresaPrincipal(index, checked) {
+export function setEmpresaPrincipal(index) {
 
     empresas.forEach((empresa, i) => {
 
-        empresa.principal =
-            checked && i === index;
+        empresa.principal = i === index;
 
     });
 
