@@ -25,6 +25,8 @@
 
             <div class="cover-work">
                 {{obra}}
+                <br>
+                {{direccion}}
             </div>
 
         </div>
@@ -37,42 +39,13 @@
 
     {{checklist}}
 
-    <h2>Personal presente</h2>
-
-    <table class="tabla">
-        <tr>
-            <th>Empresa</th>
-            <th>Trabajador</th>
-            <th>Cargo</th>
-        </tr>
-
-        {{personalRows}}
-    </table>
+    {{personalSection}}
 
     {{maquinariaSection}}
 
-    <h2>Empresas / Subcontratas</h2>
+    {{empresaSection}}
 
-    <table class="tabla">
-        <tr>
-            <th>Empresa</th>
-            <th>Observaciones</th>
-            <th>Principal</th>
-        </tr>
-
-        {{empresaRows}}
-    </table>
-
-    <h2>Inspecciones realizadas</h2>
-
-    <table class="tabla">
-        <tr>
-            <th>Fase</th>
-            <th>Observaciones</th>
-        </tr>
-
-        {{inspeccionRows}}
-    </table>
+    {{inspeccionSection}}
 
     <h2>Firmas</h2>
 

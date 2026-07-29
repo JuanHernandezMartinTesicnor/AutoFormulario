@@ -92,7 +92,7 @@ async function generatePDF(data) {
     html = html.replace(/{{fecha}}/g, data.fecha || "");
     html = html.replace(/{{obra}}/g, data.obra || "");
     html = html.replace(/{{cliente}}/g, data.cliente || "");
-    html = html.replace(/{{alcance}}/g, data.alcance || "");
+    html = html.replace(/{{direccion}}/g, data.direccion || "");
     html = html.replace(/{{fecha}}/g, data.fecha || "");
     html = html.replace(/{{obra}}/g, data.obra || "");
 
@@ -120,17 +120,55 @@ async function generatePDF(data) {
        PERSONAL
     ========================= */
 
-    html = html.replace(
-        /{{personalRows}}/g,
-        (data.personal || [])
-            .map(p => `
+    const personalValido =
+        (data.personal || []).filter(p =>
+            (p.empresa || "").trim() ||
+            (p.trabajador || "").trim() ||
+            (p.cargo || "").trim()
+        );
+
+    let personalHtml = "";
+
+    if (personalValido.length > 0) {
+
+        personalHtml = `
+
+        <h2>Personal presente</h2>
+
+        <table class="tabla">
+
+            <tr>
+
+                <th>Empresa</th>
+
+                <th>Trabajador</th>
+
+                <th>Cargo</th>
+
+            </tr>
+
+            ${personalValido.map(p => `
+
                 <tr>
+
                     <td>${p.empresa || ""}</td>
+
                     <td>${p.trabajador || ""}</td>
+
                     <td>${p.cargo || ""}</td>
+
                 </tr>
-            `)
-            .join("")
+
+            `).join("")}
+
+        </table>
+
+    `;
+    }
+
+    html = html.replace(
+        "{{personalSection}}",
+        personalHtml
     );
 
     /* =========================
@@ -184,55 +222,107 @@ async function generatePDF(data) {
     );
 
     /* =========================
-       EMPRESAS
+    EMPRESAS
     ========================= */
 
-    const principal = (data.empresas || []).find(
-        e => e.principal
-    );
+    const empresasValidas =
+        (data.empresas || []).filter(e =>
+            (e.nombre || "").trim() ||
+            (e.observaciones || "").trim()
+        );
 
-    html = html.replace(
-        /{{contrataPrincipal}}/g,
-        principal
-            ? principal.nombre
-            : ""
-    );
+    let empresaHtml = "";
 
-    html = html.replace(
-        /{{empresaRows}}/g,
-        (data.empresas || [])
-            .map(e => `
+    if (empresasValidas.length > 0) {
+
+        empresaHtml = `
+
+        <h2>Empresas / Subcontratas</h2>
+
+        <table class="tabla">
+
+            <tr>
+
+                <th>Empresa</th>
+
+                <th>Observaciones</th>
+
+                <th>Principal</th>
+
+            </tr>
+
+            ${empresasValidas.map(e => `
+
                 <tr>
 
                     <td>${e.nombre || ""}</td>
 
                     <td>${e.observaciones || ""}</td>
 
-                    <td>
-
-                        ${e.principal ? "SI" : ""}
-
-                    </td>
+                    <td>${e.principal ? "Sí" : ""}</td>
 
                 </tr>
-            `)
-            .join("")
+
+            `).join("")}
+
+        </table>
+
+    `;
+    }
+
+    html = html.replace(
+        "{{empresaSection}}",
+        empresaHtml
     );
 
     /* =========================
-       INSPECCIONES
-    ========================= */
+   INSPECCIONES
+========================= */
+
+    const inspeccionesValidas =
+        (data.inspecciones || []).filter(i =>
+            (i.fase || "").trim() ||
+            (i.observaciones || "").trim()
+        );
+
+    let inspeccionHtml = "";
+
+    if (inspeccionesValidas.length > 0) {
+
+        inspeccionHtml = `
+
+        <h2>Inspecciones realizadas</h2>
+
+        <table class="tabla">
+
+            <tr>
+
+                <th>Fase</th>
+
+                <th>Observaciones</th>
+
+            </tr>
+
+            ${inspeccionesValidas.map(i => `
+
+                <tr>
+
+                    <td>${i.fase || ""}</td>
+
+                    <td>${i.observaciones || ""}</td>
+
+                </tr>
+
+            `).join("")}
+
+        </table>
+
+    `;
+    }
 
     html = html.replace(
-        /{{inspeccionRows}}/g,
-        (data.inspecciones || [])
-            .map(i => `
-                <tr>
-                    <td>${i.fase || ""}</td>
-                    <td>${i.observaciones || ""}</td>
-                </tr>
-            `)
-            .join("")
+        "{{inspeccionSection}}",
+        inspeccionHtml
     );
 
     /* =========================

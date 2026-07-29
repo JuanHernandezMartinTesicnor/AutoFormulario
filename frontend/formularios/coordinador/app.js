@@ -132,8 +132,8 @@ async function enviar() {
             cliente:
                 document.getElementById("cliente")?.value || "",
 
-            alcance:
-                document.getElementById("alcance")?.value || "",
+            direccion:
+                document.getElementById("direccion")?.value || "",
 
             tecnicoResponsable:
                 document.getElementById("tecnicoResponsable")?.value || "",
