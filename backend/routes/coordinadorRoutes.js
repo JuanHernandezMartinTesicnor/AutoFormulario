@@ -1,31 +1,95 @@
 const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const crypto = require("crypto");
 
 const router = express.Router();
 
+const storage = multer.diskStorage({
+
+    destination: (req, file, cb) => {
+
+        cb(
+            null,
+            path.join(__dirname, "../uploads/tmp")
+        );
+
+    },
+
+    filename: (req, file, cb) => {
+
+        cb(
+            null,
+            crypto.randomUUID() +
+            path.extname(file.originalname)
+        );
+
+    }
+
+});
+
+const upload = multer({
+
+    storage,
+
+    limits: {
+
+        fileSize: 20 * 1024 * 1024 // 20 MB por foto
+
+    }
+
+});
+
 const {
-  generatePDF
+    generatePDF
 } = require("../services/pdf/coordinador/generateCoordinadorPDF");
 
-router.post("/generate-pdf", async (req, res) => {
+router.post(
 
-  try {
+    "/generate-pdf",
 
-    const pdf = await generatePDF(req.body);
+    upload.any(),
 
-    res.set({
-      "Content-Type": "application/pdf",
-      "Content-Disposition": "attachment; filename=formulario.pdf",
-      "Content-Length": pdf.length
-    });
+    async (req, res) => {
 
-    res.send(pdf);
+        try {
 
-  } catch (error) {
+            const datos =
+                JSON.parse(req.body.datos);
 
-    console.error(error);
+            const pdf =
+                await generatePDF(
+                    datos,
+                    req.files
+                );
 
-    res.status(500).send("Error generando PDF");
-  }
-});
+            res.set({
+
+                "Content-Type": "application/pdf",
+
+                "Content-Disposition":
+                    "attachment; filename=formulario.pdf",
+
+                "Content-Length":
+                    pdf.length
+
+            });
+
+            res.send(pdf);
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            res
+                .status(500)
+                .send("Error generando PDF");
+
+        }
+
+    }
+
+);
 
 module.exports = router;

@@ -4,7 +4,7 @@ const path = require("path");
 
 const isLinux = process.platform === "linux";
 
-async function generatePDF(data) {
+async function generatePDF(data, files) {
 
     const browser = await puppeteer.launch({
 
@@ -22,116 +22,118 @@ async function generatePDF(data) {
         ]
     });
 
-    const page = await browser.newPage();
+    try {
 
-    const logoTesicnor = fs.readFileSync(
-        path.join(__dirname, "../../../assets/logos/tesicnor.png"),
-        "base64"
-    );
+        const page = await browser.newPage();
 
-    const portada = fs.readFileSync(
-        path.join(__dirname, "../../../assets/logos/tesicnorPortada.png"),
-        "base64"
-    );
-
-    const firmaAna = fs.readFileSync(
-        path.join(__dirname, "../../../assets/firmas/ana.png"),
-        "base64"
-    );
-
-    const firmaJesus = fs.readFileSync(
-        path.join(__dirname, "../../../assets/firmas/jesus.png"),
-        "base64"
-    );
-
-    let html = fs.readFileSync(
-        path.join(__dirname, "pdfTemplate.html"),
-        "utf8"
-    );
-
-    const css = fs.readFileSync(
-        path.join(__dirname, "pdfStyles.css"),
-        "utf8"
-    );
-
-    html = html.replace(
-        /{{logoTesicnor}}/g,
-        logoTesicnor
-    );
-
-    html = html.replace(
-        /{{coverImage}}/g,
-        portada
-    );
-
-    let firmaCoordinador = "";
-
-    if (
-        data.coordinador &&
-        data.coordinador.includes("Ana")
-    ) {
-
-        firmaCoordinador =
-            "data:image/png;base64," + firmaAna;
-
-    }
-    else if (
-        data.coordinador &&
-        data.coordinador.includes("Jes")
-    ) {
-
-        firmaCoordinador =
-            "data:image/png;base64," + firmaJesus;
-
-    }
-
-    /* =========================
-       DATOS GENERALES
-    ========================= */
-
-    html = html.replace(/{{fecha}}/g, data.fecha || "");
-    html = html.replace(/{{obra}}/g, data.obra || "");
-    html = html.replace(/{{cliente}}/g, data.cliente || "");
-    html = html.replace(/{{direccion}}/g, data.direccion || "");
-    html = html.replace(/{{fecha}}/g, data.fecha || "");
-    html = html.replace(/{{obra}}/g, data.obra || "");
-
-    html = html.replace(
-        /{{tecnicoResponsable}}/g,
-        data.tecnicoResponsable || ""
-    );
-
-    html = html.replace(
-        /{{coordinador}}/g,
-        data.coordinador || ""
-    );
-
-    html = html.replace(
-        /{{firmaTecnico}}/g,
-        data.firmaTecnico || ""
-    );
-
-    html = html.replace(
-        /{{firmaCoordinador}}/g,
-        firmaCoordinador
-    );
-
-    /* =========================
-       PERSONAL
-    ========================= */
-
-    const personalValido =
-        (data.personal || []).filter(p =>
-            (p.empresa || "").trim() ||
-            (p.trabajador || "").trim() ||
-            (p.cargo || "").trim()
+        const logoTesicnor = fs.readFileSync(
+            path.join(__dirname, "../../../assets/logos/tesicnor.png"),
+            "base64"
         );
 
-    let personalHtml = "";
+        const portada = fs.readFileSync(
+            path.join(__dirname, "../../../assets/logos/tesicnorPortada.png"),
+            "base64"
+        );
 
-    if (personalValido.length > 0) {
+        const firmaAna = fs.readFileSync(
+            path.join(__dirname, "../../../assets/firmas/ana.png"),
+            "base64"
+        );
 
-        personalHtml = `
+        const firmaJesus = fs.readFileSync(
+            path.join(__dirname, "../../../assets/firmas/jesus.png"),
+            "base64"
+        );
+
+        let html = fs.readFileSync(
+            path.join(__dirname, "pdfTemplate.html"),
+            "utf8"
+        );
+
+        const css = fs.readFileSync(
+            path.join(__dirname, "pdfStyles.css"),
+            "utf8"
+        );
+
+        html = html.replace(
+            /{{logoTesicnor}}/g,
+            logoTesicnor
+        );
+
+        html = html.replace(
+            /{{coverImage}}/g,
+            portada
+        );
+
+        let firmaCoordinador = "";
+
+        if (
+            data.coordinador &&
+            data.coordinador.includes("Ana")
+        ) {
+
+            firmaCoordinador =
+                "data:image/png;base64," + firmaAna;
+
+        }
+        else if (
+            data.coordinador &&
+            data.coordinador.includes("Jes")
+        ) {
+
+            firmaCoordinador =
+                "data:image/png;base64," + firmaJesus;
+
+        }
+
+        /* =========================
+           DATOS GENERALES
+        ========================= */
+
+        html = html.replace(/{{fecha}}/g, data.fecha || "");
+        html = html.replace(/{{obra}}/g, data.obra || "");
+        html = html.replace(/{{cliente}}/g, data.cliente || "");
+        html = html.replace(/{{direccion}}/g, data.direccion || "");
+        html = html.replace(/{{fecha}}/g, data.fecha || "");
+        html = html.replace(/{{obra}}/g, data.obra || "");
+
+        html = html.replace(
+            /{{tecnicoResponsable}}/g,
+            data.tecnicoResponsable || ""
+        );
+
+        html = html.replace(
+            /{{coordinador}}/g,
+            data.coordinador || ""
+        );
+
+        html = html.replace(
+            /{{firmaTecnico}}/g,
+            data.firmaTecnico || ""
+        );
+
+        html = html.replace(
+            /{{firmaCoordinador}}/g,
+            firmaCoordinador
+        );
+
+        /* =========================
+           PERSONAL
+        ========================= */
+
+        const personalValido =
+            (data.personal || []).filter(p =>
+                (p.empresa || "").trim() ||
+                (p.trabajador || "").trim() ||
+                (p.cargo || "").trim()
+            );
+
+        let personalHtml = "";
+
+        if (personalValido.length > 0) {
+
+            personalHtml = `
 
         <h2>Personal presente</h2>
 
@@ -164,28 +166,28 @@ async function generatePDF(data) {
         </table>
 
     `;
-    }
+        }
 
-    html = html.replace(
-        "{{personalSection}}",
-        personalHtml
-    );
-
-    /* =========================
-    MAQUINARIA
-    ========================= */
-
-    const maquinariaValida =
-        (data.maquinaria || []).filter(m =>
-            (m.equipo || "").trim() ||
-            (m.matricula || "").trim()
+        html = html.replace(
+            "{{personalSection}}",
+            personalHtml
         );
 
-    let maquinariaHtml = "";
+        /* =========================
+        MAQUINARIA
+        ========================= */
 
-    if (maquinariaValida.length > 0) {
+        const maquinariaValida =
+            (data.maquinaria || []).filter(m =>
+                (m.equipo || "").trim() ||
+                (m.matricula || "").trim()
+            );
 
-        maquinariaHtml = `
+        let maquinariaHtml = "";
+
+        if (maquinariaValida.length > 0) {
+
+            maquinariaHtml = `
 
         <h2>Maquinaria y equipos</h2>
 
@@ -214,28 +216,28 @@ async function generatePDF(data) {
         </table>
 
     `;
-    }
+        }
 
-    html = html.replace(
-        "{{maquinariaSection}}",
-        maquinariaHtml
-    );
-
-    /* =========================
-    EMPRESAS
-    ========================= */
-
-    const empresasValidas =
-        (data.empresas || []).filter(e =>
-            (e.nombre || "").trim() ||
-            (e.observaciones || "").trim()
+        html = html.replace(
+            "{{maquinariaSection}}",
+            maquinariaHtml
         );
 
-    let empresaHtml = "";
+        /* =========================
+        EMPRESAS
+        ========================= */
 
-    if (empresasValidas.length > 0) {
+        const empresasValidas =
+            (data.empresas || []).filter(e =>
+                (e.nombre || "").trim() ||
+                (e.observaciones || "").trim()
+            );
 
-        empresaHtml = `
+        let empresaHtml = "";
+
+        if (empresasValidas.length > 0) {
+
+            empresaHtml = `
 
         <h2>Empresas / Subcontratas</h2>
 
@@ -268,28 +270,28 @@ async function generatePDF(data) {
         </table>
 
     `;
-    }
+        }
 
-    html = html.replace(
-        "{{empresaSection}}",
-        empresaHtml
-    );
-
-    /* =========================
-   INSPECCIONES
-========================= */
-
-    const inspeccionesValidas =
-        (data.inspecciones || []).filter(i =>
-            (i.fase || "").trim() ||
-            (i.observaciones || "").trim()
+        html = html.replace(
+            "{{empresaSection}}",
+            empresaHtml
         );
 
-    let inspeccionHtml = "";
+        /* =========================
+       INSPECCIONES
+    ========================= */
 
-    if (inspeccionesValidas.length > 0) {
+        const inspeccionesValidas =
+            (data.inspecciones || []).filter(i =>
+                (i.fase || "").trim() ||
+                (i.observaciones || "").trim()
+            );
 
-        inspeccionHtml = `
+        let inspeccionHtml = "";
+
+        if (inspeccionesValidas.length > 0) {
+
+            inspeccionHtml = `
 
         <h2>Inspecciones realizadas</h2>
 
@@ -318,62 +320,62 @@ async function generatePDF(data) {
         </table>
 
     `;
-    }
+        }
 
-    html = html.replace(
-        "{{inspeccionSection}}",
-        inspeccionHtml
-    );
+        html = html.replace(
+            "{{inspeccionSection}}",
+            inspeccionHtml
+        );
 
-    /* =========================
-       CHECKLIST
-    ========================= */
+        /* =========================
+           CHECKLIST
+        ========================= */
 
-    let checklistHtml = "";
+        let checklistHtml = "";
 
-    let total = 0;
-    let incumplimientos = 0;
-    let incumplimientosGraves = 0;
+        let total = 0;
+        let incumplimientos = 0;
+        let incumplimientosGraves = 0;
 
-    if (Array.isArray(data.checklist)) {
+        if (Array.isArray(data.checklist)) {
 
-        data.checklist.forEach(grupo => {
+            data.checklist.forEach(grupo => {
 
-            const itemsValidos =
-                grupo.items.filter(
-                    item => item.valor !== "NA"
-                );
+                const itemsValidos =
+                    grupo.items.filter(
+                        item => item.valor !== "NA"
+                    );
 
-            if (itemsValidos.length === 0) {
-                return;
-            }
+                if (itemsValidos.length === 0) {
+                    return;
+                }
 
-            checklistHtml += `
+                checklistHtml += `
                 <h3>
                     ${formatearTitulo(grupo.categoria)}
                 </h3>
             `;
 
-            itemsValidos.forEach(item => {
+                itemsValidos.forEach(item => {
 
-                total++;
+                    total++;
 
-                if (item.valor === "NO") {
+                    if (item.valor === "NO") {
 
-                    incumplimientos++;
+                        incumplimientos++;
 
-                    if (
-                        item.gravedad === "GRAVE"
-                    ) {
-                        incumplimientosGraves++;
+                        if (
+                            item.gravedad === "GRAVE"
+                        ) {
+                            incumplimientosGraves++;
+                        }
                     }
-                }
 
-                const descripcion =
-                    textosChecklist[item.id]?.[item.valor]
-                    || "";
+                    const descripcion =
+                        textosChecklist[item.id]?.[item.valor]
+                        || "";
 
-                checklistHtml += `
+                    checklistHtml += `
                     <div class="check-item">
 
                         <h4>
@@ -381,21 +383,21 @@ async function generatePDF(data) {
                         </h4>
                 `;
 
-                if (descripcion) {
+                    if (descripcion) {
 
-                    checklistHtml += `
+                        checklistHtml += `
                         <p>
                             ${descripcion}
                         </p>
                     `;
-                }
+                    }
 
-                if (
-                    item.comentario &&
-                    item.comentario.trim()
-                ) {
+                    if (
+                        item.comentario &&
+                        item.comentario.trim()
+                    ) {
 
-                    checklistHtml += `
+                        checklistHtml += `
                         <p>
                             <strong>
                                 Observaciones:
@@ -403,14 +405,14 @@ async function generatePDF(data) {
                             ${item.comentario}
                         </p>
                     `;
-                }
+                    }
 
-                if (
-                    item.responsable &&
-                    item.responsable.trim()
-                ) {
+                    if (
+                        item.responsable &&
+                        item.responsable.trim()
+                    ) {
 
-                    checklistHtml += `
+                        checklistHtml += `
                         <p>
                             <strong>
                                 Responsable:
@@ -418,14 +420,14 @@ async function generatePDF(data) {
                             ${item.responsable}
                         </p>
                     `;
-                }
+                    }
 
-                if (
-                    item.fechaLimite &&
-                    item.fechaLimite.trim()
-                ) {
+                    if (
+                        item.fechaLimite &&
+                        item.fechaLimite.trim()
+                    ) {
 
-                    checklistHtml += `
+                        checklistHtml += `
                         <p>
                             <strong>
                                 Fecha límite:
@@ -433,65 +435,80 @@ async function generatePDF(data) {
                             ${item.fechaLimite}
                         </p>
                     `;
-                }
-
-                checklistHtml += `
-                    </div>
-                    <hr>
-                `;
-            });
-
-            const fotosGrupo =
-                data.fotosChecklist?.[grupo.categoria] || [];
-
-            if (fotosGrupo.length > 0) {
-
-                checklistHtml += `
-                    <h4>Evidencias fotográficas</h4>
-
-                    <div class="galeria-fotos">
-                `;
-
-                fotosGrupo.forEach(foto => {
+                    }
 
                     checklistHtml += `
-                        <img
-                            src="${foto.imagen}"
-                            style="
-                                width:220px;
-                                margin:8px;
-                                border:1px solid #ccc;
-                                border-radius:4px;
-                            "
-                        >
-                    `;
-                });
-
-                checklistHtml += `
                     </div>
                     <hr>
                 `;
-            }
-        });
-    }
+                });
 
-    html = html.replace(
-        /{{checklist}}/g,
-        checklistHtml
-    );
+                const fotosGrupo =
+                    data.fotosChecklist?.[grupo.categoria] || [];
 
-    /* =========================
-       RESUMEN
-    ========================= */
+                if (fotosGrupo.length > 0) {
 
-    const cumplimiento =
-        total > 0
-            ? Math.round(
-                ((total - incumplimientos) / total) * 100
-            )
-            : 100;
+                    checklistHtml += `
+        <h4>Evidencias fotográficas</h4>
 
-    const resumenHtml = `
+        <div class="galeria-fotos">
+    `;
+
+                    fotosGrupo.forEach(foto => {
+
+                        const archivo =
+                            files.find(
+                                f => f.fieldname === foto.archivo
+                            );
+
+                        if (!archivo)
+                            return;
+
+                        const imagenBase64 =
+                            fs.readFileSync(
+                                archivo.path,
+                                "base64"
+                            );
+
+                        checklistHtml += `
+            <img
+                src="data:${archivo.mimetype};base64,${imagenBase64}"
+                style="
+                    width:220px;
+                    margin:8px;
+                    border:1px solid #ccc;
+                    border-radius:4px;
+                "
+            >
+        `;
+
+                    });
+
+                    checklistHtml += `
+        </div>
+        <hr>
+    `;
+                }
+            });
+        }
+
+        html = html.replace(
+            /{{checklist}}/g,
+            checklistHtml
+        );
+
+        /* =========================
+           RESUMEN
+        ========================= */
+
+        const cumplimiento =
+            total > 0
+                ? Math.round(
+                    ((total - incumplimientos) / total) * 100
+                )
+                : 100;
+
+        const resumenHtml = `
 
         <div class="resumen">
 
@@ -521,27 +538,27 @@ async function generatePDF(data) {
 
     `;
 
-    html = html.replace(
-        /{{resumen}}/g,
-        resumenHtml
-    );
-
-    /* =========================
-       GENERAR PDF
-    ========================= */
-
-    let contratasHtml = "";
-
-    const contrtaPrincipal =
-        (data.empresas || []).find(
-            e =>
-                e.principal === true ||
-                e.principal === "SI"
+        html = html.replace(
+            /{{resumen}}/g,
+            resumenHtml
         );
 
-    if (contrtaPrincipal) {
+        /* =========================
+           GENERAR PDF
+        ========================= */
 
-        contratasHtml += `
+        let contratasHtml = "";
+
+        const contrtaPrincipal =
+            (data.empresas || []).find(
+                e =>
+                    e.principal === true ||
+                    e.principal === "SI"
+            );
+
+        if (contrtaPrincipal) {
+
+            contratasHtml += `
         <p>
             <strong>
                 Contrata principal:
@@ -549,11 +566,11 @@ async function generatePDF(data) {
             ${contrtaPrincipal.nombre}
         </p>
     `;
-    }
+        }
 
-    if (data.empresas.length) {
+        if (data.empresas.length) {
 
-        contratasHtml += `
+            contratasHtml += `
 
         <table class="tabla">
 
@@ -567,9 +584,9 @@ async function generatePDF(data) {
 
     `;
 
-        data.empresas.forEach(e => {
+            data.empresas.forEach(e => {
 
-            contratasHtml += `
+                contratasHtml += `
 
             <tr>
 
@@ -587,45 +604,69 @@ async function generatePDF(data) {
 
         `;
 
+            });
+
+            contratasHtml += "</table>";
+        }
+
+        html = html.replace(
+            /{{firmasContratas}}/g,
+            contratasHtml
+        );
+
+        await page.setContent(html, {
+            waitUntil: "domcontentloaded",
+            timeout: 0
         });
 
-        contratasHtml += "</table>";
+        await page.addStyleTag({
+            content: css
+        });
+
+        await page.emulateMediaType("screen");
+        const pdf = await page.pdf({
+
+            format: "A4",
+
+            printBackground: true,
+
+            margin: {
+                top: "0mm",
+                bottom: "0mm",
+                left: "10mm",
+                right: "10mm"
+            }
+        });
+
+        return pdf;
+
+    } finally {
+
+        if (browser) {
+            await browser.close();
+        }
+
+        // Esperamos un poco para que Windows libere los archivos
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        if (files) {
+
+            for (const file of files) {
+
+                try {
+
+                    await fs.promises.unlink(file.path);
+
+                } catch (e) {
+
+                    console.warn("No se pudo borrar", file.path);
+
+                }
+
+            }
+        }
     }
 
-    html = html.replace(
-        /{{firmasContratas}}/g,
-        contratasHtml
-    );
-
-    await page.setContent(
-        html,
-        {
-            waitUntil: "networkidle0"
-        }
-    );
-
-    await page.addStyleTag({
-        content: css
-    });
-
-    await page.emulateMediaType("screen");
-    const pdf = await page.pdf({
-
-        format: "A4",
-
-        printBackground: true,
-
-        margin: {
-            top: "0mm",
-            bottom: "0mm",
-            left: "10mm",
-            right: "10mm"
-        }
-    });
-
-    await browser.close();
-
-    return pdf;
 }
 
 function formatearTitulo(texto) {

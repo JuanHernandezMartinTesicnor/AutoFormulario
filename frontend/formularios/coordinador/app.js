@@ -53,53 +53,44 @@ window.limpiarFirma = limpiarFirma;
    FOTOS CHECKLIST
 ========================= */
 
-async function fileToBase64(file) {
-
-    return new Promise((resolve, reject) => {
-
-        const reader = new FileReader();
-
-        reader.onload = () => resolve(reader.result);
-
-        reader.onerror = reject;
-
-        reader.readAsDataURL(file);
-
-    });
-}
-
-async function obtenerFotosChecklist() {
+async function obtenerFotosChecklist(formData) {
 
     const resultado = {};
 
     const fotosInputs =
         document.querySelectorAll(".check-foto");
 
+    let contador = 0;
+
     for (const input of fotosInputs) {
 
-        const grupo =
-            input.dataset.grupo;
+        const grupo = input.dataset.grupo;
 
         resultado[grupo] = [];
 
-        if (!input.files.length) {
+        if (!input.files.length)
             continue;
-        }
 
         for (const file of input.files) {
 
-            const base64 =
-                await fileToBase64(file);
+            const nombreServidor =
+                `foto_${contador++}`;
+
+            formData.append(
+                nombreServidor,
+                file
+            );
 
             resultado[grupo].push({
 
-                nombre:
-                    file.name,
+                nombre: file.name,
 
-                imagen:
-                    base64
+                archivo: nombreServidor
+
             });
+
         }
+
     }
 
     return resultado;
@@ -113,13 +104,10 @@ async function enviar() {
 
     try {
 
-        const fotosChecklist =
-            await obtenerFotosChecklist();
+        const formData = new FormData();
 
-        console.log(
-            "FOTOS CHECKLIST:",
-            fotosChecklist
-        );
+        const fotosChecklist =
+            await obtenerFotosChecklist(formData);
 
         const data = {
 
@@ -156,23 +144,20 @@ async function enviar() {
                 obtenerChecklist(),
 
             fotosChecklist
+
         };
 
-        const body = JSON.stringify(data);
-
-        console.log("Tamaño del JSON:", (body.length / 1024 / 1024).toFixed(2), "MB");
+        formData.append(
+            "datos",
+            JSON.stringify(data)
+        );
 
         const res =
             await fetch(
                 "/api/coordinador/generate-pdf",
                 {
                     method: "POST",
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-                    body:
-                        JSON.stringify(data)
+                    body: formData
                 }
             );
 
@@ -192,8 +177,7 @@ async function enviar() {
         const a =
             document.createElement("a");
 
-        a.href =
-            url;
+        a.href = url;
 
         a.download =
             "informe-coordinacion.pdf";
