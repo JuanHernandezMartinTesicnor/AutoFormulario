@@ -4,7 +4,8 @@ export function addMaquinaria() {
 
     maquinaria.push({
         equipo: "",
-        matricula: ""
+        matricula: "",
+        empresaTitular: ""
     });
 
     renderMaquinaria();
@@ -34,6 +35,11 @@ export function renderMaquinaria() {
                 placeholder="Matrícula"
                 value="${item.matricula}"
                 onchange="maquinaria[${index}].matricula=this.value">
+            
+            <input
+                placeholder="Empresa titular"
+                value="${item.empresaTitular}"
+                onchange="maquinaria[${index}].empresaTitular=this.value">
 
             <button
                 type="button"

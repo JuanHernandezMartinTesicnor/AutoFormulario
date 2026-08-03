@@ -180,7 +180,8 @@ async function generatePDF(data, files) {
         const maquinariaValida =
             (data.maquinaria || []).filter(m =>
                 (m.equipo || "").trim() ||
-                (m.matricula || "").trim()
+                (m.matricula || "").trim() ||
+                (m.empresaTitular || "").trim()
             );
 
         let maquinariaHtml = "";
@@ -199,6 +200,8 @@ async function generatePDF(data, files) {
 
                 <th>Matrícula</th>
 
+                <th>Empresa titular</th>
+
             </tr>
 
             ${maquinariaValida.map(m => `
@@ -208,6 +211,8 @@ async function generatePDF(data, files) {
                     <td>${m.equipo || ""}</td>
 
                     <td>${m.matricula || ""}</td>
+
+                    <td>${m.empresaTitular || ""}</td>
 
                 </tr>
 
