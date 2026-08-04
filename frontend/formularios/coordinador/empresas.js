@@ -1,5 +1,10 @@
 import { empresas } from "./state.js";
 import {
+    initFirma,
+    limpiarFirma,
+    getFirmaBase64,
+    cargarFirma
+} from "./firma.js";
 
 export function addEmpresa() {
 
@@ -7,7 +12,11 @@ export function addEmpresa() {
 
         nombre: "",
         observaciones: "",
-        principal: false
+        nivel: "",
+        contratista: "",
+        autonomo: false,
+        firma: ""
+
     });
 
     renderEmpresas();

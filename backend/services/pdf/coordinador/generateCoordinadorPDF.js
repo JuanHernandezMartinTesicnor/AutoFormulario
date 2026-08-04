@@ -2,6 +2,14 @@ const puppeteer = require("puppeteer");
 const fs = require("fs");
 const path = require("path");
 
+const {
+    renderGeneral
+} = require("./sections/general");
+
+const {
+    renderPersonal
+} = require("./sections/personal");
+
 const isLinux = process.platform === "linux";
 
 async function generatePDF(data, files) {
@@ -87,26 +95,8 @@ async function generatePDF(data, files) {
 
         }
 
-        /* =========================
-           DATOS GENERALES
-        ========================= */
-
-        html = html.replace(/{{fecha}}/g, data.fecha || "");
-        html = html.replace(/{{obra}}/g, data.obra || "");
-        html = html.replace(/{{cliente}}/g, data.cliente || "");
-        html = html.replace(/{{direccion}}/g, data.direccion || "");
-        html = html.replace(/{{fecha}}/g, data.fecha || "");
-        html = html.replace(/{{obra}}/g, data.obra || "");
-
-        html = html.replace(
-            /{{tecnicoResponsable}}/g,
-            data.tecnicoResponsable || ""
-        );
-
-        html = html.replace(
-            /{{coordinador}}/g,
-            data.coordinador || ""
-        );
+        /* DATOS GENERALES */
+        html = renderGeneral(html, data);
 
         html = html.replace(
             /{{firmaTecnico}}/g,
@@ -118,59 +108,10 @@ async function generatePDF(data, files) {
             firmaCoordinador
         );
 
-        /* =========================
-           PERSONAL
-        ========================= */
-
-        const personalValido =
-            (data.personal || []).filter(p =>
-                (p.empresa || "").trim() ||
-                (p.trabajador || "").trim() ||
-                (p.cargo || "").trim()
-            );
-
-        let personalHtml = "";
-
-        if (personalValido.length > 0) {
-
-            personalHtml = `
-
-        <h2>Personal presente</h2>
-
-        <table class="tabla">
-
-            <tr>
-
-                <th>Empresa</th>
-
-                <th>Trabajador</th>
-
-                <th>Cargo</th>
-
-            </tr>
-
-            ${personalValido.map(p => `
-
-                <tr>
-
-                    <td>${p.empresa || ""}</td>
-
-                    <td>${p.trabajador || ""}</td>
-
-                    <td>${p.cargo || ""}</td>
-
-                </tr>
-
-            `).join("")}
-
-        </table>
-
-    `;
-        }
-
-        html = html.replace(
-            "{{personalSection}}",
-            personalHtml
+        /* PERSONAL */
+        html = renderPersonal(
+            html,
+            data
         );
 
         /* =========================
