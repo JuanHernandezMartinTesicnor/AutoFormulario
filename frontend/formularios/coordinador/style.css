@@ -221,120 +221,166 @@ button:hover {
    EMPRESAS
 ========================= */
 
-.empresa-card-content{
+.empresa-card-content {
 
-    display:flex;
+    display: flex;
 
-    gap:12px;
+    gap: 12px;
 
-    align-items:flex-start;
+    align-items: flex-start;
 }
 
-.empresa-datos{
+.empresa-datos {
 
-    flex:1;
+    flex: 1;
 
-    display:flex;
+    display: flex;
 
-    flex-direction:column;
+    flex-direction: column;
 
-    gap:8px;
+    gap: 8px;
 }
 
-.empresa-acciones{
+.empresa-acciones {
 
-    width:100px;
+    width: 100px;
 
-    flex-shrink:0;
+    flex-shrink: 0;
 
-    display:flex;
+    display: flex;
 
-    flex-direction:column;
+    flex-direction: column;
 
-    align-items:center;
+    align-items: center;
 
-    gap:10px;
+    gap: 10px;
 
-    padding-top:2px;
+    padding-top: 2px;
 }
 
-.principal-check{
+.principal-check {
 
-    display:flex;
+    display: flex;
 
-    flex-direction:column;
+    flex-direction: column;
 
-    align-items:center;
+    align-items: center;
 
-    gap:4px;
+    gap: 4px;
 
-    font-size:13px;
+    font-size: 13px;
 
-    font-weight:600;
+    font-weight: 600;
 
-    text-align:center;
+    text-align: center;
 }
 
-.principal-check input{
+.principal-check input {
 
-    width:18px;
+    width: 18px;
 
-    height:18px;
+    height: 18px;
 }
 
-.item-card{
+.item-card {
 
-    margin-bottom:12px;
+    margin-bottom: 12px;
 
-    padding:14px;
+    padding: 14px;
 
-    border:1px solid #d9d9d9;
+    border: 1px solid #d9d9d9;
 
-    border-radius:8px;
+    border-radius: 8px;
 
-    background:#fff;
+    background: #fff;
 }
 
-.item-card:last-child{
+.item-card:last-child {
 
-    margin-bottom:0;
+    margin-bottom: 0;
 }
 
 
-@media (max-width:700px){
+@media (max-width:700px) {
 
-    .empresa-card-content{
+    .empresa-card-content {
 
-        flex-direction:column;
+        flex-direction: column;
     }
 
-    .empresa-datos{
+    .empresa-datos {
 
-        width:100%;
+        width: 100%;
     }
 
     .empresa-datos input,
-    .empresa-datos textarea{
+    .empresa-datos textarea {
 
-        width:100%;
+        width: 100%;
     }
 
-    .empresa-acciones{
+    .empresa-acciones {
 
-        width:100%;
+        width: 100%;
 
-        flex-direction:row;
+        flex-direction: row;
 
-        justify-content:space-between;
+        justify-content: space-between;
 
-        align-items:center;
+        align-items: center;
     }
 
-    .principal-check{
+    .principal-check {
 
-        flex-direction:row;
+        flex-direction: row;
 
-        gap:8px;
+        gap: 8px;
+    }
+
+    .firma-empresa {
+
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+    }
+
+    .firma-empresa button {
+
+        width: 170px;
+
+    }
+
+    .firma-canvas {
+
+        width: 100%;
+
+        height: 140px;
+
+        border: 1px solid #999;
+
+        display: block;
+
+        box-sizing: border-box;
+
+    }
+
+    .canvas-firma-empresa {
+
+        width: 100%;
+        height: 140px;
+
+        border: 1px solid #999;
+
+        background: #fff;
+
+    }
+
+    .firma-botones {
+
+        display: flex;
+        justify-content: flex-start;
+
     }
 
 }

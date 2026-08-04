@@ -37,7 +37,9 @@ import {
 ========================= */
 
 renderChecklist();
-initFirma();
+initFirma(
+    "firmaCanvas"
+);
 
 /* =========================
    BOTONES HTML
@@ -109,6 +111,19 @@ async function enviar() {
         const fotosChecklist =
             await obtenerFotosChecklist(formData);
 
+        empresas.forEach((empresa, index) => {
+
+            if (empresa.nivel === "principal") {
+
+                empresa.firma =
+                    getFirmaBase64(
+                        `firmaEmpresa${index}`
+                    );
+
+            }
+
+        });
+
         const data = {
 
             fecha:
@@ -130,7 +145,7 @@ async function enviar() {
                 document.getElementById("coordinador")?.value || "",
 
             firmaTecnico:
-                getFirmaBase64(),
+                getFirmaBase64("firmaCanvas"),
 
             personal,
 

@@ -1,70 +1,135 @@
-let canvas;
-let ctx;
-let dibujando = false;
+const firmas = {};
 
-function getPos(event) {
+function getPos(canvas, event) {
 
     const rect = canvas.getBoundingClientRect();
 
     return {
-        x: (event.clientX || event.touches[0].clientX) - rect.left,
-        y: (event.clientY || event.touches[0].clientY) - rect.top
+
+        x:
+            (event.clientX || event.touches[0].clientX) - rect.left,
+
+        y:
+            (event.clientY || event.touches[0].clientY) - rect.top
+
     };
+
 }
 
-function startDraw(event) {
+export function initFirma(canvasId, firmaId = canvasId) {
 
-    dibujando = true;
-
-    const pos = getPos(event);
-
-    ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
-}
-
-function stopDraw() {
-
-    dibujando = false;
-    ctx.beginPath();
-}
-
-function draw(event) {
-
-    if (!dibujando) return;
-
-    event.preventDefault();
-
-    const pos = getPos(event);
-
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-}
-
-export function initFirma() {
-
-    canvas = document.getElementById("firmaCanvas");
+    const canvas =
+        document.getElementById(canvasId);
 
     if (!canvas) return;
 
-    ctx = canvas.getContext("2d");
+    // Ajustar el tamaño al ancho real disponible
+    canvas.width =
+        canvas.clientWidth;
+
+    // Ajustar al ancho disponible
+    canvas.width =
+        canvas.parentElement.clientWidth - 10;
+
+    canvas.height = 140;
+
+    const ctx =
+        canvas.getContext("2d");
 
     ctx.lineWidth = 2;
     ctx.lineCap = "round";
     ctx.strokeStyle = "#000";
 
-    canvas.addEventListener("mousedown", startDraw);
-    canvas.addEventListener("mousemove", draw);
-    canvas.addEventListener("mouseup", stopDraw);
-    canvas.addEventListener("mouseleave", stopDraw);
+    const firma = {
 
-    canvas.addEventListener("touchstart", startDraw);
-    canvas.addEventListener("touchmove", draw);
-    canvas.addEventListener("touchend", stopDraw);
+        canvas,
+        ctx,
+        dibujando: false
+
+    };
+
+    firmas[firmaId] = firma;
+
+    function startDraw(event) {
+
+        firma.dibujando = true;
+
+        const pos =
+            getPos(canvas, event);
+
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+
+    }
+
+    function stopDraw() {
+
+        firma.dibujando = false;
+        ctx.beginPath();
+
+    }
+
+    function draw(event) {
+
+        if (!firma.dibujando)
+            return;
+
+        event.preventDefault();
+
+        const pos =
+            getPos(canvas, event);
+
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+
+    }
+
+    canvas.addEventListener(
+        "mousedown",
+        startDraw
+    );
+
+    canvas.addEventListener(
+        "mousemove",
+        draw
+    );
+
+    canvas.addEventListener(
+        "mouseup",
+        stopDraw
+    );
+
+    canvas.addEventListener(
+        "mouseleave",
+        stopDraw
+    );
+
+    canvas.addEventListener(
+        "touchstart",
+        startDraw
+    );
+
+    canvas.addEventListener(
+        "touchmove",
+        draw
+    );
+
+    canvas.addEventListener(
+        "touchend",
+        stopDraw
+    );
+
 }
 
-export function limpiarFirma() {
+export function limpiarFirma(id = "firmaCanvas") {
 
-    if (!ctx) return;
+    const canvas =
+        document.getElementById(id);
+
+    if (!canvas) return;
+
+    const ctx =
+        canvas.getContext("2d");
 
     ctx.clearRect(
         0,
@@ -74,9 +139,50 @@ export function limpiarFirma() {
     );
 }
 
-export function getFirmaBase64() {
+export function getFirmaBase64(id = "firmaCanvas") {
+
+    const canvas =
+        document.getElementById(id);
 
     if (!canvas) return "";
 
     return canvas.toDataURL("image/png");
+}
+
+export function cargarFirma(id, base64) {
+
+    if (!base64) return;
+
+    const canvas =
+        document.getElementById(id);
+
+    if (!canvas) return;
+
+    const ctx =
+        canvas.getContext("2d");
+
+    const img =
+        new Image();
+
+    img.onload = () => {
+
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        ctx.drawImage(
+            img,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+    };
+
+    img.src = base64;
+
 }
