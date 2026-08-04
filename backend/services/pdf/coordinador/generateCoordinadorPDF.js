@@ -18,6 +18,18 @@ const {
     renderEmpresas
 } = require("./sections/empresas");
 
+const {
+    renderInspecciones
+} = require("./sections/inspecciones");
+
+const {
+    renderChecklist
+} = require("./sections/checklist");
+
+const {
+    renderResumen
+} = require("./sections/resumen");
+
 const isLinux = process.platform === "linux";
 
 async function generatePDF(data, files) {
@@ -105,6 +117,7 @@ async function generatePDF(data, files) {
 
         /* DATOS GENERALES */
         html = renderGeneral(html, data);
+        html = renderResumen(html, data);
 
         html = html.replace(
             /{{firmaTecnico}}/g,
@@ -117,278 +130,24 @@ async function generatePDF(data, files) {
         );
 
         /* PERSONAL */
-        html = renderPersonal( html, data );
+        html = renderPersonal(html, data);
 
         /* MAQUINARIA */
-        html = renderMaquinaria( html, data );
+        html = renderMaquinaria(html, data);
 
         /* EMPRESAS */
-        html = renderEmpresas( html, data );
-
-        /* =========================
-       INSPECCIONES
-    ========================= */
-
-        const inspeccionesValidas =
-            (data.inspecciones || []).filter(i =>
-                (i.fase || "").trim() ||
-                (i.observaciones || "").trim()
-            );
-
-        let inspeccionHtml = "";
-
-        if (inspeccionesValidas.length > 0) {
-
-            inspeccionHtml = `
-
-        <h2>Inspecciones realizadas</h2>
-
-        <table class="tabla">
-
-            <tr>
-
-                <th>Fase</th>
-
-                <th>Observaciones</th>
-
-            </tr>
-
-            ${inspeccionesValidas.map(i => `
-
-                <tr>
-
-                    <td>${i.fase || ""}</td>
-
-                    <td>${i.observaciones || ""}</td>
-
-                </tr>
-
-            `).join("")}
-
-        </table>
-
-    `;
-        }
-
-        html = html.replace(
-            "{{inspeccionSection}}",
-            inspeccionHtml
-        );
-
-        /* =========================
-           CHECKLIST
-        ========================= */
-
-        let checklistHtml = "";
-
-        let total = 0;
-        let incumplimientos = 0;
-        let incumplimientosGraves = 0;
-
-        if (Array.isArray(data.checklist)) {
-
-            data.checklist.forEach(grupo => {
-
-                const itemsValidos =
-                    grupo.items.filter(
-                        item => item.valor !== "NA"
-                    );
-
-                if (itemsValidos.length === 0) {
-                    return;
-                }
-
-                checklistHtml += `
-                <h3>
-                    ${formatearTitulo(grupo.categoria)}
-                </h3>
-            `;
-
-                itemsValidos.forEach(item => {
-
-                    total++;
-
-                    if (item.valor === "NO") {
-
-                        incumplimientos++;
-
-                        if (
-                            item.gravedad === "GRAVE"
-                        ) {
-                            incumplimientosGraves++;
-                        }
-                    }
-
-                    const descripcion =
-                        textosChecklist[item.id]?.[item.valor]
-                        || "";
-
-                    checklistHtml += `
-                    <div class="check-item">
-
-                        <h4>
-                            ${item.titulo}
-                        </h4>
-                `;
-
-                    if (descripcion) {
-
-                        checklistHtml += `
-                        <p>
-                            ${descripcion}
-                        </p>
-                    `;
-                    }
-
-                    if (
-                        item.comentario &&
-                        item.comentario.trim()
-                    ) {
-
-                        checklistHtml += `
-                        <p>
-                            <strong>
-                                Observaciones:
-                            </strong>
-                            ${item.comentario}
-                        </p>
-                    `;
-                    }
-
-                    if (
-                        item.responsable &&
-                        item.responsable.trim()
-                    ) {
-
-                        checklistHtml += `
-                        <p>
-                            <strong>
-                                Responsable:
-                            </strong>
-                            ${item.responsable}
-                        </p>
-                    `;
-                    }
-
-                    if (
-                        item.fechaLimite &&
-                        item.fechaLimite.trim()
-                    ) {
-
-                        checklistHtml += `
-                        <p>
-                            <strong>
-                                Fecha límite:
-                            </strong>
-                            ${item.fechaLimite}
-                        </p>
-                    `;
-                    }
-
-                    checklistHtml += `
-                    </div>
-                    <hr>
-                `;
-                });
-
-                const fotosGrupo =
-                    data.fotosChecklist?.[grupo.categoria] || [];
-
-                if (fotosGrupo.length > 0) {
-
-                    checklistHtml += `
-        <h4>Evidencias fotográficas</h4>
-
-        <div class="galeria-fotos">
-    `;
-
-                    fotosGrupo.forEach(foto => {
-
-                        const archivo =
-                            files.find(
-                                f => f.fieldname === foto.archivo
-                            );
-
-                        if (!archivo)
-                            return;
-
-                        const imagenBase64 =
-                            fs.readFileSync(
-                                archivo.path,
-                                "base64"
-                            );
-
-                        checklistHtml += `
-            <img
-                src="data:${archivo.mimetype};base64,${imagenBase64}"
-                style="
-                    width:220px;
-                    margin:8px;
-                    border:1px solid #ccc;
-                    border-radius:4px;
-                "
-            >
-        `;
-
-                    });
-
-                    checklistHtml += `
-        </div>
-        <hr>
-    `;
-                }
-            });
-        }
-
-        html = html.replace(
-            /{{checklist}}/g,
-            checklistHtml
-        );
-
-        /* =========================
-           RESUMEN
-        ========================= */
-
-        const cumplimiento =
-            total > 0
-                ? Math.round(
-                    ((total - incumplimientos) / total) * 100
-                )
-                : 100;
-
-        const resumenHtml = `
-
-        <div class="resumen">
-
-            <h2>Resumen Ejecutivo</h2>
-
-            <p>
-                Aspectos evaluados:
-                ${total}
-            </p>
-
-            <p>
-                Incumplimientos detectados:
-                ${incumplimientos}
-            </p>
-
-            <p>
-                Incumplimientos graves:
-                ${incumplimientosGraves}
-            </p>
-
-            <p>
-                Índice de cumplimiento:
-                ${cumplimiento}%
-            </p>
-
-        </div>
-
-    `;
-
-        html = html.replace(
-            /{{resumen}}/g,
-            resumenHtml
+        html = renderEmpresas(html, data);
+
+        /*INSPECCIONES*/
+        html = renderInspecciones(html, data, files);
+
+        /*CHECKLIST*/
+        html = renderChecklist(
+            html,
+            data,
+            files,
+            textosChecklist,
+            formatearTitulo
         );
 
         /* =========================

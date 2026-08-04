@@ -37,6 +37,7 @@ import {
 ========================= */
 
 renderChecklist();
+
 initFirma(
     "firmaCanvas"
 );
@@ -66,7 +67,8 @@ async function obtenerFotosChecklist(formData) {
 
     for (const input of fotosInputs) {
 
-        const grupo = input.dataset.grupo;
+        const grupo =
+            input.dataset.grupo;
 
         resultado[grupo] = [];
 
@@ -99,6 +101,43 @@ async function obtenerFotosChecklist(formData) {
 }
 
 /* =========================
+   FOTOS INSPECCIONES
+========================= */
+
+function prepararFotosInspecciones(formData) {
+
+    inspecciones.forEach((inspeccion, i) => {
+
+        if (!inspeccion.fotos)
+            return;
+
+        const fotosServidor = [];
+
+        inspeccion.fotos.forEach((file, j) => {
+
+            const nombreServidor =
+                `inspeccion_${i}_${j}`;
+
+            formData.append(
+                nombreServidor,
+                file
+            );
+
+            fotosServidor.push({
+
+                archivo: nombreServidor
+
+            });
+
+        });
+
+        inspeccion.fotosServidor = fotosServidor;
+
+    });
+
+}
+
+/* =========================
    ENVÍO PDF
 ========================= */
 
@@ -106,14 +145,23 @@ async function enviar() {
 
     try {
 
-        const formData = new FormData();
+        const formData =
+            new FormData();
 
         const fotosChecklist =
-            await obtenerFotosChecklist(formData);
+            await obtenerFotosChecklist(
+                formData
+            );
+
+        prepararFotosInspecciones(
+            formData
+        );
 
         empresas.forEach((empresa, index) => {
 
-            if (empresa.nivel === "principal") {
+            if (
+                empresa.nivel === "principal"
+            ) {
 
                 empresa.firma =
                     getFirmaBase64(
@@ -145,7 +193,9 @@ async function enviar() {
                 document.getElementById("coordinador")?.value || "",
 
             firmaTecnico:
-                getFirmaBase64("firmaCanvas"),
+                getFirmaBase64(
+                    "firmaCanvas"
+                ),
 
             personal,
 
@@ -161,6 +211,12 @@ async function enviar() {
             fotosChecklist
 
         };
+
+        for (const pair of formData.entries()) {
+
+            console.log(pair[0], pair[1]);
+
+        }
 
         formData.append(
             "datos",
@@ -181,18 +237,22 @@ async function enviar() {
             throw new Error(
                 "Error generando PDF"
             );
+
         }
 
         const blob =
             await res.blob();
 
         const url =
-            window.URL.createObjectURL(blob);
+            window.URL.createObjectURL(
+                blob
+            );
 
         const a =
             document.createElement("a");
 
-        a.href = url;
+        a.href =
+            url;
 
         a.download =
             "informe-coordinacion.pdf";
@@ -213,7 +273,9 @@ async function enviar() {
         alert(
             "Error generando PDF"
         );
+
     }
+
 }
 
 /* =========================
