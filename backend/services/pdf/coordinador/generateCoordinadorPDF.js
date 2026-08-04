@@ -10,6 +10,14 @@ const {
     renderPersonal
 } = require("./sections/personal");
 
+const {
+    renderMaquinaria
+} = require("./sections/maquinaria");
+
+const {
+    renderEmpresas
+} = require("./sections/empresas");
+
 const isLinux = process.platform === "linux";
 
 async function generatePDF(data, files) {
@@ -109,119 +117,13 @@ async function generatePDF(data, files) {
         );
 
         /* PERSONAL */
-        html = renderPersonal(
-            html,
-            data
-        );
+        html = renderPersonal( html, data );
 
-        /* =========================
-        MAQUINARIA
-        ========================= */
+        /* MAQUINARIA */
+        html = renderMaquinaria( html, data );
 
-        const maquinariaValida =
-            (data.maquinaria || []).filter(m =>
-                (m.equipo || "").trim() ||
-                (m.matricula || "").trim() ||
-                (m.empresaTitular || "").trim()
-            );
-
-        let maquinariaHtml = "";
-
-        if (maquinariaValida.length > 0) {
-
-            maquinariaHtml = `
-
-        <h2>Maquinaria y equipos</h2>
-
-        <table class="tabla">
-
-            <tr>
-
-                <th>Equipo</th>
-
-                <th>Matrícula</th>
-
-                <th>Empresa titular</th>
-
-            </tr>
-
-            ${maquinariaValida.map(m => `
-
-                <tr>
-
-                    <td>${m.equipo || ""}</td>
-
-                    <td>${m.matricula || ""}</td>
-
-                    <td>${m.empresaTitular || ""}</td>
-
-                </tr>
-
-            `).join("")}
-
-        </table>
-
-    `;
-        }
-
-        html = html.replace(
-            "{{maquinariaSection}}",
-            maquinariaHtml
-        );
-
-        /* =========================
-        EMPRESAS
-        ========================= */
-
-        const empresasValidas =
-            (data.empresas || []).filter(e =>
-                (e.nombre || "").trim() ||
-                (e.observaciones || "").trim()
-            );
-
-        let empresaHtml = "";
-
-        if (empresasValidas.length > 0) {
-
-            empresaHtml = `
-
-        <h2>Empresas / Subcontratas</h2>
-
-        <table class="tabla">
-
-            <tr>
-
-                <th>Empresa</th>
-
-                <th>Observaciones</th>
-
-                <th>Principal</th>
-
-            </tr>
-
-            ${empresasValidas.map(e => `
-
-                <tr>
-
-                    <td>${e.nombre || ""}</td>
-
-                    <td>${e.observaciones || ""}</td>
-
-                    <td>${e.principal ? "Sí" : ""}</td>
-
-                </tr>
-
-            `).join("")}
-
-        </table>
-
-    `;
-        }
-
-        html = html.replace(
-            "{{empresaSection}}",
-            empresaHtml
-        );
+        /* EMPRESAS */
+        html = renderEmpresas( html, data );
 
         /* =========================
        INSPECCIONES

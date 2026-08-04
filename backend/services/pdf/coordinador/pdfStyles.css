@@ -268,6 +268,34 @@ h4 {
     font-size: 12px;
 }
 
+.firma-bloque{
+
+    margin-top:25px;
+
+    page-break-inside:avoid;
+
+}
+
+.firma-img{
+
+    max-width:320px;
+
+    max-height:140px;
+
+    border-bottom:1px solid #000;
+
+}
+
+.firma-vacia{
+
+    width:320px;
+
+    height:120px;
+
+    border-bottom:1px solid #000;
+
+}
+
 /* =========================
    RESUMEN
 ========================= */
