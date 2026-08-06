@@ -4,31 +4,31 @@ const path = require("path");
 
 const {
     renderGeneral
-} = require("./sections/general");
+} = require("./Sections/general.js");
 
 const {
     renderPersonal
-} = require("./sections/personal");
+} = require("./Sections/personal.js");
 
 const {
     renderMaquinaria
-} = require("./sections/maquinaria");
+} = require("./Sections/maquinaria.js");
 
 const {
     renderEmpresas
-} = require("./sections/empresas");
+} = require("./Sections/empresas.js");
 
 const {
     renderInspecciones
-} = require("./sections/inspecciones");
+} = require("./Sections/inspecciones.js");
 
 const {
     renderChecklist
-} = require("./sections/checklist");
+} = require("./Sections/checklist.js");
 
 const {
     renderResumen
-} = require("./sections/resumen");
+} = require("./Sections/resumen.js");
 
 const isLinux = process.platform === "linux";
 
