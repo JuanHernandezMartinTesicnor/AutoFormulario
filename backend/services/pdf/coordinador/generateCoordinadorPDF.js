@@ -64,8 +64,8 @@ async function generatePDF(data, files) {
             "base64"
         );
 
-        const firmaAna = fs.readFileSync(
-            path.join(__dirname, "../../../assets/firmas/ana.png"),
+        const firmaMaria = fs.readFileSync(
+            path.join(__dirname, "../../../assets/firmas/maria.png"),
             "base64"
         );
 
@@ -98,11 +98,11 @@ async function generatePDF(data, files) {
 
         if (
             data.coordinador &&
-            data.coordinador.includes("Ana")
+            data.coordinador.includes("Maria")
         ) {
 
             firmaCoordinador =
-                "data:image/png;base64," + firmaAna;
+                "data:image/png;base64," + firmaMaria;
 
         }
         else if (
