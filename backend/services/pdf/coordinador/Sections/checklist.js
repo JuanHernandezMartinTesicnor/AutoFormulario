@@ -1,6 +1,7 @@
 const fs = require("fs");
+const { generarTextoChecklist } = require("./checklistAI");
 
-function renderChecklist(
+async function renderChecklist(
     html,
     data,
     files,
@@ -12,7 +13,7 @@ function renderChecklist(
 
     if (Array.isArray(data.checklist)) {
 
-        data.checklist.forEach(grupo => {
+        for (const grupo of data.checklist) {
 
             const itemsValidos =
                 grupo.items.filter(
@@ -20,32 +21,35 @@ function renderChecklist(
                 );
 
             if (!itemsValidos.length)
-                return;
+                continue;
 
             checklistHtml += `
 
                 <h3>
-
                     ${formatearTitulo(grupo.categoria)}
-
                 </h3>
 
             `;
 
-            itemsValidos.forEach(item => {
+            for (const item of itemsValidos) {
+
+                const textoBase =
+                    textosChecklist[item.id]?.[item.valor] || "";
 
                 const descripcion =
-                    textosChecklist[item.id]?.[item.valor]
-                    || "";
+                    await generarTextoChecklist({
+                        titulo: item.titulo,
+                        valor: item.valor,
+                        textoBase,
+                        observacion: item.comentario
+                    });
 
                 checklistHtml += `
 
                     <div class="check-item">
 
                         <h4>
-
                             ${item.titulo}
-
                         </h4>
 
                 `;
@@ -55,14 +59,21 @@ function renderChecklist(
                     checklistHtml += `
 
                         <p>
-
                             ${descripcion}
-
                         </p>
 
                     `;
 
                 }
+
+                /*
+                 * De momento mantenemos las observaciones
+                 * originales visibles para comprobar el funcionamiento.
+                 *
+                 * Cuando conectemos la IA definitivamente,
+                 * podremos decidir si eliminamos este bloque
+                 * y dejamos únicamente el texto generado.
+                 */
 
                 if (
                     item.comentario &&
@@ -74,9 +85,7 @@ function renderChecklist(
                         <p>
 
                             <strong>
-
                                 Observaciones:
-
                             </strong>
 
                             ${item.comentario}
@@ -97,9 +106,7 @@ function renderChecklist(
                         <p>
 
                             <strong>
-
                                 Responsable:
-
                             </strong>
 
                             ${item.responsable}
@@ -120,9 +127,7 @@ function renderChecklist(
                         <p>
 
                             <strong>
-
                                 Fecha límite:
-
                             </strong>
 
                             ${item.fechaLimite}
@@ -141,7 +146,7 @@ function renderChecklist(
 
                 `;
 
-            });
+            }
 
             const fotosGrupo =
                 data.fotosChecklist?.[
@@ -153,9 +158,7 @@ function renderChecklist(
                 checklistHtml += `
 
                     <h4>
-
                         Evidencias fotográficas
-
                     </h4>
 
                     <div class="galeria-fotos">
@@ -213,7 +216,7 @@ function renderChecklist(
 
             }
 
-        });
+        }
 
     }
 
@@ -221,7 +224,6 @@ function renderChecklist(
         /{{checklist}}/g,
         checklistHtml
     );
-
 }
 
 module.exports = {

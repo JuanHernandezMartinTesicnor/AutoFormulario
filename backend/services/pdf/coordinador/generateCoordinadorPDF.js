@@ -123,7 +123,7 @@ async function generatePDF(data, files) {
         html = renderInspecciones(html, data, files);
 
         /*CHECKLIST*/
-        html = renderChecklist(
+        html = await renderChecklist(
             html,
             data,
             files,
