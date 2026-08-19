@@ -19,10 +19,12 @@
   "homepage": "https://github.com/JuanHernandezMartinTesicnor/AutoFormulario#readme",
   "description": "",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "better-sqlite3": "^13.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
     "multer": "^2.2.0",
     "nodemailer": "^8.0.7",
     "openai": "^7.4.0",

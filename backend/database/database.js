@@ -8,6 +8,7 @@ const dbPath = path.join(
 
 const db = new Database(dbPath);
 
+// Activamos las foreign keys de SQLite
 db.pragma("foreign_keys = ON");
 
 module.exports = db;
