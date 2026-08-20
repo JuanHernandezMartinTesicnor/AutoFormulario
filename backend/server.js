@@ -14,6 +14,9 @@ const coordinadorRoutes =
 const authRoutes =
     require("./routes/authRoutes");
 
+const proyectosRoutes =
+    require("./routes/proyectosRoutes");
+
 
 const app = express();
 
@@ -79,6 +82,8 @@ app.use(
     "/api/coordinador",
     coordinadorRoutes
 );
+
+app.use("/api/proyectos", proyectosRoutes);
 
 
 /* =========================
