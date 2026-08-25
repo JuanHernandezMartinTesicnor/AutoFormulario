@@ -17,6 +17,9 @@ const authRoutes =
 const proyectosRoutes =
     require("./routes/proyectosRoutes");
 
+const formulariosRoutes =
+    require("./routes/formulariosRoutes");
+
 
 const app = express();
 
@@ -83,7 +86,15 @@ app.use(
     coordinadorRoutes
 );
 
-app.use("/api/proyectos", proyectosRoutes);
+app.use(
+    "/api/proyectos",
+    proyectosRoutes
+);
+
+app.use(
+    "/api/formularios",
+    formulariosRoutes
+);
 
 
 /* =========================
