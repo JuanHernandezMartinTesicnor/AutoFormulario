@@ -14,75 +14,44 @@ const {
     obtenerFormulariosPorProyecto,
     actualizarFormulario,
     eliminarFormulario
-} = require("../database/formulariosModel");
+} = require("../models/formulariosModel");
 
 
 /* =========================
    OBTENER TODOS
 ========================= */
 
-router.get("/", requireAuth, (req, res) => {
+router.get(
+    "/",
+    requireAuth,
+    (req, res) => {
 
-    try {
+        try {
 
-        const formularios =
-            obtenerFormularios();
+            const formularios =
+                obtenerFormularios();
 
-        res.json(formularios);
+            res.json({
+                ok: true,
+                formularios
+            });
 
-    } catch (error) {
+        } catch (error) {
 
-        console.error(
-            "Error obteniendo formularios:",
-            error
-        );
-
-        res.status(500).json({
-            error: "Error obteniendo formularios"
-        });
-
-    }
-
-});
-
-
-/* =========================
-   OBTENER POR ID
-========================= */
-
-router.get("/:id", requireAuth, (req, res) => {
-
-    try {
-
-        const formulario =
-            obtenerFormularioPorId(
-                req.params.id
+            console.error(
+                "Error obteniendo formularios:",
+                error
             );
 
-        if (!formulario) {
-
-            return res.status(404).json({
-                error: "Formulario no encontrado"
+            res.status(500).json({
+                ok: false,
+                error: "Error obteniendo formularios"
             });
 
         }
 
-        res.json(formulario);
-
-    } catch (error) {
-
-        console.error(
-            "Error obteniendo formulario:",
-            error
-        );
-
-        res.status(500).json({
-            error: "Error obteniendo formulario"
-        });
-
     }
-
-});
+);
 
 
 /* =========================
@@ -101,7 +70,10 @@ router.get(
                     req.params.proyectoId
                 );
 
-            res.json(formularios);
+            res.json({
+                ok: true,
+                formularios
+            });
 
         } catch (error) {
 
@@ -111,8 +83,56 @@ router.get(
             );
 
             res.status(500).json({
-                error:
-                    "Error obteniendo formularios del proyecto"
+                ok: false,
+                error: "Error obteniendo formularios"
+            });
+
+        }
+
+    }
+);
+
+
+/* =========================
+   OBTENER UNO
+========================= */
+
+router.get(
+    "/:id",
+    requireAuth,
+    (req, res) => {
+
+        try {
+
+            const formulario =
+                obtenerFormularioPorId(
+                    req.params.id
+                );
+
+            if (!formulario) {
+
+                return res.status(404).json({
+                    ok: false,
+                    error: "Formulario no encontrado"
+                });
+
+            }
+
+            res.json({
+                ok: true,
+                formulario
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Error obteniendo formulario:",
+                error
+            );
+
+            res.status(500).json({
+                ok: false,
+                error: "Error obteniendo formulario"
             });
 
         }
@@ -139,10 +159,20 @@ router.post(
                 estado
             } = req.body;
 
+            if (!proyecto_id) {
+
+                return res.status(400).json({
+                    ok: false,
+                    error: "proyecto_id es obligatorio"
+                });
+
+            }
+
             if (!tipo) {
 
                 return res.status(400).json({
-                    error: "El tipo de formulario es obligatorio"
+                    ok: false,
+                    error: "tipo es obligatorio"
                 });
 
             }
@@ -157,15 +187,17 @@ router.post(
 
                     tipo,
 
-                    datos,
+                    datos: datos || {},
 
-                    estado
+                    estado:
+                        estado || "borrador"
 
                 });
 
-            res.status(201).json(
+            res.status(201).json({
+                ok: true,
                 formulario
-            );
+            });
 
         } catch (error) {
 
@@ -175,6 +207,7 @@ router.post(
             );
 
             res.status(500).json({
+                ok: false,
                 error: "Error creando formulario"
             });
 
@@ -190,33 +223,40 @@ router.post(
 
 router.put(
     "/:id",
-    requireAuth,
+    requireCoordinador,
     (req, res) => {
 
         try {
 
+            const {
+                datos,
+                estado,
+                tipo
+            } = req.body;
+
             const formulario =
-                obtenerFormularioPorId(
-                    req.params.id
+                actualizarFormulario(
+                    req.params.id,
+                    {
+                        datos,
+                        estado,
+                        tipo
+                    }
                 );
 
             if (!formulario) {
 
                 return res.status(404).json({
+                    ok: false,
                     error: "Formulario no encontrado"
                 });
 
             }
 
-            const actualizado =
-                actualizarFormulario(
-                    req.params.id,
-                    req.body
-                );
-
-            res.json(
-                actualizado
-            );
+            res.json({
+                ok: true,
+                formulario
+            });
 
         } catch (error) {
 
@@ -226,8 +266,8 @@ router.put(
             );
 
             res.status(500).json({
-                error:
-                    "Error actualizando formulario"
+                ok: false,
+                error: "Error actualizando formulario"
             });
 
         }
@@ -247,22 +287,21 @@ router.delete(
 
         try {
 
-            const formulario =
-                obtenerFormularioPorId(
+            const resultado =
+                eliminarFormulario(
                     req.params.id
                 );
 
-            if (!formulario) {
+            if (
+                resultado.changes === 0
+            ) {
 
                 return res.status(404).json({
+                    ok: false,
                     error: "Formulario no encontrado"
                 });
 
             }
-
-            eliminarFormulario(
-                req.params.id
-            );
 
             res.json({
                 ok: true
@@ -276,8 +315,8 @@ router.delete(
             );
 
             res.status(500).json({
-                error:
-                    "Error eliminando formulario"
+                ok: false,
+                error: "Error eliminando formulario"
             });
 
         }
