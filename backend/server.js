@@ -101,16 +101,30 @@ app.use(
    FRONTEND
 ========================= */
 
-// Archivos estáticos
+/* =========================
+   GESTIÓN
+========================= */
 
-app.use(
-    express.static(
+app.get("/gestion", (req, res) => {
+
+    res.sendFile(
         path.join(
             __dirname,
-            "../frontend"
+            "../frontend/gestion/index.html"
         )
-    )
-);
+    );
+});
+
+app.get("/gestion/", (req, res) => {
+
+    res.sendFile(
+        path.join(
+            __dirname,
+            "../frontend/gestion/index.html"
+        )
+    );
+
+});
 
 
 // Página principal
@@ -125,6 +139,19 @@ app.get("/", (req, res) => {
     );
 
 });
+
+// Archivos estáticos
+
+app.use(
+    express.static(
+        path.join(
+            __dirname,
+            "../frontend"
+        )
+    )
+);
+
+
 
 
 /* =========================

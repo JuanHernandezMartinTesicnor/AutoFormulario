@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Gestión - AutoFormulario</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body>
+
+    <header class="header">
+
+        <div>
+
+            <h1>AutoFormulario</h1>
+
+            <p>Gestión de proyectos</p>
+
+        </div>
+
+        <div class="usuario">
+
+            <span id="usuarioNombre"></span>
+
+            <button id="btnCerrarSesion">
+                Cerrar sesión
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="container">
+
+        <div class="titulo-seccion">
+
+            <div>
+
+                <h2>Proyectos</h2>
+
+                <p>
+                    Selecciona un proyecto para consultar
+                    sus formularios.
+                </p>
+
+            </div>
+
+            <button
+                id="btnNuevoProyecto"
+                class="btn-principal"
+            >
+                + Nuevo proyecto
+            </button>
+
+        </div>
+
+
+        <div id="mensaje"></div>
+
+
+        <div
+            id="listaProyectos"
+            class="lista-proyectos"
+        ></div>
+
+    </main>
+
+
+    <!-- MODAL NUEVO PROYECTO -->
+
+    <div
+        id="modalProyecto"
+        class="modal oculto"
+    >
+
+        <div class="modal-contenido">
+
+            <div class="modal-header">
+
+                <h2>Nuevo proyecto</h2>
+
+                <button
+                    id="btnCerrarModal"
+                    class="btn-cerrar"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="formProyecto">
+
+                <label>
+                    Nombre del proyecto
+                    <input
+                        type="text"
+                        id="proyectoNombre"
+                        required
+                    >
+                </label>
+
+
+                <label>
+                    Dirección
+                    <input
+                        type="text"
+                        id="proyectoDireccion"
+                    >
+                </label>
+
+
+                <label>
+                    Cliente
+                    <input
+                        type="text"
+                        id="proyectoCliente"
+                    >
+                </label>
+
+
+                <div class="modal-acciones">
+
+                    <button
+                        type="button"
+                        id="btnCancelarProyecto"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn-principal"
+                    >
+                        Crear proyecto
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script
+        type="module"
+        src="app.js"
+    ></script>
+
+</body>
+
+</html>
