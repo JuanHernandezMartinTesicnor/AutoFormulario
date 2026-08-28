@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Iniciar sesión - AutoFormulario</title>
+
+    <link
+        rel="stylesheet"
+        href="/login/style.css"
+    >
+
+</head>
+
+<body>
+
+    <main class="login-container">
+
+        <div class="login-card">
+
+            <div class="login-header">
+
+                <h1>AutoFormulario</h1>
+
+                <p>
+                    Iniciar sesión
+                </p>
+
+            </div>
+
+
+            <form id="loginForm">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    autocomplete="username"
+                    required
+                >
+
+
+                <label for="password">
+                    Contraseña
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    autocomplete="current-password"
+                    required
+                >
+
+
+                <div id="mensaje"></div>
+
+
+                <button
+                    type="submit"
+                    class="btn-login"
+                >
+                    Iniciar sesión
+                </button>
+
+            </form>
+
+        </div>
+
+    </main>
+
+
+    <script
+        type="module"
+        src="/login/app.js"
+    ></script>
+
+</body>
+
+</html>
