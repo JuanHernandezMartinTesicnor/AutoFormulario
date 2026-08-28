@@ -412,7 +412,7 @@ btnCerrarSesion.addEventListener(
 
         } finally {
 
-            window.location.href = "/";
+            window.location.href = "/login";
 
         }
 
