@@ -5,17 +5,11 @@
 
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Gestión - AutoFormulario</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <link rel="stylesheet" href="/gestion/style.css">
 
 </head>
 
@@ -59,10 +53,7 @@
 
             </div>
 
-            <button
-                id="btnNuevoProyecto"
-                class="btn-principal"
-            >
+            <button id="btnNuevoProyecto" class="btn-principal">
                 + Nuevo proyecto
             </button>
 
@@ -72,20 +63,14 @@
         <div id="mensaje"></div>
 
 
-        <div
-            id="listaProyectos"
-            class="lista-proyectos"
-        ></div>
+        <div id="listaProyectos" class="lista-proyectos"></div>
 
     </main>
 
 
     <!-- MODAL NUEVO PROYECTO -->
 
-    <div
-        id="modalProyecto"
-        class="modal oculto"
-    >
+    <div id="modalProyecto" class="modal oculto">
 
         <div class="modal-contenido">
 
@@ -93,10 +78,7 @@
 
                 <h2>Nuevo proyecto</h2>
 
-                <button
-                    id="btnCerrarModal"
-                    class="btn-cerrar"
-                >
+                <button id="btnCerrarModal" class="btn-cerrar">
                     ×
                 </button>
 
@@ -107,45 +89,29 @@
 
                 <label>
                     Nombre del proyecto
-                    <input
-                        type="text"
-                        id="proyectoNombre"
-                        required
-                    >
+                    <input type="text" id="proyectoNombre" required>
                 </label>
 
 
                 <label>
                     Dirección
-                    <input
-                        type="text"
-                        id="proyectoDireccion"
-                    >
+                    <input type="text" id="proyectoDireccion">
                 </label>
 
 
                 <label>
                     Cliente
-                    <input
-                        type="text"
-                        id="proyectoCliente"
-                    >
+                    <input type="text" id="proyectoCliente">
                 </label>
 
 
                 <div class="modal-acciones">
 
-                    <button
-                        type="button"
-                        id="btnCancelarProyecto"
-                    >
+                    <button type="button" id="btnCancelarProyecto">
                         Cancelar
                     </button>
 
-                    <button
-                        type="submit"
-                        class="btn-principal"
-                    >
+                    <button type="submit" class="btn-principal">
                         Crear proyecto
                     </button>
 
@@ -158,10 +124,7 @@
     </div>
 
 
-    <script
-        type="module"
-        src="app.js"
-    ></script>
+    <script type="module" src="/gestion/app.js"></script>
 
 </body>
 
