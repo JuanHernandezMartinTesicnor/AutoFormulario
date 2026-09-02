@@ -225,3 +225,18 @@ form input {
 
     margin-top: 30px;
 }
+
+.proyecto-acciones {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn-eliminar {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-eliminar:hover {
+    background: #b02a37;
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Proyecto - AutoFormulario</title>
+
+    <link
+        rel="stylesheet"
+        href="/gestion/style.css"
+    >
+
+</head>
+
+<body>
+
+    <header class="header">
+
+        <div>
+
+            <h1>AutoFormulario</h1>
+
+            <p>Gestión de proyecto</p>
+
+        </div>
+
+        <div class="usuario">
+
+            <span id="usuarioNombre"></span>
+
+            <button id="btnCerrarSesion">
+                Cerrar sesión
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="container">
+
+        <button
+            id="btnVolver"
+            class="btn-secundario"
+        >
+            ← Volver a proyectos
+        </button>
+
+
+        <div id="mensaje"></div>
+
+
+        <section
+            id="informacionProyecto"
+            class="info-proyecto"
+        >
+
+            <p>Cargando proyecto...</p>
+
+        </section>
+
+
+        <section>
+
+            <div class="titulo-seccion">
+
+                <div>
+
+                    <h2>Formularios</h2>
+
+                    <p>
+                        Formularios asociados a este proyecto.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="listaFormularios"
+                class="lista-proyectos"
+            ></div>
+
+        </section>
+
+    </main>
+
+
+    <script
+        type="module"
+        src="/gestion/proyecto.js"
+    ></script>
+
+</body>
+
+</html>

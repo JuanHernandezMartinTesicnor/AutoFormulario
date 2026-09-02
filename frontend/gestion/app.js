@@ -175,27 +175,25 @@ function mostrarProyectos(
 
                     <h3>
                         ${escapeHtml(
-                            proyecto.nombre
-                        )}
+                proyecto.nombre
+            )}
                     </h3>
 
                     <p>
-                        ${
-                            escapeHtml(
-                                proyecto.direccion ||
-                                "Sin dirección"
-                            )
-                        }
+                        ${escapeHtml(
+                proyecto.direccion ||
+                "Sin dirección"
+            )
+                }
                     </p>
 
                     <p>
                         <strong>Cliente:</strong>
-                        ${
-                            escapeHtml(
-                                proyecto.cliente ||
-                                "Sin cliente"
-                            )
-                        }
+                        ${escapeHtml(
+                    proyecto.cliente ||
+                    "Sin cliente"
+                )
+                }
                     </p>
 
                 </div>
@@ -204,10 +202,17 @@ function mostrarProyectos(
                 <div class="proyecto-acciones">
 
                     <button
-                        class="btn-secundario"
+                        class="btn-secundario btn-ver"
                         data-id="${proyecto.id}"
                     >
                         Ver proyecto
+                    </button>
+
+                    <button
+                        class="btn-eliminar"
+                        data-id="${proyecto.id}"
+                    >
+                        Eliminar
                     </button>
 
                 </div>
@@ -215,18 +220,32 @@ function mostrarProyectos(
             `;
 
 
-            const boton =
-                tarjeta.querySelector(
-                    "button"
-                );
+            const botonVer =
+                tarjeta.querySelector(".btn-ver");
+
+            const botonEliminar =
+                tarjeta.querySelector(".btn-eliminar");
 
 
-            boton.addEventListener(
+            botonVer.addEventListener(
                 "click",
                 () => {
 
                     abrirProyecto(
                         proyecto.id
+                    );
+
+                }
+            );
+
+
+            botonEliminar.addEventListener(
+                "click",
+                () => {
+
+                    eliminarProyecto(
+                        proyecto.id,
+                        proyecto.nombre
                     );
 
                 }
@@ -261,6 +280,69 @@ function abrirProyecto(
 
     window.location.href =
         `/gestion/proyecto.html?id=${id}`;
+}
+
+async function eliminarProyecto(
+    id,
+    nombre
+) {
+
+    const confirmar =
+        confirm(
+            `¿Seguro que quieres eliminar el proyecto "${nombre}"?`
+        );
+
+    if (!confirmar) {
+        return;
+    }
+
+
+    try {
+
+        const respuesta =
+            await fetch(
+                `${API_URL}/api/proyectos/${id}`,
+                {
+                    method: "DELETE",
+                    credentials: "include"
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                resultado.error ||
+                "No se pudo eliminar el proyecto"
+            );
+
+        }
+
+
+        await cargarProyectos();
+
+
+        mostrarMensaje(
+            "Proyecto eliminado correctamente.",
+            "ok"
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        mostrarMensaje(
+            error.message,
+            "error"
+        );
+
+    }
+
 }
 
 
