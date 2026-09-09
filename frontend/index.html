@@ -3,53 +3,161 @@
 
 <head>
 
-  <meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-  <title>Selector de formularios</title>
+    <title>AutoFormulario</title>
 
-  <link rel="stylesheet" href="/style.css">
+    <link
+        rel="stylesheet"
+        href="/style.css"
+    >
 
 </head>
 
 <body>
 
-  <div class="home-container">
+    <!-- =========================
+         CABECERA
+    ========================== -->
 
-    <h1 class="main-title">
-      Sistema de Formularios
-    </h1>
+    <header class="main-header">
 
-    <div class="cards-container">
+        <div class="header-content">
 
-      <a class="form-card" href="/formularios/contratista/">
+            <a
+                href="/"
+                class="logo"
+            >
+                AutoFormulario
+            </a>
 
-        <div class="card-title">
-          Formulario Contratista
+
+            <nav
+                id="navUsuario"
+                class="nav-usuario"
+            >
+
+                <a
+                    href="/login/"
+                    class="btn-header"
+                >
+                    Iniciar sesión
+                </a>
+
+                <a
+                    href="/registro/"
+                    class="btn-header btn-registro"
+                >
+                    Registrarse
+                </a>
+
+            </nav>
+
         </div>
 
-        <div class="card-description">
-          Control de actuación del contratista y acciones correctoras.
-        </div>
+    </header>
 
-      </a>
 
-      <a class="form-card" href="/formularios/coordinador/">
+    <!-- =========================
+         CONTENIDO
+    ========================== -->
 
-        <div class="card-title">
-          Formulario Coordinador
-        </div>
+    <main class="home-container">
 
-        <div class="card-description">
-          Registro y seguimiento de coordinación.
-        </div>
+        <section class="hero">
 
-      </a>
+            <h1 class="main-title">
+                Sistema de Formularios
+            </h1>
 
-    </div>
+            <p class="main-description">
+                Selecciona el formulario o proyecto
+                que quieres gestionar.
+            </p>
 
-  </div>
+        </section>
+
+
+        <!-- =========================
+             USUARIO
+        ========================== -->
+
+        <section
+            id="usuarioPanel"
+            class="usuario-panel"
+            style="display: none;"
+        >
+
+            <span>
+                Sesión iniciada como
+                <strong id="usuarioNombre"></strong>
+            </span>
+
+            <div class="usuario-acciones">
+
+                <a
+                    id="btnGestion"
+                    href="/gestion/"
+                    class="btn-secundario"
+                    style="display: none;"
+                >
+                    Gestión de proyectos
+                </a>
+
+                <button
+                    id="btnCerrarSesion"
+                    class="btn-cerrar"
+                >
+                    Cerrar sesión
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             FORMULARIOS / PROYECTOS
+        ========================== -->
+
+        <section class="formularios-section">
+
+            <h2>
+                Formularios
+            </h2>
+
+
+            <div
+                id="cardsContainer"
+                class="cards-container"
+            >
+
+                <!--
+                    Se rellenará desde app.js
+                -->
+
+            </div>
+
+
+            <div
+                id="mensaje"
+                class="mensaje"
+            ></div>
+
+        </section>
+
+    </main>
+
+
+    <script
+        type="module"
+        src="/app.js"
+    ></script>
 
 </body>
 

@@ -150,41 +150,54 @@ async function cargarProyecto() {
 
     informacionProyecto.innerHTML = `
 
-        <div class="proyecto">
+    <div class="proyecto">
 
-            <div class="proyecto-info">
+        <div class="proyecto-info">
 
-                <h2>
-                    ${escapeHtml(
-                        proyecto.nombre
-                    )}
-                </h2>
+            <h2>
+                ${escapeHtml(proyecto.nombre)}
+            </h2>
 
-                <p>
-                    <strong>Dirección:</strong>
-                    ${
-                        escapeHtml(
-                            proyecto.direccion ||
-                            "Sin dirección"
-                        )
-                    }
-                </p>
+            <p>
+                <strong>Dirección:</strong>
+                ${escapeHtml(proyecto.direccion || "Sin dirección")}
+            </p>
 
-                <p>
-                    <strong>Cliente:</strong>
-                    ${
-                        escapeHtml(
-                            proyecto.cliente ||
-                            "Sin cliente"
-                        )
-                    }
-                </p>
-
-            </div>
+            <p>
+                <strong>Cliente:</strong>
+                ${escapeHtml(proyecto.cliente || "Sin cliente")}
+            </p>
 
         </div>
 
-    `;
+        <div class="proyecto-acciones">
+
+            <button
+                id="btnNuevoCoordinador"
+                class="btn-principal"
+            >
+                + Formulario Coordinador
+            </button>
+
+        </div>
+
+    </div>`;
+
+
+    const btnNuevoCoordinador =
+        document.getElementById(
+            "btnNuevoCoordinador"
+        );
+
+    btnNuevoCoordinador.addEventListener(
+        "click",
+        () => {
+
+            window.location.href =
+                `/formularios/coordinador/?proyecto=${proyectoId}`;
+
+        }
+    );
 
 }
 
@@ -282,22 +295,22 @@ function mostrarFormularios(
 
                     <h3>
                         ${escapeHtml(
-                            formulario.tipo
-                        )}
+                formulario.tipo
+            )}
                     </h3>
 
                     <p>
                         <strong>Estado:</strong>
                         ${escapeHtml(
-                            formulario.estado
-                        )}
+                formulario.estado
+            )}
                     </p>
 
                     <p>
                         <strong>Creado:</strong>
                         ${escapeHtml(
-                            formulario.created_at
-                        )}
+                formulario.created_at
+            )}
                     </p>
 
                 </div>

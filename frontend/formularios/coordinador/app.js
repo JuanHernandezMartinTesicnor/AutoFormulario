@@ -1,3 +1,9 @@
+
+
+import {
+    API_URL
+} from "../../common/api.js";
+
 import {
     addPersonal
 } from "./personal.js";
@@ -137,6 +143,8 @@ function prepararFotosInspecciones(formData) {
 
 }
 
+
+
 /* =========================
    ENVÍO PDF
 ========================= */
@@ -144,6 +152,23 @@ function prepararFotosInspecciones(formData) {
 async function enviar() {
 
     try {
+
+        const proyectoId =
+            obtenerProyectoId();
+
+        console.log(
+            "Proyecto seleccionado:",
+            proyectoId
+        );
+
+        if (!proyectoId) {
+
+            alert(
+                "No se ha seleccionado ningún proyecto."
+            );
+
+            return;
+        }
 
         const formData =
             new FormData();
@@ -211,6 +236,53 @@ async function enviar() {
             fotosChecklist
 
         };
+
+        const respuestaFormulario =
+            await fetch(
+                `${API_URL}/api/formularios`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    credentials: "include",
+
+                    body: JSON.stringify({
+
+                        proyecto_id:
+                            Number(proyectoId),
+
+                        tipo:
+                            "coordinador",
+
+                        datos:
+                            data,
+
+                        estado:
+                            "completado"
+
+                    })
+                }
+            );
+
+        const resultadoFormulario =
+            await respuestaFormulario.json();
+
+        if (!respuestaFormulario.ok) {
+
+            throw new Error(
+                resultadoFormulario.error ||
+                "No se pudo guardar el formulario"
+            );
+
+        }
+
+        console.log(
+            "Formulario guardado:",
+            resultadoFormulario
+        );
 
         for (const pair of formData.entries()) {
 
@@ -283,3 +355,15 @@ async function enviar() {
 ========================= */
 
 window.enviar = enviar;
+
+
+//OBTENER PROYECTO ID DESDE URL
+function obtenerProyectoId() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    return params.get("proyecto");
+}

@@ -116,6 +116,41 @@ app.get("/login", (req, res) => {
 
 });
 
+app.get("/login/", (req, res) => {
+
+    res.sendFile(
+        path.join(
+            __dirname,
+            "../frontend/login/index.html"
+        )
+    );
+
+});
+
+
+app.get("/registro", (req, res) => {
+
+    res.sendFile(
+        path.join(
+            __dirname,
+            "../frontend/registro/index.html"
+        )
+    );
+
+});
+
+
+app.get("/registro/", (req, res) => {
+
+    res.sendFile(
+        path.join(
+            __dirname,
+            "../frontend/registro/index.html"
+        )
+    );
+
+});
+
 /* =========================
    GESTIÓN
 ========================= */

@@ -2,8 +2,11 @@ const express = require("express");
 
 const {
     obtenerUsuarioPorEmail,
-    verificarPassword
-} = require("../services/auth/usuariosService");
+    verificarPassword,
+    crearUsuario
+} = require(
+    "../services/auth/usuariosService"
+);
 
 const router = express.Router();
 
@@ -131,6 +134,128 @@ router.get("/me", (req, res) => {
     });
 
 });
+
+
+/* =========================
+   REGISTRO
+========================= */
+
+router.post(
+    "/registro",
+    async (req, res) => {
+
+        try {
+
+            const {
+                nombre,
+                email,
+                password,
+                rol
+            } = req.body;
+
+
+            if (
+                !nombre ||
+                !email ||
+                !password ||
+                !rol
+            ) {
+
+                return res.status(400).json({
+                    ok: false,
+                    error:
+                        "Todos los campos son obligatorios"
+                });
+
+            }
+
+
+            if (
+                rol !== "tecnico" &&
+                rol !== "coordinador"
+            ) {
+
+                return res.status(400).json({
+                    ok: false,
+                    error:
+                        "Rol no válido"
+                });
+
+            }
+
+
+            if (
+                password.length < 6
+            ) {
+
+                return res.status(400).json({
+                    ok: false,
+                    error:
+                        "La contraseña debe tener al menos 6 caracteres"
+                });
+
+            }
+
+
+            const emailNormalizado =
+                email.trim().toLowerCase();
+
+            const usuarioExistente =
+                obtenerUsuarioPorEmail(
+                    emailNormalizado
+                );
+
+
+            if (usuarioExistente) {
+
+                return res.status(409).json({
+                    ok: false,
+                    error:
+                        "Ya existe un usuario con ese email"
+                });
+
+            }
+
+
+            const usuario =
+                await crearUsuario({
+                    nombre: nombre.trim(),
+                    email: emailNormalizado,
+                    password,
+                    rol
+                });
+
+
+            return res.status(201).json({
+
+                ok: true,
+
+                usuario
+
+            });
+
+
+        } catch (error) {
+
+            console.error(
+                "Error en registro:",
+                error
+            );
+
+
+            return res.status(500).json({
+
+                ok: false,
+
+                error:
+                    "Error creando el usuario"
+
+            });
+
+        }
+
+    }
+);
 
 
 module.exports = router;
