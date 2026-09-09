@@ -20,13 +20,17 @@ body {
 }
 
 .descripcionTabla {
-    align-items: center;
+    width: 100%;
 }
 
 .logo {
     height: 60px;
     object-fit: contain;
 }
+
+/* =========================
+   TABLA TIPO DE ACTUACIÓN
+========================= */
 
 .tipo-table {
     width: 100%;
@@ -49,29 +53,26 @@ body {
     width: 4%;
 }
 
-.title-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
+/* =========================
+   PAGINA / FECHA
+========================= */
+
+.pagina {
+    height: 28px;
+    padding: 4px 8px;
+    box-sizing: border-box;
 }
 
-.title-table td {
-    border: 2px solid black;
+.fecha {
+    height: 28px;
+    padding: 4px 8px;
+    border-top: 1px solid black;
+    box-sizing: border-box;
 }
 
-.title-cell {
-    font-weight: bold;
-    font-size: 18px;
-    text-align: center;
-    padding: 15px;
-}
-
-.page-cell {
-    width: 120px;
-    font-size: 14px;
-    padding: 10px;
-    text-align: center;
-}
+/* =========================
+   GENERAL
+========================= */
 
 .section {
     margin-bottom: 15px;
@@ -86,15 +87,26 @@ body {
     margin-bottom: 8px;
 }
 
+/*
+   Tablas generales.
+   
+   EXCLUIMOS:
+   - info-table
+   - title-table
+   
+   para que sus bordes no sean modificados
+   por esta regla.
+*/
+
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
 }
 
-table:not(.info-table),
-table:not(.info-table) td,
-table:not(.info-table) th {
+table:not(.info-table):not(.title-table),
+table:not(.info-table):not(.title-table) td,
+table:not(.info-table):not(.title-table) th {
     border: 1px solid black;
 }
 
@@ -109,8 +121,20 @@ td {
 }
 
 /* =========================
-       FIRMAS
-    ========================= */
+   INSTRUCCIÓN CHECKLIST
+========================= */
+
+.instruccion-checklist {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 12px;
+    font-size: 12px;
+}
+
+/* =========================
+   FIRMAS
+========================= */
 
 .firmas {
     display: flex;
@@ -153,7 +177,7 @@ td {
 }
 
 /* =========================
-   TABLA INFORMACION
+   TABLA INFORMACIÓN
 ========================= */
 
 .info-table {
@@ -170,6 +194,7 @@ td {
 }
 
 /* ETIQUETAS */
+
 .label-cell {
     width: 28%;
     font-weight: bold;
@@ -179,6 +204,7 @@ td {
 }
 
 /* VALORES */
+
 .value-cell {
     width: 37%;
     height: 24px;
@@ -187,21 +213,23 @@ td {
     vertical-align: bottom;
     padding-left: 1px;
     padding-right: 2px;
-    padding-bottom: 0px;
+    padding-bottom: 0;
 }
 
 /* FIRMAS */
+
 .signature-cell {
     width: 30%;
     height: 24px;
     position: relative;
     border-bottom: 1px solid black;
     vertical-align: bottom;
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 /* IMAGEN FIRMA */
+
 .firma-img-tabla {
     position: absolute;
     right: 10px;
@@ -211,23 +239,24 @@ td {
     object-fit: contain;
 }
 
-/* LINEA FIRMA VACIA */
+/* LÍNEA FIRMA VACÍA */
+
 .firma-vacia {
     width: 110px;
     margin: auto;
     border-bottom: 1px solid black;
 }
 
-/* DESCRIPCION */
+/* DESCRIPCIÓN */
+
 .descripcion-cell {
     height: 24px;
     font-size: 11px;
     border-bottom: 1px solid black;
     vertical-align: bottom;
     padding-left: 2px;
-    padding-bottom: 0px;
+    padding-bottom: 0;
 }
-
 
 /* =========================
    OBSERVACIONES
@@ -272,16 +301,25 @@ td {
     gap: 10px;
 }
 
+/* CASILLAS DE AVISO / REQUERIMIENTO */
+
 .check-box {
-    width: 18px;
-    height: 18px;
-    border: 2px solid black;
     display: inline-flex;
+
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+
+    width: 42px;
+    height: 30px;
+
+    border: 1px solid black;
+
+    font-size: 11px;
     font-weight: bold;
+
     line-height: 1;
+
+    box-sizing: border-box;
 }
 
 /* =========================
@@ -290,13 +328,14 @@ td {
 
 .checklist-table {
     width: 100%;
-
     border-collapse: collapse;
-
     margin-top: 10px;
 }
 
-/* ELIMINAR TODOS LOS BORDES */
+/*
+   El checklist NO lleva líneas
+   alrededor de las filas.
+*/
 
 .checklist-table,
 .checklist-table tr,
@@ -304,74 +343,43 @@ td {
     border: none !important;
 }
 
-/* TEXTO IZQUIERDA */
+/* TEXTO */
 
 .checklist-text {
+    border: none !important;
+
+    padding-right: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+
+    vertical-align: middle;
+
     font-size: 11px;
-
-    line-height: 1.25;
-
-    padding-right: 10px;
-
-    padding-top: 3px;
-    padding-bottom: 3px;
-
-    vertical-align: top;
+    line-height: 1.15;
 }
 
 /* CELDA DERECHA */
 
 .checklist-result {
-    width: 26px;
+    width: 45px;
 
     text-align: center;
+    vertical-align: middle;
 
-    vertical-align: top;
-
-    padding-top: 3px;
-}
-
-/* CASILLA */
-
-.check-box {
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
-    width: 18px;
-    height: 18px;
-
-    border: 1px solid black;
-
-    font-size: 10px;
+    padding: 2px 0;
 
     font-weight: bold;
-
-    line-height: 1;
 }
 
 /* =========================
    ACCIONES CORRECTORAS
 ========================= */
+
 .acciones-title {
     font-weight: bold;
     text-decoration: underline;
     font-size: 14px;
     margin-bottom: 8px;
-}
-
-.acciones-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-}
-
-.acciones-table th,
-.acciones-table td {
-    border: 1px solid black;
-    padding: 6px;
-    vertical-align: top;
 }
 
 .accion-col {
@@ -390,37 +398,95 @@ td {
 }
 
 .accion-item {
-  border: 1px solid #ccc;
-  padding: 15px;
-  margin-top: 15px;
-  border-radius: 8px;
-  background: #fafafa;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+    background: #fafafa;
 }
 
 .delete-btn {
-  background: #c0392b;
-  margin-top: 10px;
+    background: #c0392b;
+    margin-top: 10px;
 }
 
+/* TABLA DE ACCIONES */
+
+.acciones-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.acciones-table th,
 .acciones-table td {
-    height: auto;
+    border: 1px solid black;
+    padding: 6px;
+    vertical-align: top;
 }
 
-/* =========================
-   CHECKLIST
-========================= */
+/*
+   El cuerpo de acciones mantiene
+   una altura mínima aunque esté vacío.
+*/
 
-/* Quitar bordes de la columna izquierda */
-
-.checklist-text {
-    border: none !important;
-    padding-right: 10px;
+.acciones-table tr:not(:first-child) td {
+    height: 100px;
 }
 
-/* Mantener casilla derecha */
 
-.checklist-result {
-    width: 45px;
-    text-align: center;
+/* =====================================================
+   TABLA TÍTULO - NO MODIFICAR DIMENSIONES
+   ===================================================== */
+
+.title-table {
+    width: 100%;
+    margin-bottom: 20px;
+
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+
+    border: 3px solid black !important;
+}
+
+.title-table td {
+    border: 0 !important;
+}
+
+.title-table .title-cell {
+    width: auto;
+    padding: 15px !important;
+
     font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+
+    border-right: 3px solid black !important;
+}
+
+.title-table .page-cell {
+    width: 150px !important;
+    padding: 0 !important;
+
+    font-size: 11px;
+    text-align: left;
+    vertical-align: top;
+}
+
+/* Página */
+
+.title-table .pagina {
+    height: 28px;
+    padding: 4px 8px !important;
+    box-sizing: border-box;
+}
+
+/* Fecha */
+
+.title-table .fecha {
+    height: 28px;
+    padding: 4px 8px !important;
+    box-sizing: border-box;
+
+    border-top: 3px solid black !important;
 }
