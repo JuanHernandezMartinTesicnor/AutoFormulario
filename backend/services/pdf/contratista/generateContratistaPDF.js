@@ -153,34 +153,15 @@ async function generatePDF(data) {
   function generateAccionesRows(acciones) {
 
     if (!acciones || acciones.length === 0) {
-
-      return `
-      <tr>
-        <td class="acciones-content"></td>
-        <td></td>
-        <td></td>
-      </tr>
-    `;
+      return "";
     }
 
     return acciones.map(a => `
-  
-    <tr>
-
-      <td class="acciones-content">
-        ${a.accion || ""}
-      </td>
-
-      <td>
-        ${a.responsable || ""}
-      </td>
-
-      <td>
-        ${a.control || ""}
-      </td>
-
+    <tr class="accion-row">
+      <td>${a.accion || ""}</td>
+      <td>${a.responsable || ""}</td>
+      <td>${a.control || ""}</td>
     </tr>
-
   `).join("");
   }
 

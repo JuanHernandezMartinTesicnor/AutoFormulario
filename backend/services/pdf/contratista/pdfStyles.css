@@ -378,60 +378,148 @@ td {
 .acciones-title {
     font-weight: bold;
     text-decoration: underline;
-    font-size: 14px;
+    font-size: 12px;
+    margin-top: 12px;
     margin-bottom: 8px;
 }
-
-.accion-col {
-    width: 62%;
-    text-align: center;
-}
-
-.responsable-col {
-    width: 18%;
-    text-align: center;
-}
-
-.control-col {
-    width: 20%;
-    text-align: center;
-}
-
-.accion-item {
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin-top: 15px;
-    border-radius: 8px;
-    background: #fafafa;
-}
-
-.delete-btn {
-    background: #c0392b;
-    margin-top: 10px;
-}
-
-/* TABLA DE ACCIONES */
 
 .acciones-table {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
+    margin-top: 0;
 }
 
 .acciones-table th,
 .acciones-table td {
     border: 1px solid black;
-    padding: 6px;
+    padding: 4px 6px;
     vertical-align: top;
 }
 
+.acciones-table th {
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.05;
+}
+
+/* ANCHOS DE COLUMNAS */
+
+.acciones-table th:nth-child(1),
+.acciones-table td:nth-child(1) {
+    width: 60.5%;
+}
+
+.acciones-table th:nth-child(2),
+.acciones-table td:nth-child(2) {
+    width: 19%;
+}
+
+.acciones-table th:nth-child(3),
+.acciones-table td:nth-child(3) {
+    width: 20.5%;
+}
+
+/* CABECERA */
+
+.acciones-header {
+    display: grid;
+    grid-template-columns: 60.5% 19% 20.5%;
+
+    border: 1px solid black;
+
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.05;
+}
+
+.acciones-header > div {
+    padding: 4px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.acciones-header > div + div {
+    border-left: 1px solid black;
+}
+
+
+/* CUERPO COMÚN */
+
+.acciones-body {
+    position: relative;
+
+    /*
+      Altura mínima de TODA la zona.
+      No de cada acción.
+    */
+    min-height: 35mm;
+
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+/* Líneas verticales de las tres columnas */
+
+.acciones-body::before,
+.acciones-body::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+
+    width: 0;
+    border-left: 1px solid black;
+
+    pointer-events: none;
+}
+
+.acciones-body::before {
+    left: 60.5%;
+}
+
+.acciones-body::after {
+    left: 79.5%;
+}
+
+
+/* CADA ACCIÓN */
+
+/* FILAS REALES */
+
+.accion-row td {
+    height: auto;
+    min-height: 0;
+
+    font-size: 11px;
+    line-height: 1.15;
+
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+
 /*
-   El cuerpo de acciones mantiene
-   una altura mínima aunque esté vacío.
+  Importante:
+  las acciones normales NO tienen altura mínima.
 */
 
-.acciones-table tr:not(:first-child) td {
-    height: 100px;
+.acciones-table .accion-row td {
+    height: auto !important;
+}
+
+
+/*
+  Solo esta última fila absorbe
+  todo el espacio vacío.
+*/
+
+.acciones-relleno td {
+    height: 90px;
 }
 
 

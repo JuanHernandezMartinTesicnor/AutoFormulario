@@ -130,11 +130,11 @@
   <div class="descripcionTabla">
 
     <div class="instruccion-checklist">
-        <strong>
-            <u>
-                Indicar en el casillero correspondiente : SI, NO o N/A según proceda
-            </u>
-        </strong>
+      <strong>
+        <u>
+          Indicar en el casillero correspondiente : SI, NO o N/A según proceda
+        </u>
+      </strong>
     </div>
 
     <!-- TABLA -->
@@ -297,25 +297,22 @@
     </div>
 
     <table class="acciones-table">
+      <thead>
+        <tr>
+          <th class="accion-col">ACCION</th>
+          <th class="responsable-col">RESPONSABLE</th>
+          <th class="control-col">CONTROL DE<br>REALIZACION</th>
+        </tr>
+      </thead>
 
-      <tr>
-
-        <th class="accion-col">
-          ACCION
-        </th>
-
-        <th class="responsable-col">
-          RESPONSABLE
-        </th>
-
-        <th class="control-col">
-          CONTROL DE REALIZACION
-        </th>
-
-      </tr>
-
-      {{accionesRows}}
-
+      <tbody>
+        {{accionesRows}}
+        <tr class="acciones-relleno">
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
     </table>
 
     <div>
