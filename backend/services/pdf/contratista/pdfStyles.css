@@ -104,9 +104,9 @@ table {
     margin-top: 15px;
 }
 
-table:not(.info-table):not(.title-table),
-table:not(.info-table):not(.title-table) td,
-table:not(.info-table):not(.title-table) th {
+table:not(.info-table):not(.title-table):not(.acciones-table),
+table:not(.info-table):not(.title-table):not(.acciones-table) td,
+table:not(.info-table):not(.title-table):not(.acciones-table) th {
     border: 1px solid black;
 }
 
@@ -370,7 +370,6 @@ td {
 
     font-weight: bold;
 }
-
 /* =========================
    ACCIONES CORRECTORAS
 ========================= */
@@ -383,26 +382,23 @@ td {
     margin-bottom: 8px;
 }
 
+
+/* TABLA */
+
 .acciones-table {
     width: 100%;
-    border-collapse: collapse;
     table-layout: fixed;
+
+    /*
+      Separate permite controlar cada borde
+      individualmente sin que Chromium los fusione.
+    */
+    border-collapse: separate;
+    border-spacing: 0;
+
     margin-top: 0;
 }
 
-.acciones-table th,
-.acciones-table td {
-    border: 1px solid black;
-    padding: 4px 6px;
-    vertical-align: top;
-}
-
-.acciones-table th {
-    font-size: 11px;
-    font-weight: bold;
-    text-align: center;
-    line-height: 1.05;
-}
 
 /* ANCHOS DE COLUMNAS */
 
@@ -421,107 +417,108 @@ td {
     width: 20.5%;
 }
 
+
 /* CABECERA */
 
-.acciones-header {
-    display: grid;
-    grid-template-columns: 60.5% 19% 20.5%;
-
-    border: 1px solid black;
+.acciones-table thead th {
+    padding: 4px 6px;
 
     font-size: 11px;
     font-weight: bold;
     text-align: center;
     line-height: 1.05;
-}
-
-.acciones-header > div {
-    padding: 4px 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.acciones-header > div + div {
-    border-left: 1px solid black;
-}
-
-
-/* CUERPO COMÚN */
-
-.acciones-body {
-    position: relative;
+    vertical-align: middle;
 
     /*
-      Altura mínima de TODA la zona.
-      No de cada acción.
+      Todos los bordes visibles son de 1px.
+      El borde izquierdo solo se dibuja
+      en la primera columna para evitar duplicados.
     */
-    min-height: 35mm;
-
-    border-left: 1px solid black;
-    border-right: 1px solid black;
-    border-bottom: 1px solid black;
+    border-top: 1px solid black !important;
+    border-bottom: 1px solid black !important;
+    border-right: 1px solid black !important;
+    border-left: 0 !important;
 }
 
-/* Líneas verticales de las tres columnas */
-
-.acciones-body::before,
-.acciones-body::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-
-    width: 0;
-    border-left: 1px solid black;
-
-    pointer-events: none;
-}
-
-.acciones-body::before {
-    left: 60.5%;
-}
-
-.acciones-body::after {
-    left: 79.5%;
+.acciones-table thead th:first-child {
+    border-left: 1px solid black !important;
 }
 
 
-/* CADA ACCIÓN */
+/* FILAS DE ACCIONES */
 
-/* FILAS REALES */
+.acciones-table tbody .accion-row td {
+    height: auto !important;
 
-.accion-row td {
-    height: auto;
-    min-height: 0;
+    padding: 3px 6px;
 
     font-size: 11px;
     line-height: 1.15;
+    vertical-align: top;
+
+    /*
+      No queremos líneas horizontales
+      entre una acción y la siguiente.
+    */
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+
+    /*
+      Líneas verticales de 1px.
+    */
+    border-left: 0 !important;
+    border-right: 1px solid black !important;
 
     overflow-wrap: anywhere;
     word-break: normal;
 }
 
 
-/*
-  Importante:
-  las acciones normales NO tienen altura mínima.
-*/
+/* Borde exterior izquierdo */
 
-.acciones-table .accion-row td {
-    height: auto !important;
+.acciones-table tbody .accion-row td:first-child {
+    border-left: 1px solid black !important;
 }
 
 
+/* ESPACIO VACÍO FINAL */
+
 /*
-  Solo esta última fila absorbe
-  todo el espacio vacío.
+   Esta fila proporciona el espacio vacío
+   compartido por todas las acciones.
+
+   No existe una altura mínima individual
+   para cada acción.
 */
 
-.acciones-relleno td {
+.acciones-table tbody .acciones-relleno td {
     height: 90px;
+
+    padding: 0;
+
+    /*
+      Sin línea horizontal superior.
+    */
+    border-top: 0 !important;
+
+    /*
+      Borde inferior exterior de 1px.
+    */
+    border-bottom: 1px solid black !important;
+
+    /*
+      Separadores verticales de 1px.
+    */
+    border-left: 0 !important;
+    border-right: 1px solid black !important;
 }
 
+
+/* Borde exterior izquierdo */
+
+.acciones-table tbody .acciones-relleno td:first-child {
+    border-left: 1px solid black !important;
+}
 
 /* =====================================================
    TABLA TÍTULO - NO MODIFICAR DIMENSIONES
