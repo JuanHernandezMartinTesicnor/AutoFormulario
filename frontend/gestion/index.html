@@ -17,21 +17,39 @@
 
     <header class="header">
 
-        <div>
+        <div class="header-content">
 
-            <h1>AutoFormulario</h1>
+            <div class="header-top">
 
-            <p>Gestión de proyectos</p>
+                <a href="/" class="logo">
+                    AutoFormulario
+                </a>
 
-        </div>
+                <div class="usuario">
+                    <span id="usuarioNombre"></span>
 
-        <div class="usuario">
+                    <button id="btnCerrarSesion">
+                        Cerrar sesión
+                    </button>
+                </div>
 
-            <span id="usuarioNombre"></span>
+            </div>
 
-            <button id="btnCerrarSesion">
-                Cerrar sesión
-            </button>
+            <nav class="nav-principal">
+
+                <a href="/" class="nav-link">
+                    Inicio
+                </a>
+
+                <a href="/formularios/contratista/" class="nav-link">
+                    Contratista
+                </a>
+
+                <a href="/gestion/" class="nav-link activo">
+                    Proyectos
+                </a>
+
+            </nav>
 
         </div>
 
@@ -53,9 +71,17 @@
 
             </div>
 
-            <button id="btnNuevoProyecto" class="btn-principal">
-                + Nuevo proyecto
-            </button>
+            <div class="acciones-seccion">
+
+                <a href="/formularios/contratista/" class="btn-secundario">
+                    Formulario contratista
+                </a>
+
+                <button id="btnNuevoProyecto" class="btn-principal">
+                    + Nuevo proyecto
+                </button>
+
+            </div>
 
         </div>
 
