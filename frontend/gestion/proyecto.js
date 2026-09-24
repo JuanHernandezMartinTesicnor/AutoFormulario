@@ -44,6 +44,12 @@ const parametros =
 const proyectoId =
     parametros.get("id");
 
+const tipo =
+    parametros.get("tipo");
+
+const esContratista =
+    tipo === "contratista";
+
 
 /* =========================
    INICIO
@@ -57,7 +63,10 @@ document.addEventListener(
 
 async function iniciar() {
 
-    if (!proyectoId) {
+    if (
+        !proyectoId &&
+        !esContratista
+    ) {
 
         window.location.href =
             "/gestion";
@@ -96,7 +105,15 @@ async function iniciar() {
             resultado.usuario.nombre;
 
 
-        await cargarProyecto();
+        if (esContratista) {
+
+            cargarContratista();
+
+        } else {
+
+            await cargarProyecto();
+
+        }
 
         await cargarFormularios();
 
@@ -111,6 +128,69 @@ async function iniciar() {
         );
 
     }
+
+}
+
+
+/* =========================
+   CONTRATISTA
+========================= */
+
+function cargarContratista() {
+
+    informacionProyecto.innerHTML = `
+
+        <div class="proyecto">
+
+            <div class="proyecto-info">
+
+                <h2>
+                    Contratista
+                </h2>
+
+                <p>
+                    Control de la actuación
+                    del contratista
+                </p>
+
+                <p>
+                    <strong>
+                        Formulario general
+                    </strong>
+                </p>
+
+            </div>
+
+            <div class="proyecto-acciones">
+
+                <button
+                    id="btnNuevoContratista"
+                    class="btn-principal"
+                >
+                    + Formulario Contratista
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+
+    const btnNuevoContratista =
+        document.getElementById(
+            "btnNuevoContratista"
+        );
+
+
+    btnNuevoContratista.addEventListener(
+        "click",
+        () => {
+
+            window.location.href =
+                "/formularios/contratista/";
+
+        }
+    );
 
 }
 
@@ -212,9 +292,25 @@ async function cargarFormularios() {
         "<p>Cargando formularios...</p>";
 
 
+    let url;
+
+
+    if (esContratista) {
+
+        url =
+            `${API_URL}/api/formularios/contratista`;
+
+    } else {
+
+        url =
+            `${API_URL}/api/formularios/proyecto/${proyectoId}`;
+
+    }
+
+
     const respuesta =
         await fetch(
-            `${API_URL}/api/formularios/proyecto/${proyectoId}`,
+            url,
             {
                 credentials: "include"
             }
@@ -340,9 +436,8 @@ function mostrarFormularios(
                 "click",
                 () => {
 
-                    console.log(
-                        "Formulario seleccionado:",
-                        formulario.id
+                    abrirFormulario(
+                        formulario
                     );
 
                 }
@@ -358,6 +453,38 @@ function mostrarFormularios(
 
 }
 
+/* =========================
+   ABRIR FORMULARIO
+========================= */
+
+function abrirFormulario(
+    formulario
+) {
+
+    if (
+        formulario.tipo ===
+        "contratista"
+    ) {
+
+        window.location.href =
+            `/formularios/contratista/?id=${formulario.id}`;
+
+        return;
+    }
+
+
+    if (
+        formulario.tipo ===
+        "coordinador"
+    ) {
+
+        window.location.href =
+            `/formularios/coordinador/?proyecto=${formulario.proyecto_id}&id=${formulario.id}`;
+
+    }
+
+}
+
 
 /* =========================
    VOLVER
@@ -368,7 +495,7 @@ btnVolver.addEventListener(
     () => {
 
         window.location.href =
-            "/gestion";
+            "/gestion/";
 
     }
 );

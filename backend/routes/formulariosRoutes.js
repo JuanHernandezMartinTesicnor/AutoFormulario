@@ -3,18 +3,51 @@ const express = require("express");
 const router = express.Router();
 
 const {
-    requireAuth,
-    requireCoordinador
+    requireAuth
 } = require("../middleware/authMiddleware");
+
 
 const {
     crearFormulario,
     obtenerFormularios,
+    obtenerFormulariosPorUsuario,
     obtenerFormularioPorId,
     obtenerFormulariosPorProyecto,
+    obtenerFormulariosPorProyectoYUsuario,
+    obtenerFormulariosContratista,
+    obtenerFormulariosContratistaPorUsuario,
     actualizarFormulario,
     eliminarFormulario
 } = require("../models/formulariosModel");
+
+
+/* =========================
+   UTILIDADES
+========================= */
+
+function esCoordinador(req) {
+
+    return (
+        req.session.usuario.rol ===
+        "coordinador"
+    );
+}
+
+
+function puedeAccederFormulario(
+    req,
+    formulario
+) {
+
+    if (esCoordinador(req)) {
+        return true;
+    }
+
+    return (
+        Number(formulario.usuario_id) ===
+        Number(req.session.usuario.id)
+    );
+}
 
 
 /* =========================
@@ -28,13 +61,29 @@ router.get(
 
         try {
 
-            const formularios =
-                obtenerFormularios();
+            let formularios;
+
+
+            if (esCoordinador(req)) {
+
+                formularios =
+                    obtenerFormularios();
+
+            } else {
+
+                formularios =
+                    obtenerFormulariosPorUsuario(
+                        req.session.usuario.id
+                    );
+
+            }
+
 
             res.json({
                 ok: true,
                 formularios
             });
+
 
         } catch (error) {
 
@@ -45,7 +94,62 @@ router.get(
 
             res.status(500).json({
                 ok: false,
-                error: "Error obteniendo formularios"
+                error:
+                    "Error obteniendo formularios"
+            });
+
+        }
+
+    }
+);
+
+
+/* =========================
+   CONTRATISTA
+========================= */
+
+router.get(
+    "/contratista",
+    requireAuth,
+    (req, res) => {
+
+        try {
+
+            let formularios;
+
+
+            if (esCoordinador(req)) {
+
+                formularios =
+                    obtenerFormulariosContratista();
+
+            } else {
+
+                formularios =
+                    obtenerFormulariosContratistaPorUsuario(
+                        req.session.usuario.id
+                    );
+
+            }
+
+
+            res.json({
+                ok: true,
+                formularios
+            });
+
+
+        } catch (error) {
+
+            console.error(
+                "Error obteniendo formularios de contratista:",
+                error
+            );
+
+            res.status(500).json({
+                ok: false,
+                error:
+                    "Error obteniendo formularios"
             });
 
         }
@@ -65,15 +169,32 @@ router.get(
 
         try {
 
-            const formularios =
-                obtenerFormulariosPorProyecto(
-                    req.params.proyectoId
-                );
+            let formularios;
+
+
+            if (esCoordinador(req)) {
+
+                formularios =
+                    obtenerFormulariosPorProyecto(
+                        req.params.proyectoId
+                    );
+
+            } else {
+
+                formularios =
+                    obtenerFormulariosPorProyectoYUsuario(
+                        req.params.proyectoId,
+                        req.session.usuario.id
+                    );
+
+            }
+
 
             res.json({
                 ok: true,
                 formularios
             });
+
 
         } catch (error) {
 
@@ -84,7 +205,8 @@ router.get(
 
             res.status(500).json({
                 ok: false,
-                error: "Error obteniendo formularios"
+                error:
+                    "Error obteniendo formularios"
             });
 
         }
@@ -109,19 +231,43 @@ router.get(
                     req.params.id
                 );
 
+
             if (!formulario) {
 
-                return res.status(404).json({
-                    ok: false,
-                    error: "Formulario no encontrado"
-                });
+                return res
+                    .status(404)
+                    .json({
+                        ok: false,
+                        error:
+                            "Formulario no encontrado"
+                    });
 
             }
+
+
+            if (
+                !puedeAccederFormulario(
+                    req,
+                    formulario
+                )
+            ) {
+
+                return res
+                    .status(403)
+                    .json({
+                        ok: false,
+                        error:
+                            "No tienes permisos para acceder a este formulario"
+                    });
+
+            }
+
 
             res.json({
                 ok: true,
                 formulario
             });
+
 
         } catch (error) {
 
@@ -132,7 +278,8 @@ router.get(
 
             res.status(500).json({
                 ok: false,
-                error: "Error obteniendo formulario"
+                error:
+                    "Error obteniendo formulario"
             });
 
         }
@@ -159,45 +306,97 @@ router.post(
                 estado
             } = req.body;
 
-            if (!proyecto_id) {
-
-                return res.status(400).json({
-                    ok: false,
-                    error: "proyecto_id es obligatorio"
-                });
-
-            }
 
             if (!tipo) {
 
-                return res.status(400).json({
-                    ok: false,
-                    error: "tipo es obligatorio"
-                });
+                return res
+                    .status(400)
+                    .json({
+                        ok: false,
+                        error:
+                            "tipo es obligatorio"
+                    });
 
             }
+
+
+            /* =========================
+               VALIDAR TIPO
+            ========================= */
+
+            if (
+                tipo !== "contratista" &&
+                tipo !== "coordinador"
+            ) {
+
+                return res
+                    .status(400)
+                    .json({
+                        ok: false,
+                        error:
+                            "Tipo de formulario no válido"
+                    });
+
+            }
+
+
+            /* =========================
+               COORDINADOR:
+               PROYECTO OBLIGATORIO
+            ========================= */
+
+            if (
+                tipo === "coordinador" &&
+                !proyecto_id
+            ) {
+
+                return res
+                    .status(400)
+                    .json({
+                        ok: false,
+                        error:
+                            "proyecto_id es obligatorio para formularios de coordinador"
+                    });
+
+            }
+
+
+            /* =========================
+               CONTRATISTA:
+               SIN PROYECTO
+            ========================= */
+
+            const proyectoFormulario =
+                tipo === "contratista"
+                    ? null
+                    : proyecto_id;
+
 
             const formulario =
                 crearFormulario({
 
-                    proyecto_id,
+                    proyecto_id:
+                        proyectoFormulario,
 
                     usuario_id:
                         req.session.usuario.id,
 
                     tipo,
 
-                    datos: datos || {},
+                    datos:
+                        datos || {},
 
                     estado:
                         estado || "borrador"
 
                 });
 
+
             res.status(201).json({
                 ok: true,
                 formulario
             });
+
 
         } catch (error) {
 
@@ -208,7 +407,8 @@ router.post(
 
             res.status(500).json({
                 ok: false,
-                error: "Error creando formulario"
+                error:
+                    "Error creando formulario"
             });
 
         }
@@ -223,40 +423,69 @@ router.post(
 
 router.put(
     "/:id",
-    requireCoordinador,
+    requireAuth,
     (req, res) => {
 
         try {
 
+            const actual =
+                obtenerFormularioPorId(
+                    req.params.id
+                );
+
+
+            if (!actual) {
+
+                return res
+                    .status(404)
+                    .json({
+                        ok: false,
+                        error:
+                            "Formulario no encontrado"
+                    });
+
+            }
+
+
+            if (
+                !puedeAccederFormulario(
+                    req,
+                    actual
+                )
+            ) {
+
+                return res
+                    .status(403)
+                    .json({
+                        ok: false,
+                        error:
+                            "No tienes permisos para editar este formulario"
+                    });
+
+            }
+
+
             const {
                 datos,
-                estado,
-                tipo
+                estado
             } = req.body;
+
 
             const formulario =
                 actualizarFormulario(
                     req.params.id,
                     {
                         datos,
-                        estado,
-                        tipo
+                        estado
                     }
                 );
 
-            if (!formulario) {
-
-                return res.status(404).json({
-                    ok: false,
-                    error: "Formulario no encontrado"
-                });
-
-            }
 
             res.json({
                 ok: true,
                 formulario
             });
+
 
         } catch (error) {
 
@@ -267,7 +496,8 @@ router.put(
 
             res.status(500).json({
                 ok: false,
-                error: "Error actualizando formulario"
+                error:
+                    "Error actualizando formulario"
             });
 
         }
@@ -282,30 +512,73 @@ router.put(
 
 router.delete(
     "/:id",
-    requireCoordinador,
+    requireAuth,
     (req, res) => {
 
         try {
+
+            const formulario =
+                obtenerFormularioPorId(
+                    req.params.id
+                );
+
+
+            if (!formulario) {
+
+                return res
+                    .status(404)
+                    .json({
+                        ok: false,
+                        error:
+                            "Formulario no encontrado"
+                    });
+
+            }
+
+
+            if (
+                !puedeAccederFormulario(
+                    req,
+                    formulario
+                )
+            ) {
+
+                return res
+                    .status(403)
+                    .json({
+                        ok: false,
+                        error:
+                            "No tienes permisos para eliminar este formulario"
+                    });
+
+            }
+
 
             const resultado =
                 eliminarFormulario(
                     req.params.id
                 );
 
+
             if (
                 resultado.changes === 0
             ) {
 
-                return res.status(404).json({
-                    ok: false,
-                    error: "Formulario no encontrado"
-                });
+                return res
+                    .status(404)
+                    .json({
+                        ok: false,
+                        error:
+                            "Formulario no encontrado"
+                    });
 
             }
+
 
             res.json({
                 ok: true
             });
+
 
         } catch (error) {
 
@@ -316,7 +589,8 @@ router.delete(
 
             res.status(500).json({
                 ok: false,
-                error: "Error eliminando formulario"
+                error:
+                    "Error eliminando formulario"
             });
 
         }

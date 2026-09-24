@@ -367,7 +367,7 @@ function crearTarjetaContratista() {
 function abrirContratista() {
 
     window.location.href =
-        "/gestion/contratista.html";
+        "/gestion/proyecto.html?tipo=contratista";
 
 }
 
