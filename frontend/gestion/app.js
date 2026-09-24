@@ -126,7 +126,6 @@ async function cargarProyectos() {
     }
 }
 
-
 /* =========================
    MOSTRAR PROYECTOS
 ========================= */
@@ -137,25 +136,52 @@ function mostrarProyectos(
 
     listaProyectos.innerHTML = "";
 
+
+    /* =========================
+       PROYECTO ESPECIAL:
+       CONTRATISTA
+    ========================= */
+
+    crearTarjetaContratista();
+
+
+    /* =========================
+       SIN PROYECTOS NORMALES
+    ========================= */
+
     if (!proyectos.length) {
 
-        listaProyectos.innerHTML = `
+        const aviso =
+            document.createElement(
+                "div"
+            );
 
-            <div class="sin-proyectos">
+        aviso.className =
+            "sin-proyectos";
 
-                <h3>No hay proyectos</h3>
+        aviso.innerHTML = `
 
-                <p>
-                    Crea el primer proyecto para comenzar.
-                </p>
+            <h3>
+                No hay proyectos de coordinador
+            </h3>
 
-            </div>
+            <p>
+                Crea el primer proyecto para comenzar.
+            </p>
 
         `;
+
+        listaProyectos.appendChild(
+            aviso
+        );
 
         return;
     }
 
+
+    /* =========================
+       PROYECTOS NORMALES
+    ========================= */
 
     proyectos.forEach(
         proyecto => {
@@ -175,25 +201,23 @@ function mostrarProyectos(
 
                     <h3>
                         ${escapeHtml(
-                proyecto.nombre
-            )}
+                            proyecto.nombre
+                        )}
                     </h3>
 
                     <p>
                         ${escapeHtml(
-                proyecto.direccion ||
-                "Sin dirección"
-            )
-                }
+                            proyecto.direccion ||
+                            "Sin dirección"
+                        )}
                     </p>
 
                     <p>
                         <strong>Cliente:</strong>
                         ${escapeHtml(
-                    proyecto.cliente ||
-                    "Sin cliente"
-                )
-                }
+                            proyecto.cliente ||
+                            "Sin cliente"
+                        )}
                     </p>
 
                 </div>
@@ -221,10 +245,14 @@ function mostrarProyectos(
 
 
             const botonVer =
-                tarjeta.querySelector(".btn-ver");
+                tarjeta.querySelector(
+                    ".btn-ver"
+                );
 
             const botonEliminar =
-                tarjeta.querySelector(".btn-eliminar");
+                tarjeta.querySelector(
+                    ".btn-eliminar"
+                );
 
 
             botonVer.addEventListener(
@@ -258,6 +286,89 @@ function mostrarProyectos(
 
         }
     );
+}
+
+
+/* =========================
+   TARJETA CONTRATISTA
+========================= */
+
+function crearTarjetaContratista() {
+
+    const tarjeta =
+        document.createElement(
+            "div"
+        );
+
+    tarjeta.className =
+        "proyecto proyecto-contratista";
+
+
+    tarjeta.innerHTML = `
+
+        <div class="proyecto-info">
+
+            <h3>
+                Contratista
+            </h3>
+
+            <p>
+                Control de la actuación del contratista
+            </p>
+
+            <p>
+                <strong>
+                    Formulario general
+                </strong>
+            </p>
+
+        </div>
+
+
+        <div class="proyecto-acciones">
+
+            <button
+                class="btn-secundario btn-ver-contratista"
+            >
+                Ver formularios
+            </button>
+
+        </div>
+
+    `;
+
+
+    const botonVer =
+        tarjeta.querySelector(
+            ".btn-ver-contratista"
+        );
+
+
+    botonVer.addEventListener(
+        "click",
+        () => {
+
+            abrirContratista();
+
+        }
+    );
+
+
+    listaProyectos.appendChild(
+        tarjeta
+    );
+}
+
+
+/* =========================
+   ABRIR CONTRATISTA
+========================= */
+
+function abrirContratista() {
+
+    window.location.href =
+        "/gestion/contratista.html";
+
 }
 
 

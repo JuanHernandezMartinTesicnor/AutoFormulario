@@ -93,7 +93,7 @@ loginForm.addEventListener(
              */
 
             window.location.href =
-                "/gestion";
+                "/";
 
 
         } catch (error) {
