@@ -110,15 +110,40 @@ async function enviar() {
       throw new Error("Error generando PDF");
     }
 
-    const blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const formularioId =
+      res.headers.get(
+        "X-Formulario-Id"
+      );
+
+
+    const blob =
+      await res.blob();
+
+    const url =
+      window.URL.createObjectURL(
+        blob
+      );
+
+    const a =
+      document.createElement(
+        "a"
+      );
+
 
     a.href = url;
-    a.download = "formulario.pdf";
+
+    a.download =
+      formularioId
+        ? `formulario-${formularioId}.pdf`
+        : "formulario.pdf";
+
+
     a.click();
 
-    window.URL.revokeObjectURL(url);
+
+    window.URL.revokeObjectURL(
+      url
+    );
 
   } catch (error) {
 
