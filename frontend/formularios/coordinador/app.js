@@ -5,30 +5,36 @@ import {
 } from "../../common/api.js";
 
 import {
-    addPersonal
+    addPersonal,
+    renderPersonal
 } from "./personal.js";
 
 import {
-    addMaquinaria
+    addMaquinaria,
+    renderMaquinaria
 } from "./maquinaria.js";
 
 import {
-    addEmpresa
+    addEmpresa,
+    renderEmpresas
 } from "./empresas.js";
 
 import {
-    addInspeccion
+    addInspeccion,
+    renderInspecciones
 } from "./inspecciones.js";
 
 import {
     renderChecklist,
-    obtenerChecklist
+    obtenerChecklist,
+    cargarChecklist
 } from "./checklist.js";
 
 import {
     initFirma,
     limpiarFirma,
-    getFirmaBase64
+    getFirmaBase64,
+    cargarFirma
 } from "./firma.js";
 
 import {
@@ -38,15 +44,62 @@ import {
     inspecciones
 } from "./state.js";
 
+
+/* =========================
+   PARÁMETROS URL
+========================= */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const proyectoId =
+    params.get("proyecto");
+
+const formularioId =
+    params.get("id");
+
+
 /* =========================
    INICIALIZACIÓN
 ========================= */
 
-renderChecklist();
-
-initFirma(
-    "firmaCanvas"
+document.addEventListener(
+    "DOMContentLoaded",
+    iniciar
 );
+
+
+async function iniciar() {
+
+    /*
+     * Primero construimos el HTML
+     * dinámico.
+     */
+
+    renderChecklist();
+
+    initFirma(
+        "firmaCanvas"
+    );
+
+
+    /*
+     * Si tenemos ID estamos abriendo
+     * un formulario existente.
+     */
+
+    if (formularioId) {
+
+        await cargarFormularioExistente();
+
+    }
+
+}
+
+
+
 
 /* =========================
    BOTONES HTML
@@ -357,13 +410,283 @@ async function enviar() {
 window.enviar = enviar;
 
 
-//OBTENER PROYECTO ID DESDE URL
 function obtenerProyectoId() {
 
-    const params =
-        new URLSearchParams(
-            window.location.search
+    return proyectoId;
+}
+
+
+/* =========================
+   CARGAR FORMULARIO EXISTENTE
+========================= */
+
+async function cargarFormularioExistente() {
+
+    try {
+
+        const respuesta =
+            await fetch(
+                `${API_URL}/api/formularios/${formularioId}`,
+                {
+                    credentials:
+                        "include"
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                resultado.error ||
+                "No se pudo cargar el formulario"
+            );
+
+        }
+
+
+        const formulario =
+            resultado.formulario;
+
+
+        if (
+            formulario.tipo !==
+            "coordinador"
+        ) {
+
+            throw new Error(
+                "El formulario seleccionado no es de coordinador"
+            );
+
+        }
+
+
+        rellenarFormulario(
+            formulario.datos || {}
         );
 
-    return params.get("proyecto");
+
+    } catch (error) {
+
+        console.error(
+            "Error cargando formulario:",
+            error
+        );
+
+        alert(
+            error.message ||
+            "No se pudo cargar el formulario"
+        );
+
+    }
+
+}
+
+
+/* =========================
+   RELLENAR FORMULARIO
+========================= */
+
+function rellenarFormulario(
+    data
+) {
+
+    /* =========================
+       DATOS GENERALES
+    ========================= */
+
+    document.getElementById(
+        "fecha"
+    ).value =
+        data.fecha || "";
+
+
+    document.getElementById(
+        "obra"
+    ).value =
+        data.obra || "";
+
+
+    document.getElementById(
+        "cliente"
+    ).value =
+        data.cliente || "";
+
+
+    document.getElementById(
+        "direccion"
+    ).value =
+        data.direccion || "";
+
+
+    document.getElementById(
+        "tecnicoResponsable"
+    ).value =
+        data.tecnicoResponsable ||
+        "";
+
+
+    document.getElementById(
+        "coordinador"
+    ).value =
+        data.coordinador || "";
+
+
+    /* =========================
+       PERSONAL
+    ========================= */
+
+    personal.splice(
+        0,
+        personal.length
+    );
+
+
+    if (
+        Array.isArray(
+            data.personal
+        )
+    ) {
+
+        personal.push(
+            ...data.personal
+        );
+
+    }
+
+
+    renderPersonal();
+
+
+    /* =========================
+       MAQUINARIA
+    ========================= */
+
+    maquinaria.splice(
+        0,
+        maquinaria.length
+    );
+
+
+    if (
+        Array.isArray(
+            data.maquinaria
+        )
+    ) {
+
+        maquinaria.push(
+            ...data.maquinaria
+        );
+
+    }
+
+
+    renderMaquinaria();
+
+
+    /* =========================
+       EMPRESAS
+    ========================= */
+
+    empresas.splice(
+        0,
+        empresas.length
+    );
+
+
+    if (
+        Array.isArray(
+            data.empresas
+        )
+    ) {
+
+        empresas.push(
+            ...data.empresas
+        );
+
+    }
+
+
+    /*
+     * renderEmpresas ya sabe
+     * reconstruir las firmas
+     * guardadas de las empresas.
+     */
+
+    renderEmpresas();
+
+
+    /* =========================
+       INSPECCIONES
+    ========================= */
+
+    inspecciones.splice(
+        0,
+        inspecciones.length
+    );
+
+
+    if (
+        Array.isArray(
+            data.inspecciones
+        )
+    ) {
+
+        /*
+         * Al cargar desde JSON,
+         * las fotos antiguas ya no son
+         * objetos File del navegador.
+         *
+         * Las conservamos como datos,
+         * pero limpiamos fotos para evitar
+         * tratarlas como archivos nuevos.
+         */
+
+        data.inspecciones.forEach(
+            inspeccion => {
+
+                inspecciones.push({
+
+                    ...inspeccion,
+
+                    fotos: []
+
+                });
+
+            }
+        );
+
+    }
+
+
+    renderInspecciones();
+
+
+    /* =========================
+       CHECKLIST
+    ========================= */
+
+    cargarChecklist(
+        data.checklist || []
+    );
+
+
+    /* =========================
+       FIRMA TÉCNICO
+    ========================= */
+
+    if (
+        data.firmaTecnico
+    ) {
+
+        cargarFirma(
+            "firmaCanvas",
+            data.firmaTecnico
+        );
+
+    }
+
 }

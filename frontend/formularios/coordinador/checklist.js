@@ -402,3 +402,112 @@ window.toggleDetalle = function (id) {
             ? "flex"
             : "none";
 };
+
+
+/* =========================
+   CARGAR CHECKLIST GUARDADO
+========================= */
+
+export function cargarChecklist(
+    datosChecklist = []
+) {
+
+    if (
+        !Array.isArray(datosChecklist)
+    ) {
+        return;
+    }
+
+
+    datosChecklist.forEach(
+        categoria => {
+
+            if (
+                !Array.isArray(
+                    categoria.items
+                )
+            ) {
+                return;
+            }
+
+
+            categoria.items.forEach(
+                item => {
+
+                    const select =
+                        document.getElementById(
+                            item.id
+                        );
+
+                    const comentario =
+                        document.getElementById(
+                            `${item.id}_comentario`
+                        );
+
+                    const responsable =
+                        document.getElementById(
+                            `${item.id}_responsable`
+                        );
+
+                    const fechaLimite =
+                        document.getElementById(
+                            `${item.id}_fechaLimite`
+                        );
+
+
+                    if (select) {
+
+                        select.value =
+                            item.valor ||
+                            "NA";
+
+                    }
+
+
+                    if (comentario) {
+
+                        comentario.value =
+                            item.comentario ||
+                            "";
+
+                    }
+
+
+                    if (responsable) {
+
+                        responsable.value =
+                            item.responsable ||
+                            "";
+
+                    }
+
+
+                    if (fechaLimite) {
+
+                        fechaLimite.value =
+                            item.fechaLimite ||
+                            "";
+
+                    }
+
+
+                    /*
+                     * Mostrar u ocultar el detalle
+                     * dependiendo del valor guardado.
+                     */
+
+                    if (select) {
+
+                        window.toggleDetalle(
+                            item.id
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
