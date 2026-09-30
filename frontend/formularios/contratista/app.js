@@ -10,7 +10,7 @@ const parametros =
     window.location.search
   );
 
-const formularioId =
+let formularioId =
   parametros.get("id");
 
 
@@ -519,11 +519,36 @@ function obtenerDatosFormulario() {
 
 async function enviar() {
 
-  const data =
-    obtenerDatosFormulario();
-
-
   try {
+
+    /* =========================
+       RECOGER DATOS
+    ========================= */
+
+    const data =
+      obtenerDatosFormulario();
+
+
+    /* =========================
+       GUARDAR / ACTUALIZAR
+    ========================= */
+
+    /*
+     * Si el formulario es nuevo:
+     *   → se crea y formularioId recibe su ID.
+     *
+     * Si ya existe:
+     *   → se actualiza el mismo formulario.
+     */
+
+    await guardarFormulario(
+      "completado"
+    );
+
+
+    /* =========================
+       GENERAR PDF
+    ========================= */
 
     const res =
       await fetch(
@@ -555,11 +580,9 @@ async function enviar() {
     }
 
 
-    const nuevoFormularioId =
-      res.headers.get(
-        "X-Formulario-Id"
-      );
-
+    /* =========================
+       DESCARGAR PDF
+    ========================= */
 
     const blob =
       await res.blob();
@@ -581,12 +604,20 @@ async function enviar() {
 
 
     a.download =
-      nuevoFormularioId
-        ? `formulario-${nuevoFormularioId}.pdf`
+      formularioId
+        ? `formulario-${formularioId}.pdf`
         : "formulario.pdf";
 
 
+    document.body.appendChild(
+      a
+    );
+
+
     a.click();
+
+
+    a.remove();
 
 
     window.URL.revokeObjectURL(
@@ -596,9 +627,14 @@ async function enviar() {
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Error guardando/generando PDF:",
+      error
+    );
+
 
     alert(
+      error.message ||
       "Error generando PDF"
     );
 
@@ -606,6 +642,132 @@ async function enviar() {
 
 }
 
+
+
+/* =========================
+   GUARDAR FORMULARIO
+========================= */
+
+async function guardarFormulario(
+  estado = "borrador"
+) {
+
+  const data =
+    obtenerDatosFormulario();
+
+
+  const respuesta =
+    await fetch(
+      "/api/contratista/save",
+      {
+        method: "POST",
+
+        credentials: "include",
+
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+
+        body: JSON.stringify({
+
+          id:
+            formularioId
+              ? Number(formularioId)
+              : null,
+
+          datos:
+            data,
+
+          estado
+
+        })
+      }
+    );
+
+
+  const resultado =
+    await respuesta.json();
+
+
+  if (!respuesta.ok) {
+
+    throw new Error(
+      resultado.error ||
+      "No se pudo guardar el formulario"
+    );
+
+  }
+
+
+  /*
+   * Si era un formulario nuevo,
+   * guardamos su ID.
+   */
+
+  if (!formularioId) {
+
+    formularioId =
+      String(
+        resultado.formulario.id
+      );
+
+
+    const url =
+      new URL(
+        window.location.href
+      );
+
+
+    url.searchParams.set(
+      "id",
+      formularioId
+    );
+
+
+    window.history.replaceState(
+      {},
+      "",
+      url
+    );
+
+  }
+
+
+  return resultado.formulario;
+}
+
+
+/* =========================
+   GUARDAR SIN PDF
+========================= */
+
+async function guardar() {
+
+  try {
+
+    await guardarFormulario(
+      "borrador"
+    );
+
+
+    alert(
+      "Formulario guardado correctamente"
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      error.message ||
+      "Error guardando formulario"
+    );
+
+  }
+
+}
 
 /* =========================
    HACER FUNCIONES GLOBALES
@@ -624,3 +786,7 @@ window.agregarAccion =
 
 window.enviar =
   enviar;
+
+window.guardar = guardar;
+window.enviar = enviar;
+window.agregarAccion = agregarAccion;

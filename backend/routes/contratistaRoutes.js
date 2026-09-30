@@ -9,14 +9,195 @@ const {
 );
 
 const {
-  crearFormulario
+  crearFormulario,
+  obtenerFormularioPorId,
+  actualizarFormulario
 } = require(
   "../models/formulariosModel"
 );
 
 
 /* =========================
-   GENERAR PDF CONTRATISTA
+   GUARDAR CONTRATISTA
+========================= */
+
+router.post(
+  "/save",
+  async (req, res) => {
+
+    try {
+
+      const {
+        id,
+        datos,
+        estado = "borrador"
+      } = req.body;
+
+
+      const usuario =
+        req.session?.usuario ||
+        null;
+
+
+      /* =========================
+         ACTUALIZAR EXISTENTE
+      ========================= */
+
+      if (id) {
+
+        /*
+         * Para modificar un formulario
+         * existente exigimos sesión.
+         */
+
+        if (!usuario) {
+
+          return res
+            .status(401)
+            .json({
+              ok: false,
+              error:
+                "Debes iniciar sesión para editar un formulario existente"
+            });
+
+        }
+
+
+        const actual =
+          obtenerFormularioPorId(
+            id
+          );
+
+
+        if (!actual) {
+
+          return res
+            .status(404)
+            .json({
+              ok: false,
+              error:
+                "Formulario no encontrado"
+            });
+
+        }
+
+
+        if (
+          actual.tipo !==
+          "contratista"
+        ) {
+
+          return res
+            .status(400)
+            .json({
+              ok: false,
+              error:
+                "El formulario no es de contratista"
+            });
+
+        }
+
+
+        const esCoordinador =
+          usuario.rol ===
+          "coordinador";
+
+
+        const esPropietario =
+          Number(actual.usuario_id) ===
+          Number(usuario.id);
+
+
+        if (
+          !esCoordinador &&
+          !esPropietario
+        ) {
+
+          return res
+            .status(403)
+            .json({
+              ok: false,
+              error:
+                "No tienes permisos para editar este formulario"
+            });
+
+        }
+
+
+        const formulario =
+          actualizarFormulario(
+            id,
+            {
+              datos,
+              estado
+            }
+          );
+
+
+        return res.json({
+          ok: true,
+          formulario
+        });
+
+      }
+
+
+      /* =========================
+         CREAR NUEVO
+      ========================= */
+
+      const formulario =
+        crearFormulario({
+
+          proyecto_id: null,
+
+          usuario_id:
+            usuario?.id ??
+            null,
+
+          tipo:
+            "contratista",
+
+          datos:
+            datos || {},
+
+          estado
+
+        });
+
+
+      res
+        .status(201)
+        .json({
+          ok: true,
+          formulario
+        });
+
+
+    } catch (error) {
+
+      console.error(
+        "Error guardando contratista:",
+        error
+      );
+
+
+      res
+        .status(500)
+        .json({
+          ok: false,
+          error:
+            "Error guardando formulario"
+        });
+
+    }
+
+  }
+);
+
+
+/* =========================
+   GENERAR PDF
 ========================= */
 
 router.post(
@@ -25,79 +206,11 @@ router.post(
 
     try {
 
-      const datos =
-        req.body || {};
-
-
-      /* =========================
-         USUARIO
-      ========================= */
-
-      /*
-       * El formulario de contratista
-       * también puede utilizarse sin
-       * iniciar sesión.
-       *
-       * Si existe una sesión guardamos
-       * quién creó el formulario.
-       *
-       * Si no existe:
-       * usuario_id = null
-       */
-
-      const usuarioId =
-        req.session?.usuario?.id
-          ?? null;
-
-
-      /* =========================
-         GUARDAR FORMULARIO
-      ========================= */
-
-      const formulario =
-        crearFormulario({
-
-          /*
-           * Contratista no pertenece
-           * a ningún proyecto real.
-           */
-          proyecto_id: null,
-
-          usuario_id:
-            usuarioId,
-
-          tipo:
-            "contratista",
-
-          /*
-           * Guardamos TODO el contenido
-           * del formulario dentro de datos.
-           */
-          datos,
-
-          /*
-           * Al generar el PDF consideramos
-           * que el formulario está terminado.
-           */
-          estado:
-            "finalizado"
-
-        });
-
-
-      /* =========================
-         GENERAR PDF
-      ========================= */
-
       const pdf =
         await generatePDF(
-          datos
+          req.body
         );
 
-
-      /* =========================
-         RESPUESTA
-      ========================= */
 
       res.set({
 
@@ -105,30 +218,21 @@ router.post(
           "application/pdf",
 
         "Content-Disposition":
-          `attachment; filename=formulario-${formulario.id}.pdf`,
+          "attachment; filename=formulario.pdf",
 
         "Content-Length":
-          pdf.length,
-
-        /*
-         * Nos puede resultar útil
-         * posteriormente para edición.
-         */
-        "X-Formulario-Id":
-          String(formulario.id)
+          pdf.length
 
       });
 
 
-      res.send(
-        pdf
-      );
+      res.send(pdf);
 
 
     } catch (error) {
 
       console.error(
-        "Error guardando/generando formulario de contratista:",
+        "Error generando PDF:",
         error
       );
 
