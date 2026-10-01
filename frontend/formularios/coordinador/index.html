@@ -11,124 +11,120 @@
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <h2>Informe de Coordinación</h2>
+        <h2>Informe de Coordinación</h2>
 
-    <div class="section">
+        <div class="section">
 
-        <label>Fecha</label>
-        <input type="date" id="fecha">
+            <label>Fecha</label>
+            <input type="date" id="fecha">
 
-        <label>Obra</label>
-        <input type="text" id="obra">
+            <label>Obra</label>
+            <input type="text" id="obra">
 
-        <label>Cliente</label>
-        <input type="text" id="cliente">
+            <label>Cliente</label>
+            <input type="text" id="cliente">
 
-        <label>Direccion</label>
-        <input type="text" id="direccion">
+            <label>Direccion</label>
+            <input type="text" id="direccion">
 
-    </div>
+        </div>
 
-    <h3>Personal presente</h3>
+        <h3>Personal presente</h3>
 
-    <div id="personalContainer"></div>
+        <div id="personalContainer"></div>
 
-    <button type="button" onclick="addPersonal()">
-        Añadir trabajador
-    </button>
-
-    <h3>Maquinaria</h3>
-
-    <div id="maquinariaContainer"></div>
-
-    <button type="button" onclick="addMaquinaria()">
-        Añadir maquinaria
-    </button>
-
-    <h3>Empresas / Contratas</h3>
-
-    <div id="empresaContainer"></div>
-
-    <button type="button" onclick="addEmpresa()">
-        Añadir empresa
-    </button>
-
-    <h3>Inspecciones</h3>
-
-    <div id="inspeccionesContainer"></div>
-
-    <button type="button" onclick="addInspeccion()">
-        Añadir inspección
-    </button>
-
-    <h3>Checklist de inspección</h3>
-
-    <div id="checklistContainer"></div>
-
-    <hr>
-
-    <h3>Visita realizada por</h3>
-
-    <label>Nombre</label>
-
-    <input
-        type="text"
-        id="tecnicoResponsable"
-        placeholder="Nombre del técnico responsable">
-
-    <label>Firma</label>
-
-    <canvas
-        id="firmaCanvas"
-        width="700"
-        height="220">
-    </canvas>
-
-    <div class="firma-buttons">
-
-        <button
-            type="button"
-            onclick="limpiarFirma()">
-
-            Limpiar firma
-
+        <button type="button" onclick="addPersonal()">
+            Añadir trabajador
         </button>
 
+        <h3>Maquinaria</h3>
+
+        <div id="maquinariaContainer"></div>
+
+        <button type="button" onclick="addMaquinaria()">
+            Añadir maquinaria
+        </button>
+
+        <h3>Empresas / Contratas</h3>
+
+        <div id="empresaContainer"></div>
+
+        <button type="button" onclick="addEmpresa()">
+            Añadir empresa
+        </button>
+
+        <h3>Inspecciones</h3>
+
+        <div id="inspeccionesContainer"></div>
+
+        <button type="button" onclick="addInspeccion()">
+            Añadir inspección
+        </button>
+
+        <h3>Checklist de inspección</h3>
+
+        <div id="checklistContainer"></div>
+
+        <hr>
+
+        <h3>Visita realizada por</h3>
+
+        <label>Nombre</label>
+
+        <input type="text" id="tecnicoResponsable" placeholder="Nombre del técnico responsable">
+
+        <label>Firma</label>
+
+        <canvas id="firmaCanvas" width="700" height="220">
+        </canvas>
+
+        <div class="firma-buttons">
+
+            <button type="button" onclick="limpiarFirma()">
+
+                Limpiar firma
+
+            </button>
+
+        </div>
+
+        <hr>
+
+        <h3>Informe realizado por</h3>
+
+        <label>Coordinador</label>
+
+        <select id="coordinador">
+
+            <option value="Jesús Domínguez Segura">
+                Jesús Domínguez Segura
+            </option>
+
+            <option value="Maria Rodríguez">
+                Maria Rodríguez
+            </option>
+
+        </select>
+
+        <br><br>
+
+        <div class="form-actions">
+
+            <button type="button" id="btnGuardar">
+                Guardar
+            </button>
+
+            <button type="button" class="generate-btn" onclick="enviar()">
+                Generar PDF
+            </button>
+
+        </div>
+
     </div>
 
-    <hr>
-
-    <h3>Informe realizado por</h3>
-
-    <label>Coordinador</label>
-
-    <select id="coordinador">
-
-        <option value="Jesús Domínguez Segura">
-            Jesús Domínguez Segura
-        </option>
-
-        <option value="Maria Rodríguez">
-            Maria Rodríguez
-        </option>
-
-    </select>
-
-    <br><br>
-
-    <button
-        class="generate-btn"
-        onclick="enviar()">
-
-        Generar PDF
-
-    </button>
-
-</div>
-
-<script type="module" src="./app.js"></script>
+    <script type="module" src="./app.js"></script>
 
 </body>
 

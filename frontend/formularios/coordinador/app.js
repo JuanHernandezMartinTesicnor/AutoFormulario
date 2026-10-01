@@ -1,5 +1,3 @@
-
-
 import {
     API_URL
 } from "../../common/api.js";
@@ -45,9 +43,9 @@ import {
 } from "./state.js";
 
 
-/* =========================
+/* =========================================================
    PARÁMETROS URL
-========================= */
+========================================================= */
 
 const params =
     new URLSearchParams(
@@ -57,13 +55,16 @@ const params =
 const proyectoId =
     params.get("proyecto");
 
-const formularioId =
+let formularioId =
     params.get("id");
 
+let estadoFormulario =
+    "borrador";
 
-/* =========================
+
+/* =========================================================
    INICIALIZACIÓN
-========================= */
+========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -73,11 +74,6 @@ document.addEventListener(
 
 async function iniciar() {
 
-    /*
-     * Primero construimos el HTML
-     * dinámico.
-     */
-
     renderChecklist();
 
     initFirma(
@@ -85,10 +81,21 @@ async function iniciar() {
     );
 
 
-    /*
-     * Si tenemos ID estamos abriendo
-     * un formulario existente.
-     */
+    const btnGuardar =
+        document.getElementById(
+            "btnGuardar"
+        );
+
+
+    if (btnGuardar) {
+
+        btnGuardar.addEventListener(
+            "click",
+            guardar
+        );
+
+    }
+
 
     if (formularioId) {
 
@@ -99,326 +106,29 @@ async function iniciar() {
 }
 
 
-
-
-/* =========================
+/* =========================================================
    BOTONES HTML
-========================= */
+========================================================= */
 
-window.addPersonal = addPersonal;
-window.addMaquinaria = addMaquinaria;
-window.addEmpresa = addEmpresa;
-window.addInspeccion = addInspeccion;
-window.limpiarFirma = limpiarFirma;
+window.addPersonal =
+    addPersonal;
 
-/* =========================
-   FOTOS CHECKLIST
-========================= */
+window.addMaquinaria =
+    addMaquinaria;
 
-async function obtenerFotosChecklist(formData) {
+window.addEmpresa =
+    addEmpresa;
 
-    const resultado = {};
+window.addInspeccion =
+    addInspeccion;
 
-    const fotosInputs =
-        document.querySelectorAll(".check-foto");
+window.limpiarFirma =
+    limpiarFirma;
 
-    let contador = 0;
 
-    for (const input of fotosInputs) {
-
-        const grupo =
-            input.dataset.grupo;
-
-        resultado[grupo] = [];
-
-        if (!input.files.length)
-            continue;
-
-        for (const file of input.files) {
-
-            const nombreServidor =
-                `foto_${contador++}`;
-
-            formData.append(
-                nombreServidor,
-                file
-            );
-
-            resultado[grupo].push({
-
-                nombre: file.name,
-
-                archivo: nombreServidor
-
-            });
-
-        }
-
-    }
-
-    return resultado;
-}
-
-/* =========================
-   FOTOS INSPECCIONES
-========================= */
-
-function prepararFotosInspecciones(formData) {
-
-    inspecciones.forEach((inspeccion, i) => {
-
-        if (!inspeccion.fotos)
-            return;
-
-        const fotosServidor = [];
-
-        inspeccion.fotos.forEach((file, j) => {
-
-            const nombreServidor =
-                `inspeccion_${i}_${j}`;
-
-            formData.append(
-                nombreServidor,
-                file
-            );
-
-            fotosServidor.push({
-
-                archivo: nombreServidor
-
-            });
-
-        });
-
-        inspeccion.fotosServidor = fotosServidor;
-
-    });
-
-}
-
-
-
-/* =========================
-   ENVÍO PDF
-========================= */
-
-async function enviar() {
-
-    try {
-
-        const proyectoId =
-            obtenerProyectoId();
-
-        console.log(
-            "Proyecto seleccionado:",
-            proyectoId
-        );
-
-        if (!proyectoId) {
-
-            alert(
-                "No se ha seleccionado ningún proyecto."
-            );
-
-            return;
-        }
-
-        const formData =
-            new FormData();
-
-        const fotosChecklist =
-            await obtenerFotosChecklist(
-                formData
-            );
-
-        prepararFotosInspecciones(
-            formData
-        );
-
-        empresas.forEach((empresa, index) => {
-
-            if (
-                empresa.nivel === "principal"
-            ) {
-
-                empresa.firma =
-                    getFirmaBase64(
-                        `firmaEmpresa${index}`
-                    );
-
-            }
-
-        });
-
-        const data = {
-
-            fecha:
-                document.getElementById("fecha")?.value || "",
-
-            obra:
-                document.getElementById("obra")?.value || "",
-
-            cliente:
-                document.getElementById("cliente")?.value || "",
-
-            direccion:
-                document.getElementById("direccion")?.value || "",
-
-            tecnicoResponsable:
-                document.getElementById("tecnicoResponsable")?.value || "",
-
-            coordinador:
-                document.getElementById("coordinador")?.value || "",
-
-            firmaTecnico:
-                getFirmaBase64(
-                    "firmaCanvas"
-                ),
-
-            personal,
-
-            maquinaria,
-
-            empresas,
-
-            inspecciones,
-
-            checklist:
-                obtenerChecklist(),
-
-            fotosChecklist
-
-        };
-
-        const respuestaFormulario =
-            await fetch(
-                `${API_URL}/api/formularios`,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    credentials: "include",
-
-                    body: JSON.stringify({
-
-                        proyecto_id:
-                            Number(proyectoId),
-
-                        tipo:
-                            "coordinador",
-
-                        datos:
-                            data,
-
-                        estado:
-                            "completado"
-
-                    })
-                }
-            );
-
-        const resultadoFormulario =
-            await respuestaFormulario.json();
-
-        if (!respuestaFormulario.ok) {
-
-            throw new Error(
-                resultadoFormulario.error ||
-                "No se pudo guardar el formulario"
-            );
-
-        }
-
-        console.log(
-            "Formulario guardado:",
-            resultadoFormulario
-        );
-
-        for (const pair of formData.entries()) {
-
-            console.log(pair[0], pair[1]);
-
-        }
-
-        formData.append(
-            "datos",
-            JSON.stringify(data)
-        );
-
-        const res =
-            await fetch(
-                "/api/coordinador/generate-pdf",
-                {
-                    method: "POST",
-                    body: formData
-                }
-            );
-
-        if (!res.ok) {
-
-            throw new Error(
-                "Error generando PDF"
-            );
-
-        }
-
-        const blob =
-            await res.blob();
-
-        const url =
-            window.URL.createObjectURL(
-                blob
-            );
-
-        const a =
-            document.createElement("a");
-
-        a.href =
-            url;
-
-        a.download =
-            "informe-coordinacion.pdf";
-
-        document.body.appendChild(a);
-
-        a.click();
-
-        a.remove();
-
-        window.URL.revokeObjectURL(url);
-
-    }
-    catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Error generando PDF"
-        );
-
-    }
-
-}
-
-/* =========================
-   EXPORTAR
-========================= */
-
-window.enviar = enviar;
-
-
-function obtenerProyectoId() {
-
-    return proyectoId;
-}
-
-
-/* =========================
+/* =========================================================
    CARGAR FORMULARIO EXISTENTE
-========================= */
+========================================================= */
 
 async function cargarFormularioExistente() {
 
@@ -464,6 +174,11 @@ async function cargarFormularioExistente() {
         }
 
 
+        estadoFormulario =
+            formulario.estado ||
+            "borrador";
+
+
         rellenarFormulario(
             formulario.datos || {}
         );
@@ -476,6 +191,7 @@ async function cargarFormularioExistente() {
             error
         );
 
+
         alert(
             error.message ||
             "No se pudo cargar el formulario"
@@ -486,53 +202,94 @@ async function cargarFormularioExistente() {
 }
 
 
-/* =========================
+/* =========================================================
    RELLENAR FORMULARIO
-========================= */
+========================================================= */
 
-function rellenarFormulario(
-    data
-) {
+function rellenarFormulario(data) {
 
     /* =========================
        DATOS GENERALES
     ========================= */
 
-    document.getElementById(
-        "fecha"
-    ).value =
-        data.fecha || "";
+    const fecha =
+        document.getElementById(
+            "fecha"
+        );
+
+    const obra =
+        document.getElementById(
+            "obra"
+        );
+
+    const cliente =
+        document.getElementById(
+            "cliente"
+        );
+
+    const direccion =
+        document.getElementById(
+            "direccion"
+        );
+
+    const tecnicoResponsable =
+        document.getElementById(
+            "tecnicoResponsable"
+        );
+
+    const coordinador =
+        document.getElementById(
+            "coordinador"
+        );
 
 
-    document.getElementById(
-        "obra"
-    ).value =
-        data.obra || "";
+    if (fecha) {
+
+        fecha.value =
+            data.fecha || "";
+
+    }
 
 
-    document.getElementById(
-        "cliente"
-    ).value =
-        data.cliente || "";
+    if (obra) {
+
+        obra.value =
+            data.obra || "";
+
+    }
 
 
-    document.getElementById(
-        "direccion"
-    ).value =
-        data.direccion || "";
+    if (cliente) {
+
+        cliente.value =
+            data.cliente || "";
+
+    }
 
 
-    document.getElementById(
-        "tecnicoResponsable"
-    ).value =
-        data.tecnicoResponsable ||
-        "";
+    if (direccion) {
+
+        direccion.value =
+            data.direccion || "";
+
+    }
 
 
-    document.getElementById(
-        "coordinador"
-    ).value =
-        data.coordinador || "";
+    if (tecnicoResponsable) {
+
+        tecnicoResponsable.value =
+            data.tecnicoResponsable ||
+            "";
+
+    }
+
+
+    if (coordinador) {
+
+        coordinador.value =
+            data.coordinador || "";
+
+    }
 
 
     /* =========================
@@ -611,9 +368,9 @@ function rellenarFormulario(
 
 
     /*
-     * renderEmpresas ya sabe
-     * reconstruir las firmas
-     * guardadas de las empresas.
+     * renderEmpresas también
+     * reconstruye las firmas
+     * guardadas.
      */
 
     renderEmpresas();
@@ -635,22 +392,17 @@ function rellenarFormulario(
         )
     ) {
 
-        /*
-         * Al cargar desde JSON,
-         * las fotos antiguas ya no son
-         * objetos File del navegador.
-         *
-         * Las conservamos como datos,
-         * pero limpiamos fotos para evitar
-         * tratarlas como archivos nuevos.
-         */
-
         data.inspecciones.forEach(
             inspeccion => {
 
                 inspecciones.push({
 
                     ...inspeccion,
+
+                    /*
+                     * Un input file no puede
+                     * restaurarse automáticamente.
+                     */
 
                     fotos: []
 
@@ -690,3 +442,727 @@ function rellenarFormulario(
     }
 
 }
+
+
+/* =========================================================
+   OBTENER DATOS DEL FORMULARIO
+========================================================= */
+
+function obtenerDatosFormulario() {
+
+    /* =========================
+       FIRMAS EMPRESAS
+    ========================= */
+
+    empresas.forEach(
+        (empresa, index) => {
+
+            if (
+                empresa.nivel ===
+                "principal"
+            ) {
+
+                empresa.firma =
+                    getFirmaBase64(
+                        `firmaEmpresa${index}`
+                    );
+
+            }
+
+        }
+    );
+
+
+    /* =========================
+       DATOS
+    ========================= */
+
+    return {
+
+        fecha:
+            document.getElementById(
+                "fecha"
+            )?.value || "",
+
+        obra:
+            document.getElementById(
+                "obra"
+            )?.value || "",
+
+        cliente:
+            document.getElementById(
+                "cliente"
+            )?.value || "",
+
+        direccion:
+            document.getElementById(
+                "direccion"
+            )?.value || "",
+
+        tecnicoResponsable:
+            document.getElementById(
+                "tecnicoResponsable"
+            )?.value || "",
+
+        coordinador:
+            document.getElementById(
+                "coordinador"
+            )?.value || "",
+
+        firmaTecnico:
+            getFirmaBase64(
+                "firmaCanvas"
+            ),
+
+        personal,
+
+        maquinaria,
+
+        empresas,
+
+        inspecciones,
+
+        checklist:
+            obtenerChecklist()
+
+    };
+
+}
+
+
+/* =========================================================
+   GUARDAR FORMULARIO
+========================================================= */
+
+/* =========================================================
+   GUARDAR FORMULARIO
+========================================================= */
+
+async function guardarFormulario(
+    data,
+    estado = "borrador"
+) {
+
+    let url;
+    let method;
+    let body;
+
+
+    /* =========================
+       EDITAR EXISTENTE
+    ========================= */
+
+    if (formularioId) {
+
+        url =
+            `${API_URL}/api/formularios/${formularioId}`;
+
+        method =
+            "PUT";
+
+        body = {
+
+            datos:
+                data,
+
+            estado:
+                estado
+
+        };
+
+    }
+
+
+    /* =========================
+       CREAR NUEVO
+    ========================= */
+
+    else {
+
+        if (!proyectoId) {
+
+            throw new Error(
+                "No se ha seleccionado ningún proyecto."
+            );
+
+        }
+
+
+        url =
+            `${API_URL}/api/formularios`;
+
+        method =
+            "POST";
+
+        body = {
+
+            proyecto_id:
+                Number(
+                    proyectoId
+                ),
+
+            tipo:
+                "coordinador",
+
+            datos:
+                data,
+
+            estado:
+                estado
+
+        };
+
+    }
+
+
+    console.log(
+        "Guardando formulario:",
+        {
+            url,
+            method,
+            body
+        }
+    );
+
+
+    const respuesta =
+        await fetch(
+            url,
+            {
+                method:
+
+                    method,
+
+                credentials:
+                    "include",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body:
+                    JSON.stringify(
+                        body
+                    )
+            }
+        );
+
+
+    /*
+     * Primero leemos como texto para
+     * poder ver incluso errores que no
+     * vengan en JSON.
+     */
+
+    const texto =
+        await respuesta.text();
+
+
+    console.log(
+        "Respuesta servidor:",
+        respuesta.status,
+        texto
+    );
+
+
+    let resultado;
+
+
+    try {
+
+        resultado =
+            JSON.parse(
+                texto
+            );
+
+    } catch {
+
+        throw new Error(
+            texto ||
+            `Error HTTP ${respuesta.status}`
+        );
+
+    }
+
+
+    if (!respuesta.ok) {
+
+        throw new Error(
+            resultado.error ||
+            "No se pudo guardar el formulario"
+        );
+
+    }
+
+
+    if (
+        !resultado.formulario
+    ) {
+
+        throw new Error(
+            "El servidor no devolvió el formulario guardado"
+        );
+
+    }
+
+
+    /* =========================
+       NUEVO FORMULARIO
+    ========================= */
+
+    if (!formularioId) {
+
+        formularioId =
+            String(
+                resultado.formulario.id
+            );
+
+
+        const urlActual =
+            new URL(
+                window.location.href
+            );
+
+
+        urlActual.searchParams.set(
+            "id",
+            formularioId
+        );
+
+
+        window.history.replaceState(
+            {},
+            "",
+            urlActual
+        );
+
+
+        console.log(
+            "Nuevo formulario creado con ID:",
+            formularioId
+        );
+
+    }
+
+
+    estadoFormulario =
+        resultado.formulario.estado ||
+        estado;
+
+
+    return resultado.formulario;
+
+}
+
+
+/* =========================================================
+   GUARDAR SIN GENERAR PDF
+========================================================= */
+
+async function guardar() {
+
+    try {
+
+        console.log(
+            "Iniciando guardado..."
+        );
+
+
+        const data =
+            obtenerDatosFormulario();
+
+
+        console.log(
+            "Datos a guardar:",
+            data
+        );
+
+
+        console.log(
+            "Formulario ID:",
+            formularioId
+        );
+
+
+        console.log(
+            "Proyecto ID:",
+            proyectoId
+        );
+
+
+        const estado =
+            formularioId
+                ? estadoFormulario
+                : "borrador";
+
+
+        const formulario =
+            await guardarFormulario(
+                data,
+                estado
+            );
+
+
+        console.log(
+            "Formulario guardado:",
+            formulario
+        );
+
+
+        alert(
+            "Formulario guardado correctamente"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error guardando formulario:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Error guardando formulario"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   FOTOS CHECKLIST
+========================================================= */
+
+async function obtenerFotosChecklist(
+    formData
+) {
+
+    const resultado =
+        {};
+
+    const fotosInputs =
+        document.querySelectorAll(
+            ".check-foto"
+        );
+
+    let contador =
+        0;
+
+
+    for (
+        const input
+        of fotosInputs
+    ) {
+
+        const grupo =
+            input.dataset.grupo;
+
+
+        resultado[grupo] =
+            [];
+
+
+        if (
+            !input.files ||
+            !input.files.length
+        ) {
+
+            continue;
+
+        }
+
+
+        for (
+            const file
+            of input.files
+        ) {
+
+            const nombreServidor =
+                `foto_${contador++}`;
+
+
+            formData.append(
+                nombreServidor,
+                file
+            );
+
+
+            resultado[
+                grupo
+            ].push({
+
+                nombre:
+                    file.name,
+
+                archivo:
+                    nombreServidor
+
+            });
+
+        }
+
+    }
+
+
+    return resultado;
+
+}
+
+
+/* =========================================================
+   FOTOS INSPECCIONES
+========================================================= */
+
+function prepararFotosInspecciones(
+    formData
+) {
+
+    inspecciones.forEach(
+        (inspeccion, i) => {
+
+            if (
+                !Array.isArray(
+                    inspeccion.fotos
+                ) ||
+                inspeccion.fotos.length === 0
+            ) {
+
+                return;
+
+            }
+
+
+            const fotosServidor =
+                [];
+
+
+            inspeccion.fotos.forEach(
+                (file, j) => {
+
+                    const nombreServidor =
+                        `inspeccion_${i}_${j}`;
+
+
+                    formData.append(
+                        nombreServidor,
+                        file
+                    );
+
+
+                    fotosServidor.push({
+
+                        nombre:
+                            file.name,
+
+                        archivo:
+                            nombreServidor
+
+                    });
+
+                }
+            );
+
+
+            inspeccion.fotosServidor =
+                fotosServidor;
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   GENERAR PDF
+========================================================= */
+
+async function enviar() {
+
+    try {
+
+        /* =========================
+           VALIDAR PROYECTO
+        ========================= */
+
+        if (!proyectoId) {
+
+            alert(
+                "No se ha seleccionado ningún proyecto."
+            );
+
+            return;
+
+        }
+
+
+        /* =========================
+           PREPARAR ARCHIVOS
+        ========================= */
+
+        const formData =
+            new FormData();
+
+
+        const fotosChecklist =
+            await obtenerFotosChecklist(
+                formData
+            );
+
+
+        prepararFotosInspecciones(
+            formData
+        );
+
+
+        /* =========================
+           RECOGER DATOS
+        ========================= */
+
+        const data =
+            obtenerDatosFormulario();
+
+
+        data.fotosChecklist =
+            fotosChecklist;
+
+
+        /* =========================
+           GUARDAR / ACTUALIZAR
+        ========================= */
+
+        /*
+         * Si es nuevo:
+         *
+         * POST
+         * → crea formulario
+         * → obtiene formularioId
+         *
+         * Si existe:
+         *
+         * PUT
+         * → actualiza el mismo.
+         */
+
+        await guardarFormulario(
+            data,
+            "completado"
+        );
+
+
+        /* =========================
+           DATOS PARA EL PDF
+        ========================= */
+
+        formData.append(
+            "datos",
+            JSON.stringify(
+                data
+            )
+        );
+
+
+        /* =========================
+           GENERAR PDF
+        ========================= */
+
+        const respuesta =
+            await fetch(
+                "/api/coordinador/generate-pdf",
+                {
+                    method:
+                        "POST",
+
+                    credentials:
+                        "include",
+
+                    body:
+                        formData
+                }
+            );
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                "Error generando PDF"
+            );
+
+        }
+
+
+        /* =========================
+           DESCARGAR PDF
+        ========================= */
+
+        const blob =
+            await respuesta.blob();
+
+
+        const url =
+            window.URL.createObjectURL(
+                blob
+            );
+
+
+        const enlace =
+            document.createElement(
+                "a"
+            );
+
+
+        enlace.href =
+            url;
+
+
+        enlace.download =
+            formularioId
+                ? `informe-coordinacion-${formularioId}.pdf`
+                : "informe-coordinacion.pdf";
+
+
+        document.body.appendChild(
+            enlace
+        );
+
+
+        enlace.click();
+
+
+        enlace.remove();
+
+
+        window.URL.revokeObjectURL(
+            url
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error guardando/generando PDF:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Error generando PDF"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   EXPORTAR FUNCIONES AL HTML
+========================================================= */
+
+window.enviar =
+    enviar;
