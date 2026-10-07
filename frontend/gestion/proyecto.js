@@ -385,29 +385,69 @@ function mostrarFormularios(
                 "proyecto";
 
 
+            /* =========================
+               BOTÓN PDF
+            ========================= */
+
+            const botonPdf =
+                formulario.tiene_pdf
+                    ? `
+                        <button
+                            type="button"
+                            class="btn-secundario btn-ver-pdf"
+                            data-id="${formulario.id}"
+                        >
+                            Ver último PDF
+                        </button>
+                    `
+                    : "";
+
+
             tarjeta.innerHTML = `
 
                 <div class="proyecto-info">
 
                     <h3>
                         ${escapeHtml(
-                formulario.tipo
-            )}
+                            formulario.tipo
+                        )}
                     </h3>
+
 
                     <p>
                         <strong>Estado:</strong>
+
                         ${escapeHtml(
-                formulario.estado
-            )}
+                            formulario.estado
+                        )}
                     </p>
+
 
                     <p>
                         <strong>Creado:</strong>
+
                         ${escapeHtml(
-                formulario.created_at
-            )}
+                            formulario.created_at
+                        )}
                     </p>
+
+
+                    ${
+                        formulario.tiene_pdf &&
+                        formulario.ultimo_pdf_generado_at
+                            ? `
+                                <p>
+                                    <strong>
+                                        Último PDF:
+                                    </strong>
+
+                                    ${escapeHtml(
+                                        formulario.ultimo_pdf_generado_at
+                                    )}
+                                </p>
+                            `
+                            : ""
+                    }
 
                 </div>
 
@@ -415,24 +455,32 @@ function mostrarFormularios(
                 <div class="proyecto-acciones">
 
                     <button
-                        class="btn-secundario"
+                        type="button"
+                        class="btn-secundario btn-ver-formulario"
                         data-id="${formulario.id}"
                     >
                         Ver formulario
                     </button>
+
+
+                    ${botonPdf}
 
                 </div>
 
             `;
 
 
-            const boton =
+            /* =========================
+               VER FORMULARIO
+            ========================= */
+
+            const botonFormulario =
                 tarjeta.querySelector(
-                    "button"
+                    ".btn-ver-formulario"
                 );
 
 
-            boton.addEventListener(
+            botonFormulario.addEventListener(
                 "click",
                 () => {
 
@@ -442,6 +490,33 @@ function mostrarFormularios(
 
                 }
             );
+
+
+            /* =========================
+               VER ÚLTIMO PDF
+            ========================= */
+
+            const botonVerPdf =
+                tarjeta.querySelector(
+                    ".btn-ver-pdf"
+                );
+
+
+            if (botonVerPdf) {
+
+                botonVerPdf.addEventListener(
+                    "click",
+                    () => {
+
+                        window.open(
+                            `${API_URL}/api/formularios/${formulario.id}/pdf`,
+                            "_blank"
+                        );
+
+                    }
+                );
+
+            }
 
 
             listaFormularios.appendChild(

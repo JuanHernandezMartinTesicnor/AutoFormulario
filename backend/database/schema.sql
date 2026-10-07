@@ -30,6 +30,12 @@ CREATE TABLE IF NOT EXISTS formularios (
 
     datos TEXT NOT NULL,
 
+    ultimo_pdf BLOB,
+
+    ultimo_pdf_nombre TEXT,
+
+    ultimo_pdf_generado_at TEXT,
+
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,

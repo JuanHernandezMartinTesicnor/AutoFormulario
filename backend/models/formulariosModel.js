@@ -39,6 +39,38 @@ function crearFormulario({
 
 
 /* =========================
+   CAMPOS COMUNES DE LISTADO
+
+   Importante:
+   NO incluimos ultimo_pdf,
+   porque es un BLOB y no queremos
+   enviarlo en cada consulta.
+========================= */
+
+const CAMPOS_FORMULARIO = `
+    f.id,
+    f.proyecto_id,
+    f.usuario_id,
+    f.tipo,
+    f.estado,
+    f.datos,
+    f.created_at,
+    f.updated_at,
+
+    f.ultimo_pdf_nombre,
+    f.ultimo_pdf_generado_at,
+
+    CASE
+        WHEN f.ultimo_pdf IS NOT NULL
+        THEN 1
+        ELSE 0
+    END AS tiene_pdf,
+
+    p.nombre AS proyecto_nombre
+`;
+
+
+/* =========================
    OBTENER TODOS
 ========================= */
 
@@ -46,13 +78,16 @@ function obtenerFormularios() {
 
     const formularios = db.prepare(`
         SELECT
-            f.*,
-            p.nombre AS proyecto_nombre
+            ${CAMPOS_FORMULARIO}
+
         FROM formularios f
+
         LEFT JOIN proyectos p
             ON p.id = f.proyecto_id
+
         ORDER BY f.updated_at DESC
     `).all();
+
 
     return formularios.map(
         formatearFormulario
@@ -70,14 +105,21 @@ function obtenerFormulariosPorUsuario(
 
     const formularios = db.prepare(`
         SELECT
-            f.*,
-            p.nombre AS proyecto_nombre
+            ${CAMPOS_FORMULARIO}
+
         FROM formularios f
+
         LEFT JOIN proyectos p
             ON p.id = f.proyecto_id
-        WHERE f.usuario_id = ?
+
+        WHERE
+            f.usuario_id = ?
+
         ORDER BY f.updated_at DESC
-    `).all(usuarioId);
+    `).all(
+        usuarioId
+    );
+
 
     return formularios.map(
         formatearFormulario
@@ -93,17 +135,26 @@ function obtenerFormularioPorId(id) {
 
     const formulario = db.prepare(`
         SELECT
-            f.*,
-            p.nombre AS proyecto_nombre
+            ${CAMPOS_FORMULARIO}
+
         FROM formularios f
+
         LEFT JOIN proyectos p
             ON p.id = f.proyecto_id
-        WHERE f.id = ?
-    `).get(id);
+
+        WHERE
+            f.id = ?
+    `).get(
+        id
+    );
+
 
     if (!formulario) {
+
         return null;
+
     }
+
 
     return formatearFormulario(
         formulario
@@ -121,14 +172,21 @@ function obtenerFormulariosPorProyecto(
 
     const formularios = db.prepare(`
         SELECT
-            f.*,
-            p.nombre AS proyecto_nombre
+            ${CAMPOS_FORMULARIO}
+
         FROM formularios f
+
         LEFT JOIN proyectos p
             ON p.id = f.proyecto_id
-        WHERE f.proyecto_id = ?
+
+        WHERE
+            f.proyecto_id = ?
+
         ORDER BY f.updated_at DESC
-    `).all(proyectoId);
+    `).all(
+        proyectoId
+    );
+
 
     return formularios.map(
         formatearFormulario
@@ -148,19 +206,23 @@ function obtenerFormulariosPorProyectoYUsuario(
 
     const formularios = db.prepare(`
         SELECT
-            f.*,
-            p.nombre AS proyecto_nombre
+            ${CAMPOS_FORMULARIO}
+
         FROM formularios f
+
         LEFT JOIN proyectos p
             ON p.id = f.proyecto_id
+
         WHERE
             f.proyecto_id = ?
             AND f.usuario_id = ?
+
         ORDER BY f.updated_at DESC
     `).all(
         proyectoId,
         usuarioId
     );
+
 
     return formularios.map(
         formatearFormulario
@@ -176,16 +238,20 @@ function obtenerFormulariosContratista() {
 
     const formularios = db.prepare(`
         SELECT
-            f.*,
-            p.nombre AS proyecto_nombre
+            ${CAMPOS_FORMULARIO}
+
         FROM formularios f
+
         LEFT JOIN proyectos p
             ON p.id = f.proyecto_id
+
         WHERE
             f.tipo = 'contratista'
             AND f.proyecto_id IS NULL
+
         ORDER BY f.updated_at DESC
     `).all();
+
 
     return formularios.map(
         formatearFormulario
@@ -199,17 +265,23 @@ function obtenerFormulariosContratistaPorUsuario(
 
     const formularios = db.prepare(`
         SELECT
-            f.*,
-            p.nombre AS proyecto_nombre
+            ${CAMPOS_FORMULARIO}
+
         FROM formularios f
+
         LEFT JOIN proyectos p
             ON p.id = f.proyecto_id
+
         WHERE
             f.tipo = 'contratista'
             AND f.proyecto_id IS NULL
             AND f.usuario_id = ?
+
         ORDER BY f.updated_at DESC
-    `).all(usuarioId);
+    `).all(
+        usuarioId
+    );
+
 
     return formularios.map(
         formatearFormulario
@@ -231,21 +303,31 @@ function actualizarFormulario(
 ) {
 
     const actual =
-        obtenerFormularioPorId(id);
+        obtenerFormularioPorId(
+            id
+        );
+
 
     if (!actual) {
+
         return null;
+
     }
+
 
     db.prepare(`
         UPDATE formularios
+
         SET
             datos = ?,
             estado = ?,
             tipo = ?,
             updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
+
+        WHERE
+            id = ?
     `).run(
+
         JSON.stringify(
             datos !== undefined
                 ? datos
@@ -263,7 +345,65 @@ function actualizarFormulario(
         id
     );
 
-    return obtenerFormularioPorId(id);
+
+    return obtenerFormularioPorId(
+        id
+    );
+}
+
+
+/* =========================
+   GUARDAR ÚLTIMO PDF
+========================= */
+
+function guardarUltimoPdf(
+    id,
+    pdf,
+    nombre
+) {
+
+    return db.prepare(`
+        UPDATE formularios
+
+        SET
+            ultimo_pdf = ?,
+            ultimo_pdf_nombre = ?,
+            ultimo_pdf_generado_at = CURRENT_TIMESTAMP
+
+        WHERE
+            id = ?
+    `).run(
+        pdf,
+        nombre,
+        id
+    );
+}
+
+
+/* =========================
+   OBTENER ÚLTIMO PDF
+========================= */
+
+function obtenerUltimoPdf(
+    id
+) {
+
+    return db.prepare(`
+        SELECT
+            id,
+            usuario_id,
+            tipo,
+            ultimo_pdf,
+            ultimo_pdf_nombre,
+            ultimo_pdf_generado_at
+
+        FROM formularios
+
+        WHERE
+            id = ?
+    `).get(
+        id
+    );
 }
 
 
@@ -271,12 +411,16 @@ function actualizarFormulario(
    ELIMINAR
 ========================= */
 
-function eliminarFormulario(id) {
+function eliminarFormulario(
+    id
+) {
 
     return db.prepare(`
         DELETE FROM formularios
         WHERE id = ?
-    `).run(id);
+    `).run(
+        id
+    );
 }
 
 
@@ -291,9 +435,20 @@ function formatearFormulario(
     return {
         ...formulario,
 
-        datos: JSON.parse(
-            formulario.datos || "{}"
-        )
+        datos:
+            JSON.parse(
+                formulario.datos ||
+                "{}"
+            ),
+
+        /*
+         * SQLite devuelve 0 / 1.
+         * Lo convertimos a boolean.
+         */
+        tiene_pdf:
+            Boolean(
+                formulario.tiene_pdf
+            )
     };
 }
 
@@ -303,14 +458,28 @@ function formatearFormulario(
 ========================= */
 
 module.exports = {
+
     crearFormulario,
+
     obtenerFormularios,
+
     obtenerFormulariosPorUsuario,
+
     obtenerFormularioPorId,
+
     obtenerFormulariosPorProyecto,
+
     obtenerFormulariosPorProyectoYUsuario,
+
     obtenerFormulariosContratista,
+
     obtenerFormulariosContratistaPorUsuario,
+
     actualizarFormulario,
+
+    guardarUltimoPdf,
+
+    obtenerUltimoPdf,
+
     eliminarFormulario
 };

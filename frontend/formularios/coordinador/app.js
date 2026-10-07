@@ -46,7 +46,6 @@ import {
 /* =========================================================
    PARÁMETROS URL
 ========================================================= */
-
 const params =
     new URLSearchParams(
         window.location.search
@@ -65,12 +64,10 @@ let estadoFormulario =
 /* =========================================================
    INICIALIZACIÓN
 ========================================================= */
-
 document.addEventListener(
     "DOMContentLoaded",
     iniciar
 );
-
 
 async function iniciar() {
 
@@ -109,7 +106,6 @@ async function iniciar() {
 /* =========================================================
    BOTONES HTML
 ========================================================= */
-
 window.addPersonal =
     addPersonal;
 
@@ -129,7 +125,6 @@ window.limpiarFirma =
 /* =========================================================
    CARGAR FORMULARIO EXISTENTE
 ========================================================= */
-
 async function cargarFormularioExistente() {
 
     try {
@@ -205,7 +200,6 @@ async function cargarFormularioExistente() {
 /* =========================================================
    RELLENAR FORMULARIO
 ========================================================= */
-
 function rellenarFormulario(data) {
 
     /* =========================
@@ -447,7 +441,6 @@ function rellenarFormulario(data) {
 /* =========================================================
    OBTENER DATOS DEL FORMULARIO
 ========================================================= */
-
 function obtenerDatosFormulario() {
 
     /* =========================
@@ -533,11 +526,6 @@ function obtenerDatosFormulario() {
 /* =========================================================
    GUARDAR FORMULARIO
 ========================================================= */
-
-/* =========================================================
-   GUARDAR FORMULARIO
-========================================================= */
-
 async function guardarFormulario(
     data,
     estado = "borrador"
@@ -761,7 +749,6 @@ async function guardarFormulario(
 /* =========================================================
    GUARDAR SIN GENERAR PDF
 ========================================================= */
-
 async function guardar() {
 
     try {
@@ -838,7 +825,6 @@ async function guardar() {
 /* =========================================================
    FOTOS CHECKLIST
 ========================================================= */
-
 async function obtenerFotosChecklist(
     formData
 ) {
@@ -918,7 +904,6 @@ async function obtenerFotosChecklist(
 /* =========================================================
    FOTOS INSPECCIONES
 ========================================================= */
-
 function prepararFotosInspecciones(
     formData
 ) {
@@ -979,9 +964,8 @@ function prepararFotosInspecciones(
 
 
 /* =========================================================
-   GENERAR PDF
+   GENERAR PDF - COORDINADOR
 ========================================================= */
-
 async function enviar() {
 
     try {
@@ -997,7 +981,6 @@ async function enviar() {
             );
 
             return;
-
         }
 
 
@@ -1036,28 +1019,38 @@ async function enviar() {
            GUARDAR / ACTUALIZAR
         ========================= */
 
-        /*
-         * Si es nuevo:
-         *
-         * POST
-         * → crea formulario
-         * → obtiene formularioId
-         *
-         * Si existe:
-         *
-         * PUT
-         * → actualiza el mismo.
-         */
-
         await guardarFormulario(
             data,
             "completado"
         );
 
 
+        /*
+         * En este punto formularioId
+         * debe existir siempre.
+         *
+         * Si era nuevo, guardarFormulario()
+         * lo acaba de crear.
+         */
+
+        if (!formularioId) {
+
+            throw new Error(
+                "No se pudo obtener el ID del formulario."
+            );
+
+        }
+
+
         /* =========================
            DATOS PARA EL PDF
         ========================= */
+
+        formData.append(
+            "formularioId",
+            formularioId
+        );
+
 
         formData.append(
             "datos",
@@ -1089,7 +1082,11 @@ async function enviar() {
 
         if (!respuesta.ok) {
 
+            const mensaje =
+                await respuesta.text();
+
             throw new Error(
+                mensaje ||
                 "Error generando PDF"
             );
 
@@ -1121,9 +1118,7 @@ async function enviar() {
 
 
         enlace.download =
-            formularioId
-                ? `informe-coordinacion-${formularioId}.pdf`
-                : "informe-coordinacion.pdf";
+            `informe-coordinacion-${formularioId}.pdf`;
 
 
         document.body.appendChild(
@@ -1159,10 +1154,8 @@ async function enviar() {
 
 }
 
-
 /* =========================================================
    EXPORTAR FUNCIONES AL HTML
 ========================================================= */
-
 window.enviar =
     enviar;

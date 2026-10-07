@@ -1,6 +1,12 @@
 const express = require("express");
 
-const router = express.Router();
+const router =
+  express.Router();
+
+
+/* =========================
+   GENERADOR PDF
+========================= */
 
 const {
   generatePDF
@@ -8,10 +14,16 @@ const {
   "../services/pdf/contratista/generateContratistaPDF"
 );
 
+
+/* =========================
+   MODELO
+========================= */
+
 const {
   crearFormulario,
   obtenerFormularioPorId,
-  actualizarFormulario
+  actualizarFormulario,
+  guardarUltimoPdf
 } = require(
   "../models/formulariosModel"
 );
@@ -23,6 +35,7 @@ const {
 
 router.post(
   "/save",
+
   async (req, res) => {
 
     try {
@@ -46,7 +59,7 @@ router.post(
       if (id) {
 
         /*
-         * Para modificar un formulario
+         * Para editar un formulario
          * existente exigimos sesión.
          */
 
@@ -55,9 +68,12 @@ router.post(
           return res
             .status(401)
             .json({
+
               ok: false,
+
               error:
                 "Debes iniciar sesión para editar un formulario existente"
+
             });
 
         }
@@ -74,9 +90,12 @@ router.post(
           return res
             .status(404)
             .json({
+
               ok: false,
+
               error:
                 "Formulario no encontrado"
+
             });
 
         }
@@ -90,9 +109,12 @@ router.post(
           return res
             .status(400)
             .json({
+
               ok: false,
+
               error:
                 "El formulario no es de contratista"
+
             });
 
         }
@@ -104,8 +126,12 @@ router.post(
 
 
         const esPropietario =
-          Number(actual.usuario_id) ===
-          Number(usuario.id);
+          Number(
+            actual.usuario_id
+          ) ===
+          Number(
+            usuario.id
+          );
 
 
         if (
@@ -116,9 +142,12 @@ router.post(
           return res
             .status(403)
             .json({
+
               ok: false,
+
               error:
                 "No tienes permisos para editar este formulario"
+
             });
 
         }
@@ -135,8 +164,10 @@ router.post(
 
 
         return res.json({
+
           ok: true,
           formulario
+
         });
 
       }
@@ -149,7 +180,8 @@ router.post(
       const formulario =
         crearFormulario({
 
-          proyecto_id: null,
+          proyecto_id:
+            null,
 
           usuario_id:
             usuario?.id ??
@@ -169,8 +201,10 @@ router.post(
       res
         .status(201)
         .json({
+
           ok: true,
           formulario
+
         });
 
 
@@ -185,9 +219,12 @@ router.post(
       res
         .status(500)
         .json({
+
           ok: false,
+
           error:
             "Error guardando formulario"
+
         });
 
     }
@@ -202,15 +239,132 @@ router.post(
 
 router.post(
   "/generate-pdf",
+
   async (req, res) => {
 
     try {
 
-      const pdf =
-        await generatePDF(
-          req.body
+      const {
+        formularioId,
+        datos
+      } = req.body;
+
+
+      /* =========================
+         VALIDAR ID
+      ========================= */
+
+      const id =
+        Number(
+          formularioId
         );
 
+
+      if (
+        !id ||
+        Number.isNaN(id)
+      ) {
+
+        return res
+          .status(400)
+          .send(
+            "formularioId es obligatorio"
+          );
+
+      }
+
+
+      /* =========================
+         COMPROBAR FORMULARIO
+      ========================= */
+
+      const formulario =
+        obtenerFormularioPorId(
+          id
+        );
+
+
+      if (!formulario) {
+
+        return res
+          .status(404)
+          .send(
+            "Formulario no encontrado"
+          );
+
+      }
+
+
+      if (
+        formulario.tipo !==
+        "contratista"
+      ) {
+
+        return res
+          .status(400)
+          .send(
+            "El formulario no es de contratista"
+          );
+
+      }
+
+
+      /* =========================
+         COMPROBAR DATOS
+      ========================= */
+
+      if (!datos) {
+
+        return res
+          .status(400)
+          .send(
+            "No se han recibido los datos del formulario"
+          );
+
+      }
+
+
+      /* =========================
+         GENERAR PDF
+      ========================= */
+
+      const pdf =
+        await generatePDF(
+          datos
+        );
+
+
+      /* =========================
+         GUARDAR ÚLTIMO PDF
+      ========================= */
+
+      const nombrePdf =
+        `formulario-${id}.pdf`;
+
+
+      const resultadoGuardado =
+        guardarUltimoPdf(
+          id,
+          pdf,
+          nombrePdf
+        );
+
+
+      if (
+        resultadoGuardado.changes ===
+        0
+      ) {
+
+        throw new Error(
+          "No se pudo guardar el PDF"
+        );
+
+      }
+
+
+      /* =========================
+         RESPUESTA
+      ========================= */
 
       res.set({
 
@@ -218,7 +372,7 @@ router.post(
           "application/pdf",
 
         "Content-Disposition":
-          "attachment; filename=formulario.pdf",
+          `attachment; filename="${nombrePdf}"`,
 
         "Content-Length":
           pdf.length
@@ -226,13 +380,15 @@ router.post(
       });
 
 
-      res.send(pdf);
+      res.send(
+        pdf
+      );
 
 
     } catch (error) {
 
       console.error(
-        "Error generando PDF:",
+        "Error generando PDF contratista:",
         error
       );
 
@@ -249,4 +405,5 @@ router.post(
 );
 
 
-module.exports = router;
+module.exports =
+  router;

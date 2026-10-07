@@ -4,7 +4,6 @@ import { API_URL } from "/common/api.js";
 /* =========================
    ID FORMULARIO
 ========================= */
-
 const parametros =
   new URLSearchParams(
     window.location.search
@@ -17,7 +16,6 @@ let formularioId =
 /* =========================
    INICIO
 ========================= */
-
 document.addEventListener(
   "DOMContentLoaded",
   iniciar
@@ -52,7 +50,6 @@ async function iniciar() {
 /* =========================
    CARGAR FORMULARIO
 ========================= */
-
 async function cargarFormularioExistente() {
 
   try {
@@ -126,7 +123,6 @@ async function cargarFormularioExistente() {
 /* =========================
    RELLENAR FORMULARIO
 ========================= */
-
 function rellenarFormulario(
   data
 ) {
@@ -289,7 +285,6 @@ function rellenarFormulario(
 /* =========================
    ACCIONES CORRECTORAS
 ========================= */
-
 function agregarAccion(
   data = {}
 ) {
@@ -386,7 +381,6 @@ function agregarAccion(
 /* =========================
    RECOGER DATOS
 ========================= */
-
 function obtenerDatosFormulario() {
 
   const accionesCorrectoras =
@@ -514,9 +508,8 @@ function obtenerDatosFormulario() {
 
 
 /* =========================
-   GENERAR PDF
+   GENERAR PDF - CONTRATISTA
 ========================= */
-
 async function enviar() {
 
   try {
@@ -533,17 +526,24 @@ async function enviar() {
        GUARDAR / ACTUALIZAR
     ========================= */
 
-    /*
-     * Si el formulario es nuevo:
-     *   → se crea y formularioId recibe su ID.
-     *
-     * Si ya existe:
-     *   → se actualiza el mismo formulario.
-     */
-
     await guardarFormulario(
       "completado"
     );
+
+
+    /*
+     * Si era nuevo, guardarFormulario()
+     * ya habrá creado el formulario
+     * y asignado formularioId.
+     */
+
+    if (!formularioId) {
+
+      throw new Error(
+        "No se pudo obtener el ID del formulario."
+      );
+
+    }
 
 
     /* =========================
@@ -554,9 +554,11 @@ async function enviar() {
       await fetch(
         "/api/contratista/generate-pdf",
         {
-          method: "POST",
+          method:
+            "POST",
 
-          credentials: "include",
+          credentials:
+            "include",
 
           headers: {
             "Content-Type":
@@ -564,16 +566,29 @@ async function enviar() {
           },
 
           body:
-            JSON.stringify(
-              data
-            )
+            JSON.stringify({
+
+              formularioId:
+                Number(
+                  formularioId
+                ),
+
+              datos:
+                data
+
+            })
         }
       );
 
 
     if (!res.ok) {
 
+      const mensaje =
+        await res.text();
+
+
       throw new Error(
+        mensaje ||
         "Error generando PDF"
       );
 
@@ -600,13 +615,12 @@ async function enviar() {
       );
 
 
-    a.href = url;
+    a.href =
+      url;
 
 
     a.download =
-      formularioId
-        ? `formulario-${formularioId}.pdf`
-        : "formulario.pdf";
+      `formulario-${formularioId}.pdf`;
 
 
     document.body.appendChild(
@@ -647,7 +661,6 @@ async function enviar() {
 /* =========================
    GUARDAR FORMULARIO
 ========================= */
-
 async function guardarFormulario(
   estado = "borrador"
 ) {
@@ -741,7 +754,6 @@ async function guardarFormulario(
 /* =========================
    GUARDAR SIN PDF
 ========================= */
-
 async function guardar() {
 
   try {

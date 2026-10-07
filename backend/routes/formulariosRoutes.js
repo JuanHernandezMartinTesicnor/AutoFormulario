@@ -17,6 +17,7 @@ const {
     obtenerFormulariosContratista,
     obtenerFormulariosContratistaPorUsuario,
     actualizarFormulario,
+    obtenerUltimoPdf,
     eliminarFormulario
 } = require("../models/formulariosModel");
 
@@ -208,6 +209,146 @@ router.get(
                 error:
                     "Error obteniendo formularios"
             });
+
+        }
+
+    }
+);
+
+
+/* =========================
+   OBTENER ÚLTIMO PDF
+========================= */
+
+router.get(
+    "/:id/pdf",
+
+    requireAuth,
+
+    (req, res) => {
+
+        try {
+
+            /* =========================
+               OBTENER FORMULARIO
+            ========================= */
+
+            const formulario =
+                obtenerFormularioPorId(
+                    req.params.id
+                );
+
+
+            if (!formulario) {
+
+                return res
+                    .status(404)
+                    .json({
+                        ok: false,
+                        error:
+                            "Formulario no encontrado"
+                    });
+
+            }
+
+
+            /* =========================
+               COMPROBAR PERMISOS
+            ========================= */
+
+            if (
+                !puedeAccederFormulario(
+                    req,
+                    formulario
+                )
+            ) {
+
+                return res
+                    .status(403)
+                    .json({
+                        ok: false,
+                        error:
+                            "No tienes permisos para acceder a este PDF"
+                    });
+
+            }
+
+
+            /* =========================
+               OBTENER PDF
+            ========================= */
+
+            const pdf =
+                obtenerUltimoPdf(
+                    req.params.id
+                );
+
+
+            if (
+                !pdf ||
+                !pdf.ultimo_pdf
+            ) {
+
+                return res
+                    .status(404)
+                    .json({
+                        ok: false,
+                        error:
+                            "Este formulario no tiene un PDF generado"
+                    });
+
+            }
+
+
+            /* =========================
+               MOSTRAR PDF
+            ========================= */
+
+            const nombre =
+                pdf.ultimo_pdf_nombre ||
+                `formulario-${req.params.id}.pdf`;
+
+
+            res.set({
+
+                "Content-Type":
+                    "application/pdf",
+
+                /*
+                 * inline hace que el navegador
+                 * intente mostrar el PDF en vez
+                 * de descargarlo directamente.
+                 */
+
+                "Content-Disposition":
+                    `inline; filename="${nombre}"`,
+
+                "Content-Length":
+                    pdf.ultimo_pdf.length
+
+            });
+
+
+            res.send(
+                pdf.ultimo_pdf
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Error obteniendo PDF:",
+                error
+            );
+
+
+            res
+                .status(500)
+                .json({
+                    ok: false,
+                    error:
+                        "Error obteniendo PDF"
+                });
 
         }
 
