@@ -10,34 +10,47 @@ function getImageBase64(relativePath) {
   return `data:image/png;base64,${image.toString("base64")}`;
 }
 
-const isLinux = process.platform === "linux";
+
 
 function getSignatureBase64(filename) {
-  const filePath = path.join(__dirname, "../../../assets/firmas", filename);
 
-  const image = fs.readFileSync(filePath);
+  const filePath =
+    path.join(
+      __dirname,
+      "../../../assets/firmas",
+      filename
+    );
+
+  const image =
+    fs.readFileSync(filePath);
 
   return `data:image/png;base64,${image.toString("base64")}`;
 }
 
 async function generatePDF(data) {
 
-  const browser = await puppeteer.launch({
-    headless: true,
+  const browser =
+    await puppeteer.launch({
 
-    ...(isLinux && {
-      executablePath: "/snap/bin/chromium"
-    }),
+      headless: true,
 
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu"
-    ]
-  });
+      executablePath:
+        puppeteer.executablePath(),
 
-  const page = await browser.newPage();
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu"
+      ]
+
+    });
+
+
+  const page =
+    await browser.newPage();
+
+
 
   /* =========================
      CARGAR HTML + CSS
