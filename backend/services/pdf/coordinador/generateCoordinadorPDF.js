@@ -1,3 +1,4 @@
+
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const path = require("path");
@@ -11,29 +12,36 @@ const { renderChecklist } = require("./Sections/checklist");
 const { renderResumen } = require("./Sections/resumen");
 const { textosChecklist, formatearTitulo } = require("./Sections/checklistTexts");
 
-const isLinux = process.platform === "linux";
 
 async function generatePDF(data, files) {
 
-    const browser = await puppeteer.launch({
-
-        headless: true,
-
-        ...(isLinux && {
-            executablePath: "/snap/bin/chromium"
-        }),
-
-        args: [
-            "--no-sandbox",
-            "--disable-setuid-sandbox",
-            "--disable-dev-shm-usage",
-            "--disable-gpu"
-        ]
-    });
+    let browser;
 
     try {
 
+        /* =========================
+           INICIAR CHROME
+        ========================= */
+
+        browser = await puppeteer.launch({
+
+            headless: true,
+
+            executablePath: puppeteer.executablePath(),
+
+            args: [
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-gpu"
+            ]
+        });
+
         const page = await browser.newPage();
+
+        /* =========================
+           CARGAR IMÁGENES
+        ========================= */
 
         const logoTesicnor = fs.readFileSync(
             path.join(__dirname, "../../../assets/logos/tesicnor.png"),
@@ -75,6 +83,10 @@ async function generatePDF(data, files) {
             portada
         );
 
+        /* =========================
+           FIRMA COORDINADOR
+        ========================= */
+
         let firmaCoordinador = "";
 
         if (
@@ -85,18 +97,19 @@ async function generatePDF(data, files) {
             firmaCoordinador =
                 "data:image/png;base64," + firmaMaria;
 
-        }
-        else if (
+        } else if (
             data.coordinador &&
             data.coordinador.includes("Jes")
         ) {
 
             firmaCoordinador =
                 "data:image/png;base64," + firmaJesus;
-
         }
 
-        /* DATOS GENERALES */
+        /* =========================
+           DATOS GENERALES
+        ========================= */
+
         html = renderGeneral(html, data);
         html = renderResumen(html, data);
 
@@ -110,19 +123,34 @@ async function generatePDF(data, files) {
             firmaCoordinador
         );
 
-        /* PERSONAL */
+        /* =========================
+           PERSONAL
+        ========================= */
+
         html = renderPersonal(html, data);
 
-        /* MAQUINARIA */
+        /* =========================
+           MAQUINARIA
+        ========================= */
+
         html = renderMaquinaria(html, data);
 
-        /* EMPRESAS */
+        /* =========================
+           EMPRESAS
+        ========================= */
+
         html = renderEmpresas(html, data);
 
-        /*INSPECCIONES*/
+        /* =========================
+           INSPECCIONES
+        ========================= */
+
         html = renderInspecciones(html, data, files);
 
-        /*CHECKLIST*/
+        /* =========================
+           CHECKLIST
+        ========================= */
+
         html = await renderChecklist(
             html,
             data,
@@ -132,66 +160,51 @@ async function generatePDF(data, files) {
         );
 
         /* =========================
-           GENERAR PDF
+           FIRMAS DE CONTRATAS
         ========================= */
 
         let contratasHtml = "";
 
-        const contrtaPrincipal =
-            (data.empresas || []).find(
-                e =>
-                    e.principal === true ||
-                    e.principal === "SI"
-            );
+        const empresas = Array.isArray(data.empresas)
+            ? data.empresas
+            : [];
+
+        const contrtaPrincipal = empresas.find(
+            e =>
+                e.principal === true ||
+                e.principal === "SI"
+        );
 
         if (contrtaPrincipal) {
 
             contratasHtml += `
-        <p>
-            <strong>
-                Contrata principal:
-            </strong>
-            ${contrtaPrincipal.nombre}
-        </p>
-    `;
+                <p>
+                    <strong>
+                        Contrata principal:
+                    </strong>
+                    ${contrtaPrincipal.nombre}
+                </p>
+            `;
         }
 
-        if (data.empresas.length) {
+        if (empresas.length) {
 
             contratasHtml += `
+                <table class="tabla">
+                    <tr>
+                        <th>Empresa</th>
+                        <th>Firma</th>
+                    </tr>
+            `;
 
-        <table class="tabla">
-
-            <tr>
-
-                <th>Empresa</th>
-
-                <th>Firma</th>
-
-            </tr>
-
-    `;
-
-            data.empresas.forEach(e => {
+            empresas.forEach(e => {
 
                 contratasHtml += `
-
-            <tr>
-
-                <td>
-
-                    ${e.nombre}
-
-                </td>
-
-                <td style="height:70px;">
-
-                </td>
-
-            </tr>
-
-        `;
-
+                    <tr>
+                        <td>${e.nombre}</td>
+                        <td style="height:70px;"></td>
+                    </tr>
+                `;
             });
 
             contratasHtml += "</table>";
@@ -202,16 +215,29 @@ async function generatePDF(data, files) {
             contratasHtml
         );
 
+        /* =========================
+           CARGAR HTML
+        ========================= */
+
         await page.setContent(html, {
             waitUntil: "domcontentloaded",
             timeout: 0
         });
+
+        /* =========================
+           APLICAR ESTILOS
+        ========================= */
 
         await page.addStyleTag({
             content: css
         });
 
         await page.emulateMediaType("screen");
+
+        /* =========================
+           GENERAR PDF
+        ========================= */
+
         const pdf = await page.pdf({
 
             format: "A4",
@@ -230,35 +256,53 @@ async function generatePDF(data, files) {
 
     } finally {
 
+        /* =========================
+           CERRAR NAVEGADOR
+        ========================= */
+
         if (browser) {
-            await browser.close();
+
+            try {
+                await browser.close();
+            } catch (error) {
+                console.warn(
+                    "No se pudo cerrar Chrome:",
+                    error.message
+                );
+            }
         }
 
-        // Esperamos un poco para que Windows libere los archivos
-        await new Promise(resolve => setTimeout(resolve, 500));
+        /* =========================
+           LIMPIAR ARCHIVOS TEMPORALES
+        ========================= */
 
         if (files) {
 
             for (const file of files) {
 
-                try {
-
-                    await fs.promises.unlink(file.path);
-
-                } catch (e) {
-
-                    console.warn("No se pudo borrar", file.path);
-
+                if (!file.path) {
+                    continue;
                 }
 
+                try {
+
+                    await fs.promises.unlink(
+                        file.path
+                    );
+
+                } catch (error) {
+
+                    console.warn(
+                        "No se pudo borrar:",
+                        file.path,
+                        error.message
+                    );
+                }
             }
         }
     }
-
 }
 
 module.exports = {
     generatePDF
 };
-
-
