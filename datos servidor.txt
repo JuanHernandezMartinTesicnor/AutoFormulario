@@ -7,4 +7,4 @@ IP: 37.59.113.226
 lanzar desde repo
     pm2 start backend/server.js --name autoformulario
 ver estado
-    pm2 list
+    pm2 list-

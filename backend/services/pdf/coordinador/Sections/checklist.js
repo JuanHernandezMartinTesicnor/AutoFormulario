@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { generarTextoChecklist } = require("./checklistAI");
+const { generarTextosChecklist } = require("./checklistAI");
 
 async function renderChecklist(
     html,
@@ -10,15 +10,45 @@ async function renderChecklist(
 ) {
 
     let checklistHtml = "";
+    const elementosChecklist = [];
+    const indicesChecklist = [];
 
     if (Array.isArray(data.checklist)) {
+        data.checklist.forEach(grupo => {
+            const indicesGrupo = [];
 
-        for (const grupo of data.checklist) {
+            for (const item of grupo.items) {
+                if (item.valor === "NA") {
+                    indicesGrupo.push(null);
+                    continue;
+                }
 
-            const itemsValidos =
-                grupo.items.filter(
-                    item => item.valor !== "NA"
-                );
+                const indice = elementosChecklist.length;
+                indicesGrupo.push(indice);
+                elementosChecklist.push({
+                    indice,
+                    titulo: item.titulo,
+                    valor: item.valor,
+                    textoBase: textosChecklist[item.id]?.[item.valor] || "",
+                    observacion: item.comentario
+                });
+            }
+
+            indicesChecklist.push(indicesGrupo);
+        });
+    }
+
+    const textosGenerados =
+        await generarTextosChecklist(elementosChecklist);
+
+    if (Array.isArray(data.checklist)) {
+        for (const [indiceGrupo, grupo] of data.checklist.entries()) {
+            const itemsValidos = grupo.items
+                .map((item, indiceItem) => ({
+                    item,
+                    indice: indicesChecklist[indiceGrupo][indiceItem]
+                }))
+                .filter(({ indice }) => indice !== null);
 
             if (!itemsValidos.length)
                 continue;
@@ -31,18 +61,8 @@ async function renderChecklist(
 
             `;
 
-            for (const item of itemsValidos) {
-
-                const textoBase =
-                    textosChecklist[item.id]?.[item.valor] || "";
-
-                const descripcion =
-                    await generarTextoChecklist({
-                        titulo: item.titulo,
-                        valor: item.valor,
-                        textoBase,
-                        observacion: item.comentario
-                    });
+            for (const { item, indice } of itemsValidos) {
+                const descripcion = textosGenerados.get(indice) || "";
 
                 checklistHtml += `
 
@@ -60,36 +80,6 @@ async function renderChecklist(
 
                         <p>
                             ${descripcion}
-                        </p>
-
-                    `;
-
-                }
-
-                /*
-                 * De momento mantenemos las observaciones
-                 * originales visibles para comprobar el funcionamiento.
-                 *
-                 * Cuando conectemos la IA definitivamente,
-                 * podremos decidir si eliminamos este bloque
-                 * y dejamos únicamente el texto generado.
-                 */
-
-                if (
-                    item.comentario &&
-                    item.comentario.trim()
-                ) {
-
-                    checklistHtml += `
-
-                        <p>
-
-                            <strong>
-                                Observaciones:
-                            </strong>
-
-                            ${item.comentario}
-
                         </p>
 
                     `;
