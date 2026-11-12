@@ -51,7 +51,7 @@ const params =
         window.location.search
     );
 
-const proyectoId =
+let proyectoId =
     params.get("proyecto");
 
 let formularioId =
@@ -59,6 +59,8 @@ let formularioId =
 
 let estadoFormulario =
     "borrador";
+
+let datosProyecto = null;
 
 
 /* =========================================================
@@ -98,6 +100,20 @@ async function iniciar() {
 
         await cargarFormularioExistente();
 
+    }
+
+    try {
+        await cargarDatosProyecto();
+        mostrarCabeceraProyecto();
+    } catch (error) {
+        console.error(
+            "Error cargando los datos del proyecto:",
+            error
+        );
+        alert(
+            error.message ||
+            "No se pudieron cargar los datos del proyecto."
+        );
     }
 
 }
@@ -173,6 +189,8 @@ async function cargarFormularioExistente() {
             formulario.estado ||
             "borrador";
 
+        proyectoId =
+            String(formulario.proyecto_id || proyectoId || "");
 
         rellenarFormulario(
             formulario.datos || {}
@@ -197,34 +215,58 @@ async function cargarFormularioExistente() {
 }
 
 
+async function cargarDatosProyecto() {
+
+    if (!proyectoId) {
+        throw new Error(
+            "No se ha seleccionado ningún proyecto."
+        );
+    }
+
+    const respuesta =
+        await fetch(
+            `${API_URL}/api/proyectos/${proyectoId}`,
+            {
+                credentials: "include"
+            }
+        );
+
+    const resultado =
+        await respuesta.json();
+
+    if (!respuesta.ok || !resultado.proyecto) {
+        throw new Error(
+            resultado.error ||
+            "No se pudieron cargar los datos del proyecto."
+        );
+    }
+
+    datosProyecto = resultado.proyecto;
+}
+
+
+function mostrarCabeceraProyecto() {
+
+    const fechaActual =
+        new Intl.DateTimeFormat("es-ES", {
+            timeZone: "Europe/Madrid"
+        }).format(new Date());
+
+    document.getElementById("fecha").textContent =
+        fechaActual;
+    document.getElementById("obra").textContent =
+        datosProyecto.nombre || "";
+    document.getElementById("cliente").textContent =
+        datosProyecto.cliente || "";
+    document.getElementById("direccion").textContent =
+        datosProyecto.direccion || "";
+}
+
+
 /* =========================================================
    RELLENAR FORMULARIO
 ========================================================= */
 function rellenarFormulario(data) {
-
-    /* =========================
-       DATOS GENERALES
-    ========================= */
-
-    const fecha =
-        document.getElementById(
-            "fecha"
-        );
-
-    const obra =
-        document.getElementById(
-            "obra"
-        );
-
-    const cliente =
-        document.getElementById(
-            "cliente"
-        );
-
-    const direccion =
-        document.getElementById(
-            "direccion"
-        );
 
     const tecnicoResponsable =
         document.getElementById(
@@ -235,38 +277,6 @@ function rellenarFormulario(data) {
         document.getElementById(
             "coordinador"
         );
-
-
-    if (fecha) {
-
-        fecha.value =
-            data.fecha || "";
-
-    }
-
-
-    if (obra) {
-
-        obra.value =
-            data.obra || "";
-
-    }
-
-
-    if (cliente) {
-
-        cliente.value =
-            data.cliente || "";
-
-    }
-
-
-    if (direccion) {
-
-        direccion.value =
-            data.direccion || "";
-
-    }
 
 
     if (tecnicoResponsable) {
@@ -471,27 +481,6 @@ function obtenerDatosFormulario() {
     ========================= */
 
     return {
-
-        fecha:
-            document.getElementById(
-                "fecha"
-            )?.value || "",
-
-        obra:
-            document.getElementById(
-                "obra"
-            )?.value || "",
-
-        cliente:
-            document.getElementById(
-                "cliente"
-            )?.value || "",
-
-        direccion:
-            document.getElementById(
-                "direccion"
-            )?.value || "",
-
         tecnicoResponsable:
             document.getElementById(
                 "tecnicoResponsable"

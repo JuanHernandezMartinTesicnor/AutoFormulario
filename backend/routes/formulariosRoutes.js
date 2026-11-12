@@ -6,6 +6,13 @@ const {
     requireAuth
 } = require("../middleware/authMiddleware");
 
+const {
+    obtenerProyectoPorId
+} = require("../models/proyectosModel");
+
+const {
+    aplicarCabeceraProyecto
+} = require("../utils/coordinadorCabecera");
 
 const {
     crearFormulario,
@@ -512,6 +519,23 @@ router.post(
                     ? null
                     : proyecto_id;
 
+            let datosFormulario = datos || {};
+
+            if (tipo === "coordinador") {
+                const proyecto =
+                    obtenerProyectoPorId(proyectoFormulario);
+
+                if (!proyecto) {
+                    return res.status(404).json({
+                        ok: false,
+                        error: "Proyecto no encontrado"
+                    });
+                }
+
+                datosFormulario =
+                    aplicarCabeceraProyecto(datosFormulario, proyecto);
+            }
+
 
             const formulario =
                 crearFormulario({
@@ -525,7 +549,7 @@ router.post(
                     tipo,
 
                     datos:
-                        datos || {},
+                        datosFormulario,
 
                     estado:
                         estado || "borrador"
@@ -611,12 +635,32 @@ router.put(
                 estado
             } = req.body;
 
+            let datosFormulario = datos;
+
+            if (actual.tipo === "coordinador") {
+                const proyecto =
+                    obtenerProyectoPorId(actual.proyecto_id);
+
+                if (!proyecto) {
+                    return res.status(409).json({
+                        ok: false,
+                        error: "El proyecto asociado al formulario ya no existe"
+                    });
+                }
+
+                datosFormulario =
+                    aplicarCabeceraProyecto(
+                        datos !== undefined ? datos : actual.datos,
+                        proyecto
+                    );
+            }
+
 
             const formulario =
                 actualizarFormulario(
                     req.params.id,
                     {
-                        datos,
+                        datos: datosFormulario,
                         estado
                     }
                 );

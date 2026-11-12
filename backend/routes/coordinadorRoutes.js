@@ -28,6 +28,18 @@ const {
     "../models/formulariosModel"
 );
 
+const {
+    obtenerProyectoPorId
+} = require(
+    "../models/proyectosModel"
+);
+
+const {
+    aplicarCabeceraProyecto
+} = require(
+    "../utils/coordinadorCabecera"
+);
+
 
 /* =========================
    GENERADOR PDF
@@ -242,6 +254,25 @@ router.post(
                     req.body.datos
                 );
 
+            const proyecto =
+                obtenerProyectoPorId(
+                    formulario.proyecto_id
+                );
+
+            if (!proyecto) {
+                return res
+                    .status(409)
+                    .send(
+                        "El proyecto asociado al formulario ya no existe"
+                    );
+            }
+
+            const datosInforme =
+                aplicarCabeceraProyecto(
+                    datos,
+                    proyecto
+                );
+
 
             /* =========================
                GENERAR PDF
@@ -249,7 +280,7 @@ router.post(
 
             const pdf =
                 await generatePDF(
-                    datos,
+                    datosInforme,
                     req.files
                 );
 
